@@ -6,6 +6,7 @@ import model.*;
 
 public class CEServer
 {
+
 	private ChatAssistant theChats;
 	private ArrayList chatLog;
 	private EditAssistant theEdits;
@@ -15,7 +16,7 @@ public class CEServer
 
 	public static void main(String[] args)
 	{
-		//Turtles bob I like them.....
+
 		JOptionPane.showMessageDialog(null, "This Should Pop Up When Ran!");
 	}
 
@@ -40,6 +41,7 @@ public class CEServer
 	}
 	private class ClientHandler implements Runnable
 	{
+
 		public ClientHandler(Socket arg)
 		{
 		}

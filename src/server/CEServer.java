@@ -27,6 +27,10 @@ public class CEServer
 	public void login()
 	{
 	}
+	public void listen(ServerSocket arg)
+	{
+		
+	}
 
 	public void updateChats(ArrayList arg)
 	{
@@ -38,6 +42,19 @@ public class CEServer
 
 	public void updateUsers(ArrayList arg)
 	{
+	}
+	private class ClientAccepter implements Runnable
+	{
+
+		public ClientAccepter(Socket arg)
+		{
+		}
+
+		@Override
+		public void run()
+		{
+			// TODO Auto-generated method stub
+		}
 	}
 	private class ClientHandler implements Runnable
 	{

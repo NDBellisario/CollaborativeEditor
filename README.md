@@ -1,2 +1,0 @@
-# CollaborativeEditor
-CSC 335

@@ -1,6 +1,7 @@
 package server;
 import java.net.*;
 import java.util.*;
+import javax.swing.JOptionPane;
 import model.*;
 
 public class CEServer
@@ -14,7 +15,8 @@ public class CEServer
 
 	public static void main(String[] args)
 	{
-		// TODO Auto-generated method stub
+		
+		JOptionPane.showMessageDialog(null, "This Should Pop Up When Ran!");
 	}
 
 	public void start(int port)

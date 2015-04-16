@@ -18,12 +18,12 @@ Lead "MVC Integration" Programmer</br>
 [cmorrell@cs.arizona.edu](cmorrell@cs.arizona.edu)</br></br>
 
 **Omri Hazan**</br>
-Lead "Model" Programmer</br>
+Lead "Model" Package Programmer</br>
 [LinkedIn](https://www.linkedin.com/pub/omri-hazan/ab/a24/64b)</br>
 [omrihq@cs.arizona.edu](omrihq@cs.arizona.edu)</br></br>
 
 **Nick Bellisario**</br>
-Lead "Controller" Programmer</br>
+Lead "Controller" Package Programmer</br>
 [LinkedIn](https://www.linkedin.com/pub/nicholas-bellisario/37/826/485)</br>
 [ndbellisario@cs.arizona.edu](ndbellisario@cs.arizona.edu)</br></br></br>
 

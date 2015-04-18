@@ -27,17 +27,66 @@ public class CEController extends JFrame
 	private JMenuItem changePermission;
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser)
 	{
+		setupGui();
 
 	}
 	public void serverConnect()
 	{
 
 	}
+	private void setupGui() {
+		
+		//Initializing graphic user interface variables 
+		mainProgPanel = new JPanel();
+		menuBarCore = new JMenuBar();
+		fileContainer = new JMenu("File");
+		editContainer = new JMenu("Edit");
+		userContainer = new JMenu("User");
+		save = new JMenuItem("Save");
+		saveLocal = new JMenuItem("Save Local");
+		quitOption = new JMenuItem("Quit");
+		undo = new JMenuItem("Undo");
+		redo = new JMenuItem("Redo");
+		version = new JMenuItem("Version");
+		addUser = new JMenuItem("Add User");
+		removeUser = new JMenuItem("Remove User");
+		changePermission = new JMenuItem("Permissions Options");
+		
+		//add main menu buttons to bar
+		menuBarCore.add(fileContainer);
+		menuBarCore.add(editContainer);
+		menuBarCore.add(userContainer);
+		
+		//fileContainer sub menu buttons
+		fileContainer.add(save);
+		fileContainer.add(saveLocal);
+		fileContainer.add(quitOption);
+		
+		//editContainer sub menu buttons
+		editContainer.add(undo);
+		editContainer.add(redo);
+		editContainer.add(version);
+		
+		//userContainer sub menu buttons
+		userContainer.add(addUser);
+		userContainer.add(removeUser);
+		userContainer.add(changePermission);
+		
+		//Add menu bar
+		this.setJMenuBar(menuBarCore);
+		
+		//Add 
+		
+		//pack and create!
+		this.pack();
+		this.setVisible(true);
+	}
 	private class ServerFirstContact implements Runnable
 	{
 
 		public ServerFirstContact(Socket arg)
 		{
+			
 		}
 
 		@Override
@@ -51,6 +100,7 @@ public class CEController extends JFrame
 
 		public ServerListener(Socket arg)
 		{
+			
 		}
 
 		@Override
@@ -61,6 +111,10 @@ public class CEController extends JFrame
 	}
 	public static void main(String[] args)
 	{
+		
+		CEController CEC = new CEController(null, null, null);
+		
+		
 
 	}
 }

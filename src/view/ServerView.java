@@ -54,8 +54,8 @@ public class ServerView extends JFrame
 	 */
 	public void youScrewedUp()
 	{
-		JOptionPane.showMessageDialog(this, "Somethings Wrong With That Port\nDefaulting To 9001");
-		portNumber = "9001";
+		JOptionPane.showMessageDialog(this, "Somethings Wrong With That Port\nDefaulting To 9002");
+		portNumber = "9002";
 	}
 	/*
 	 * This occurs when a user connects TODO: Make it say their actual name.

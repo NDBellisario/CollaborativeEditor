@@ -16,7 +16,7 @@ public class ChatView extends JFrame implements Observer
 
  public ChatView()
  {
-   //Test for sourcetree
+   //Test for sourcetree number 2
  }
 
 

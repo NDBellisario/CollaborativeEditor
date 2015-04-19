@@ -13,6 +13,7 @@ public class ChatView extends JFrame implements Observer
 
 	public ChatView()
 	{
+		//Test push in regular eclipse
 	}
 
 	public void setUpGui()

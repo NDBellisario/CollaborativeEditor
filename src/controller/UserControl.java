@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 
 public class UserControl extends JFrame
 {
+	
+	
 
 	/**
 	 * 

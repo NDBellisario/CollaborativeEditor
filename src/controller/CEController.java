@@ -28,7 +28,7 @@ public class CEController extends JFrame
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser)
 	{
 		setupGui();
-
+		
 	}
 	public void serverConnect()
 	{
@@ -75,7 +75,10 @@ public class CEController extends JFrame
 		//Add menu bar
 		this.setJMenuBar(menuBarCore);
 		
+		
 		//Add 
+		
+		
 		
 		//pack and create!
 		this.pack();
@@ -111,7 +114,6 @@ public class CEController extends JFrame
 	}
 	public static void main(String[] args)
 	{
-		
 		CEController CEC = new CEController(null, null, null);
 		
 		

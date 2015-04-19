@@ -1,9 +1,10 @@
 package controller;
 
-import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 import model.*;
 
-public class EditControl extends JFrame
+public class EditControl extends JPanel
 {
 public EditControl(EditAssistant theEdit, UserAssistant theUser)
 {

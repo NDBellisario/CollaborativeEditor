@@ -1,12 +1,12 @@
 package controller;
 
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class UserControl extends JFrame
+
+
+public class UserControl extends JPanel
 {
 	
-	
-
 	/**
 	 * 
 	 */

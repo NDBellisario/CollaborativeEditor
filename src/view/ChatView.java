@@ -17,7 +17,7 @@ public class ChatView extends JPanel implements Observer{
     private JButton sendButton;
     private JTextPane groupText, personalTest;
     private JTextArea textArea; // chat log displayed here
-    private JTextField textField; // field where user enters text
+    private JTextArea textField; // field where user enters text
     private JTextArea whoIsTyping;
 
 
@@ -28,10 +28,13 @@ public class ChatView extends JPanel implements Observer{
 	    
 	    //Text area to carry the conversation text.
 	    textArea = new JTextArea();
-	    textArea.setEditable(false);	    
+	    textArea.setEditable(false);
+	    textArea.setLineWrap(true);
 	    
 	    //Text field to 
-	    textField = new JTextField();
+	    textField = new JTextArea();
+	    textField.setEditable(true);
+	    textField.setLineWrap(true);
 	    JButton enterButton = new JButton("Send");
 	    
 	   // textField.setPreferredSize(new Dimension(600, 40));
@@ -41,7 +44,7 @@ public class ChatView extends JPanel implements Observer{
 	 	ActionListener listener = new chatSendListener();
 	 		
 	 	// attach listener to field & button
-	 	textField.addActionListener(listener);
+	 	//textField.addActionListener(listener);
 	 	enterButton.addActionListener(listener);
 	 	
 	 	
@@ -53,7 +56,9 @@ public class ChatView extends JPanel implements Observer{
 	 	//Type panel at the bottom of the ChatView.
 	    typePanel = new JPanel();
 	    typePanel.setLayout(new BorderLayout());
-	 	typePanel.add(textField, BorderLayout.CENTER);
+	    typePanel.setPreferredSize(new Dimension(280, 100));
+	 	//typePanel.add(textField, BorderLayout.CENTER);
+	    typePanel.add(new JScrollPane(textField), BorderLayout.CENTER);
 	 	typePanel.add(enterButton, BorderLayout.SOUTH);
 	 	typePanel.add(whoIsTyping, BorderLayout.NORTH);
 	 	

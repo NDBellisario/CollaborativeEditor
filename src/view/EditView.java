@@ -27,18 +27,44 @@ public class EditView extends JPanel implements Observer{
 	private JPanel formatPanel(){
 		JPanel formats = new JPanel();
 		formats.setLayout(new GridLayout(12,1));
+		
+		ActionListener listener = new formatListener();
+		
 		bold = new JButton("Bold");
+		bold.addActionListener(listener);
+		
 		ital = new JButton("Italics");
+		ital.addActionListener(listener);
+		
 		underlined = new JButton("Underline");
+		underlined.addActionListener(listener);
+		
 		colored = new JButton("Color Font");
+		colored.addActionListener(listener);
+		
 		indentLeft = new JButton("Indent Left");
+		indentLeft.addActionListener(listener);
+		
 		indentCenter = new JButton("Indent Center");
+		indentCenter.addActionListener(listener);
+		
 		indentRight = new JButton("Indent Right");
+		indentRight.addActionListener(listener);
+		
 		bullets = new JButton("Bullet Points");
+		bullets.addActionListener(listener);
+		
 		fontType = new JButton("Font Type");
+		fontType.addActionListener(listener);
+		
 		fontSize = new JButton("Font Size");
+		fontSize.addActionListener(listener);
+		
 		annotate = new JButton("Annotate");
+		annotate.addActionListener(listener);
+		
 		insertCode = new JButton("Insert Code");
+		insertCode.addActionListener(listener);
 		
 		
 		formats.add(bold);
@@ -85,7 +111,7 @@ public class EditView extends JPanel implements Observer{
 		@Override
 		public void actionPerformed(ActionEvent e) {
             if(e.getSource() == bold){
-				
+
 			}
 			else if(e.getSource() == ital){
 				

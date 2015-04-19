@@ -12,17 +12,19 @@ public class ChatAssistant extends Observable
 	 */
 	public ChatAssistant()
 	{
+		
 	}
 	
 	/**
 	 * 
 	 * Sends a message to some other user
-	 * @param toSend
+	 * @param toSend - The message that is sent to another user
 	 * @param arg
 	 */
 	
 	public void sendMessage(String toSend, UserAssistant arg)
 	{
+		
 	}
 	/**
 	 * Checks to see if some user is typing in the chat

@@ -1,7 +1,11 @@
 package controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.Socket;
+
 import javax.swing.*;
+
 import model.*;
 
 public class CEController extends JFrame
@@ -52,6 +56,25 @@ public class CEController extends JFrame
 		removeUser = new JMenuItem("Remove User");
 		changePermission = new JMenuItem("Permissions Options");
 		
+	
+		
+		this.setTitle("Collaborative Editor");
+		
+		//Adding action listeners for File
+		quitOption.addActionListener(new ExitListener());
+		save.addActionListener(new SaveListener());
+		saveLocal.addActionListener(new SaveLocalListener());
+	
+		//Adding Action Listeners for Edit
+		undo.addActionListener(new UndoListener());
+		redo.addActionListener(new RedoListener());
+		version.addActionListener(new VersionListener());
+		
+		//Adding Action Listener for User
+		addUser.addActionListener(new AddUserListener());
+		removeUser.addActionListener(new RemoveUserListener());
+		changePermission.addActionListener(new PermissionListener());
+		
 		//add main menu buttons to bar
 		menuBarCore.add(fileContainer);
 		menuBarCore.add(editContainer);
@@ -76,7 +99,8 @@ public class CEController extends JFrame
 		this.setJMenuBar(menuBarCore);
 		
 		
-		//Add 
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//Add JPanels 
 		
 		
 		
@@ -84,6 +108,96 @@ public class CEController extends JFrame
 		this.pack();
 		this.setVisible(true);
 	}
+	
+
+	//Listener Private Classes
+	private class ExitListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.exit(0);
+		}
+		
+	}
+	
+	private class SaveListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	private class SaveLocalListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	private class UndoListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	private class RedoListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	private class VersionListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	private class AddUserListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	private class RemoveUserListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	private class PermissionListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
 	private class ServerFirstContact implements Runnable
 	{
 

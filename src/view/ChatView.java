@@ -24,7 +24,7 @@ public class ChatView extends JPanel implements Observer{
     public ChatView(){
     	
 	    this.setLayout(new BorderLayout());
-	    this.setPreferredSize(new Dimension(800, 600));
+	    this.setPreferredSize(new Dimension(280, 600));
 	    
 	    //Text area to carry the conversation text.
 	    textArea = new JTextArea();
@@ -34,8 +34,8 @@ public class ChatView extends JPanel implements Observer{
 	    textField = new JTextField();
 	    JButton enterButton = new JButton("Send");
 	    
-	    textField.setPreferredSize(new Dimension(600, 40));
-	    enterButton.setPreferredSize(new Dimension(100, 40));
+	   // textField.setPreferredSize(new Dimension(600, 40));
+	   // enterButton.setPreferredSize(new Dimension(100, 40));
 	    		
 	 	// create a listener for writing messages to server
 	 	ActionListener listener = new chatSendListener();
@@ -59,6 +59,7 @@ public class ChatView extends JPanel implements Observer{
 	 	
 	 	//Adding the type and chat areas, and the Chat title.
 	 	this.add(new JScrollPane(textArea), BorderLayout.CENTER);
+	 	//this.add(textArea,BorderLayout.CENTER);
 	 	this.add(typePanel, BorderLayout.SOUTH);
 	 	this.add(new JLabel("Chat"),BorderLayout.NORTH);
     }
@@ -74,7 +75,7 @@ public class ChatView extends JPanel implements Observer{
 			}catch(Exception e){
 				e.printStackTrace();
 			}*/
-			textArea.append(s);
+			textArea.append("<username>: "+s);
 			textArea.append("\n");
 			textField.setText("");
 		}

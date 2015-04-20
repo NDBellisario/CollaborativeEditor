@@ -6,8 +6,9 @@ import java.net.Socket;
 
 import javax.swing.*;
 
-import model.*;
 
+import model.*;
+import view.*;
 public class CEController extends JFrame
 {
 
@@ -29,6 +30,7 @@ public class CEController extends JFrame
 	private JMenuItem addUser;
 	private JMenuItem removeUser;
 	private JMenuItem changePermission;
+	
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser)
 	{
 		setupGui();
@@ -39,6 +41,8 @@ public class CEController extends JFrame
 
 	}
 	private void setupGui() {
+		//Permissions Pop up
+
 		
 		//Initializing graphic user interface variables 
 		mainProgPanel = new JPanel();
@@ -97,12 +101,10 @@ public class CEController extends JFrame
 		
 		//Add menu bar
 		this.setJMenuBar(menuBarCore);
-		
+	
+	
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		//Add JPanels 
-		
-		
 		
 		//pack and create!
 		this.pack();

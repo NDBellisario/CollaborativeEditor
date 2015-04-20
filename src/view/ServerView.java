@@ -129,6 +129,7 @@ public class ServerView extends JFrame
 		theUsers.add("Cameron Morrell");
 		theUsers.add("Nick Bellisario");
 		theUsers.add("Omri Hazan");
+		theUsers.add("Blitzer");
 		theUsers.add("Barrack Obama");
 		theUsers.add("George Bush");
 		theUsers.add("Bill Clinton");

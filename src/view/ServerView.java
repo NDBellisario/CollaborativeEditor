@@ -182,4 +182,6 @@ public class ServerView extends JFrame
 			userList.addElement(temp);
 
 	}
+	
+	
 }

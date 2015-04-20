@@ -19,10 +19,11 @@ public class ChatView extends JPanel implements Observer{
     private JTextArea textArea; // chat log displayed here
     private JTextArea textField; // field where user enters text
     private JTextArea whoIsTyping;
+    private String username;
 
 
-    public ChatView(){
-    	
+    public ChatView(String username){
+    	this.username = username;
 	    this.setLayout(new BorderLayout());
 	    this.setPreferredSize(new Dimension(280, 600));
 	    
@@ -51,7 +52,7 @@ public class ChatView extends JPanel implements Observer{
 	 	//Text area to show who is typing. NOT currently networked. 
 	 	whoIsTyping = new JTextArea();
 	 	whoIsTyping.setEditable(false);
-	 	whoIsTyping.setText("<username> is typing....");
+	 	whoIsTyping.setText(username+" is typing....");
 	    
 	 	//Type panel at the bottom of the ChatView.
 	    typePanel = new JPanel();
@@ -66,7 +67,7 @@ public class ChatView extends JPanel implements Observer{
 	 	this.add(new JScrollPane(textArea), BorderLayout.CENTER);
 	 	//this.add(textArea,BorderLayout.CENTER);
 	 	this.add(typePanel, BorderLayout.SOUTH);
-	 	this.add(new JLabel("Chat"),BorderLayout.NORTH);
+	 	this.add(new JLabel("Chat", SwingConstants.CENTER),BorderLayout.NORTH);
     }
     
     //Action listener class to update the chat conversation
@@ -80,8 +81,8 @@ public class ChatView extends JPanel implements Observer{
 			}catch(Exception e){
 				e.printStackTrace();
 			}*/
-			textArea.append("<username>: "+s);
-			textArea.append("\n");
+			textArea.append(username+": "+s);
+			textArea.append("\n\n");
 			textField.setText("");
 		}
     }

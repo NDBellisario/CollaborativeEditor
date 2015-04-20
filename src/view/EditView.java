@@ -1,6 +1,7 @@
 package view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.util.*;
@@ -92,6 +93,8 @@ public class EditView extends JPanel implements Observer{
 		
 		formatPanel = formatPanel();
         this.add(formatPanel,BorderLayout.WEST);
+        
+        this.add(new JLabel("No Document Selected.", SwingConstants.CENTER),BorderLayout.NORTH);
 	}
 	
 	//Have not written this yet.
@@ -111,39 +114,39 @@ public class EditView extends JPanel implements Observer{
 		@Override
 		public void actionPerformed(ActionEvent e) {
             if(e.getSource() == bold){
-
+               // textBox.setFont(new Font(name, Font.BOLD, alignmentX));
 			}
 			else if(e.getSource() == ital){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == underlined){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == colored){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == indentLeft){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == indentCenter){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == indentRight){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == bullets){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == fontType){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == fontSize){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == annotate){
 				
 			}
-            else if(e.getSource() == ital){
+            else if(e.getSource() == insertCode){
 				
 			}
 			
@@ -193,7 +196,7 @@ public class EditView extends JPanel implements Observer{
 	public static void main(String[] args){
 		JFrame frame = new JFrame();
 		frame.setLayout(new BorderLayout());
-		ChatView chat = new ChatView();
+		ChatView chat = new ChatView("Blitzer");
 		chat.setVisible(true);
 		frame.add(chat, BorderLayout.EAST);
 		EditView edit = new EditView();

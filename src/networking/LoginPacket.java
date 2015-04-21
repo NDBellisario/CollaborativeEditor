@@ -25,7 +25,7 @@ public class LoginPacket implements Serializable
 	{
 		// TODO: Checks user info, returns if they can login or not!
 
-		return true;
+		return false;
 
 	}
 

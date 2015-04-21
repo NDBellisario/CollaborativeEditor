@@ -132,13 +132,11 @@ public class CEServer extends JFrame
 						// spawn a thread to handle communication with this
 						// client
 						clientInit();
-						new Thread(new ClientHandlerEditor(input, output)).start();
-						new Thread(new ClientHandlerChat(input, output)).start();
+						new Thread(new ClientHandler(input, output)).start();
 					} else
 					{
-						// Client gets a false boolean, knows that the user
-						// account
-						// isn't valid.
+
+						System.out.println("BBBB");
 						output.writeObject(correctInfo);
 					}
 
@@ -167,12 +165,12 @@ public class CEServer extends JFrame
 	/*
 	 * Bare bones now, just stores the input and output stream of a client
 	 */
-	private class ClientHandlerEditor implements Runnable
+	private class ClientHandler implements Runnable
 	{
 
 		private ObjectInputStream editorInput;
 		private ObjectOutputStream editorOutput;
-		public ClientHandlerEditor(ObjectInputStream inputArg, ObjectOutputStream outputArg)
+		public ClientHandler(ObjectInputStream inputArg, ObjectOutputStream outputArg)
 		{
 			editorInput = inputArg;
 			editorOutput = outputArg;
@@ -188,23 +186,6 @@ public class CEServer extends JFrame
 	/*
 	 * Bare bones now, just stores the input and output stream of a client
 	 */
-	private class ClientHandlerChat implements Runnable
-	{
-
-		private ObjectInputStream chatInput;
-		private ObjectOutputStream chatOutput;
-		public ClientHandlerChat(ObjectInputStream inputArg, ObjectOutputStream outputArg)
-		{
-			chatInput = inputArg;
-			chatOutput = outputArg;
-		}
-
-		@Override
-		public void run()
-		{
-			// TODO This is going to handle making sure the client is fully
-			// updated right!
-		}
-	}
+	
 
 }

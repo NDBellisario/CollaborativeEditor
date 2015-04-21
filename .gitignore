@@ -43,7 +43,7 @@ Desktop.ini
 ######################
 # Eclipse
 ######################
- 
+CollaborativeEditor\bin\**
 *.pydevproject
 .project
 .metadata

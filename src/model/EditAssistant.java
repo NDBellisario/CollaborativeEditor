@@ -3,11 +3,9 @@ import java.util.*;
 
 public class EditAssistant extends Observable
 {
-	private ArrayList theData;
+	private ArrayList<User> theData;
+	private User currUser;
 
-	public EditAssistant()
-	{
-	}
 
 	/**
 	 * 
@@ -16,6 +14,10 @@ public class EditAssistant extends Observable
 	 */
 	public void addText(String toAdd)
 	{
+		if (currUser.getPermission() < 3) {
+			
+		}
+		
 	}
 	
 	/**
@@ -31,9 +33,19 @@ public class EditAssistant extends Observable
 	 * Undos any change made to the document
 	 * @return null
 	 */
-	public EditAssistant undoText()
+	public void undoText()
 	{
 		return null;
+	}
+	
+	public User getUser(String name) {
+		User toReturn = null;
+		for (User user : theData) {
+			if (user.userName.equals(name)) {
+				toReturn = user;
+			}
+		} 
+		return toReturn;
 	}
 	
 	/**

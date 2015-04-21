@@ -83,7 +83,7 @@ public class EditView extends JPanel implements Observer{
 		return formats;
 	}
 
-	public EditView(){
+	public EditView(String fileName){
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(700, 600));
 		
@@ -199,7 +199,7 @@ public class EditView extends JPanel implements Observer{
 		ChatView chat = new ChatView("Blitzer");
 		chat.setVisible(true);
 		frame.add(chat, BorderLayout.EAST);
-		EditView edit = new EditView();
+		EditView edit = new EditView(null);
 		edit.setVisible(true);
 		frame.add(edit, BorderLayout.WEST);
 		frame.setVisible(true);

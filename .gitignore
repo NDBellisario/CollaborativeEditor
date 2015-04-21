@@ -70,3 +70,17 @@ local.properties
  
 # PDT-specific
 .buildpath
+
+bin/view/ServerView.class
+
+*.class
+
+*.class
+
+bin/view/ChatView$chatSendListener.class
+
+bin/view/ServerView.class
+
+bin/view/ChatView$chatSendListener.class
+
+bin/view/ChatView.class

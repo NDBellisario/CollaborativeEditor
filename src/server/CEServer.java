@@ -11,8 +11,8 @@ import networking.LoginPacket;
 import view.ServerView;
 import model.*;
 
-/*
- * Written by Taylor Cox
+/* 
+ * Written By Taylor Cox
  * Here's what Happens
  * 
  * We create a new ServerView which asks for a port

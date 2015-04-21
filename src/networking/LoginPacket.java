@@ -1,14 +1,6 @@
 package networking;
 
-
 public class LoginPacket {
-
-import java.io.Serializable;
-
-@SuppressWarnings("serial")
-public class LoginPacket extends Packet implements Serializable 
-{
-
 
 	String userName;
 	String password;

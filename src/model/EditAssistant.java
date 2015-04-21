@@ -1,10 +1,13 @@
 package model;
 import java.util.*;
+import java.io.*;
+import java.util.Arrays;
 
 public class EditAssistant extends Observable
 {
 	private ArrayList<User> theData;
 	private User currUser;
+	private File toEdit;
 
 
 	/**
@@ -14,10 +17,44 @@ public class EditAssistant extends Observable
 	 */
 	public void addText(String toAdd)
 	{
+		byte[] byteAdd = toAdd.getBytes();
+		//if beginning.startswith "{Bold : 17,20}"
 		if (currUser.getPermission() < 3) {
 			
+			//User can type
+			try {
+				//If doc was just opened
+				RandomAccessFile raf = new RandomAccessFile(toEdit, "rw");
+				String hasText = raf.readLine();
+				if (hasText != null) {
+					try {
+						FileWriter fw = new FileWriter(toEdit);
+						BufferedWriter bw = new BufferedWriter(fw);
+			            bw.write(toAdd);
+			            bw.close();
+					} catch(IOException e){
+						e.printStackTrace();
+			        }
+				} else {
+					//off = pointer to where the cursor is
+					//everyone has their own packet with a cursor pointer
+					
+					
+					/*toEdit.write(byteAdd, off, len);
+					BufferedWriter bw = new BufferedWriter(fw);
+		            bw.write(toAdd);
+		            bw.close();*/
+					//for now will edit end of file
+					long fileLength = toEdit.length();
+					raf.seek(fileLength);
+				    raf.writeBytes(toAdd);
+				    raf.close();
+				}
+			} catch(IOException e){
+				e.printStackTrace();
+	        }
+			
 		}
-		
 	}
 	
 	/**
@@ -27,6 +64,9 @@ public class EditAssistant extends Observable
 	 */
 	public void deleteText(String toDelete)
 	{
+		if (currUser.getPermission() < 3) {
+			//User can type
+		}
 	}
 
 	/**
@@ -52,6 +92,10 @@ public class EditAssistant extends Observable
 	 * 
 	 * Redo's the last change made to the document
 	 */
+	/*
+	public void styling(Packet packet) {
+		
+	}*/
 	public void redoText()
 	{
 	}

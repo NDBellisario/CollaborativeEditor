@@ -68,10 +68,11 @@ public class CEController extends JFrame implements Serializable
 			if((boolean)inputStrm.readObject()){
 				setupGui();
 				new Thread(new ServerListener(serversoc)).start();
+				System.out.println("Connect");
 			}else{
-				JOptionPane.showMessageDialog(null, "Invald Account!");
-				JOptionPane.showInternalConfirmDialog(null, "Make Account");
-				
+				JOptionPane.showMessageDialog(this, "Invald Account!");
+				JOptionPane.showInternalConfirmDialog(this, "Make Account");
+				System.out.println("Bam you FAILED!");
 			}
 			
 			

@@ -35,7 +35,7 @@ public class EditAssistant extends Observable
 	 */
 	public void undoText()
 	{
-		return null;
+		
 	}
 	
 	public User getUser(String name) {

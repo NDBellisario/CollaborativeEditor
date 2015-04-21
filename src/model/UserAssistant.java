@@ -1,21 +1,23 @@
 package model;
 import java.util.*;
 
-public class UserAssistant<UserAssitant> extends Observable
+public class UserAssistant extends Observable
 {
-	UserAssistant theUser;
-	ArrayList<UserAssitant> userList;
-
-	public UserAssistant()
-	{
-	}	
+	User theUser;
+	ArrayList<User> userList;
 	
-	/**
-	 * Change the permissions of the users on the page
-	 * @param arg, depending on the integer, thats the new permission
-	 */
-	public void changePermissions(int arg)
+	//When would we ever create an instance of UserAssistant?
+	/*
+	public UserAssistant(String userName, String password, int permission)
+	{	
+		theUser = new User(userName, password, permission);
+		userList.add(theUser);
+	}	
+	*/
+
+	public void changePermissions(int permission) 
 	{
+		theUser.setPermission(permission);
 	}
 	/**
 	 * add a new user to the document
@@ -23,57 +25,35 @@ public class UserAssistant<UserAssitant> extends Observable
 	 * @param password
 	 * @param basePermissions
 	 */
-	public void addUser(String name, String password, String basePermissions)
+	//This is the equivalent of adding to the arraylist?
+	public void addUser(String name, String password, int basePermissions)
 	{
+		userList.add(theUser);
+		setChanged();
+		notifyObservers();
+	}
+	
+	/**
+	 * Give the user a new Password
+	 * @param username - User whose password is to be changed
+	 * @param newPassword - New password that user wants
+	 */
+	public void recoverPassword(String username, String newPassword)
+	{
+		for (User user : userList) {
+			if (user.userName.equals(username)) {
+				user.setPassword(newPassword);
+				setChanged();
+				notifyObservers();
+			}
+		}
 	}
 
 	/**
-	 * Give the user a new password
-	 * @param username
-	 */
-	public void recoverPassword(String username)
-	{
-	}
-	
-	/**
-	 * Set the users password
-	 * @param arg
-	 */
-	public void setPassword(String arg)
-	{
-	}
-	
-	/**
-	 * When the user creates his ID, he creates a UserName
-	 * @param arg
-	 */
-	public void setUsername(String arg)
-	{
-	}
-	
-	/**
-	 * Get the password from the user
-	 * @return
-	 */
-	public String getPassword()
-	{
-		return null;
-	}
-	
-	/**
-	 * Get a user's username
-	 * @return
-	 */
-	public String getUsername()
-	{
-		return null;
-	}
-	
-	/**
 	 * Get all the users
-	 * @return
+	 * @return The list of Users
 	 */
-	public ArrayList getUsers()
+	public ArrayList<User> getUsers()
 	{
 		return userList;
 	}

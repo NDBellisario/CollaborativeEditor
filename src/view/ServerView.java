@@ -54,8 +54,8 @@ public class ServerView extends JFrame
 	 */
 	public void youScrewedUp()
 	{
-		JOptionPane.showMessageDialog(this, "Somethings Wrong With That Port\nDefaulting To 9001");
-		portNumber = "9001";
+		JOptionPane.showMessageDialog(this, "Somethings Wrong With That Port\nDefaulting To 9002");
+		portNumber = "9002";
 	}
 	/*
 	 * This occurs when a user connects TODO: Make it say their actual name.
@@ -129,6 +129,7 @@ public class ServerView extends JFrame
 		theUsers.add("Cameron Morrell");
 		theUsers.add("Nick Bellisario");
 		theUsers.add("Omri Hazan");
+		theUsers.add("Blitzer");
 		theUsers.add("Barrack Obama");
 		theUsers.add("George Bush");
 		theUsers.add("Bill Clinton");
@@ -181,4 +182,6 @@ public class ServerView extends JFrame
 			userList.addElement(temp);
 
 	}
+	
+	
 }

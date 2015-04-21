@@ -124,18 +124,6 @@ public class ServerView extends JFrame
 		// TODO: Uncommment
 		// ArrayList<String> theUsers = passedUser.getUsers();
 		theUsers = new ArrayList<String>();
-		// TODO: Delete this stuff
-		theUsers.add("Taylor Cox");
-		theUsers.add("Cameron Morrell");
-		theUsers.add("Nick Bellisario");
-		theUsers.add("Omri Hazan");
-		theUsers.add("Blitzer");
-		theUsers.add("Barrack Obama");
-		theUsers.add("George Bush");
-		theUsers.add("Bill Clinton");
-		theUsers.add("Monika Lewinsky");
-		theUsers.add("Jim Gossling");
-		theUsers.add("Marco Rubio");
 		// ^^
 		for (String temp : theUsers)
 			userList.addElement(temp);

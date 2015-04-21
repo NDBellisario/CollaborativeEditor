@@ -27,8 +27,7 @@ import model.*;
  * Then create two new threads.  Editor and Chat which are bare now
  * 
  */
-public class CEServer extends JFrame
-{
+public class CEServer extends JFrame {
 
 	/**
 	 * 
@@ -44,8 +43,7 @@ public class CEServer extends JFrame
 	private ServerView ourView;
 	private ServerSocket ourServer;
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 
 		new CEServer();
 	}
@@ -54,8 +52,7 @@ public class CEServer extends JFrame
 	 * needed If a failed attempt to setup, uses a default port If we get
 	 * someone, we spawn an acceptor
 	 */
-	public CEServer()
-	{
+	public CEServer() {
 
 		this.chatLog = new ArrayList<String>(); // create the chat log
 		this.editsLog = new ArrayList<String>(); // log of edits
@@ -64,21 +61,17 @@ public class CEServer extends JFrame
 																	// map
 		ourView = new ServerView(theUsers);
 		int portNumber = ourView.getPortNumber();
-		try
-		{
+		try {
 			ourServer = new ServerSocket(portNumber);
 			ourView.roundTwo();
 			new Thread(new ClientAccepter()).start();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			ourView.youScrewedUp();
 			portNumber = ourView.getPortNumber();
 			new Thread(new ClientAccepter()).start();
-			try
-			{
+			try {
 				ourServer = new ServerSocket(portNumber);
-			} catch (IOException e1)
-			{
+			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -87,16 +80,13 @@ public class CEServer extends JFrame
 
 	}
 
-	public void updateChats(ArrayList<String> arg)
-	{
+	public void updateChats(ArrayList<String> arg) {
 	}
 
-	public void updateEdits(ArrayList<String> arg)
-	{
+	public void updateEdits(ArrayList<String> arg) {
 	}
 
-	public void updateUsers(ArrayList<String> arg)
-	{
+	public void updateUsers(ArrayList<String> arg) {
 	}
 	/*
 	 * This gets out input/output stream Reads in a login packed containing
@@ -104,18 +94,14 @@ public class CEServer extends JFrame
 	 * good, false means no If true, update list on server side and spawn an
 	 * edit and chat thread If false, let the client know so they can fix it.
 	 */
-	private class ClientAccepter implements Runnable
-	{
+	private class ClientAccepter implements Runnable {
 
 		String userName;
 		@Override
-		public void run()
-		{
-			while (true)
-			{
+		public void run() {
+			while (true) {
 				Socket temp;
-				try
-				{
+				try {
 					temp = ourServer.accept();
 					ObjectOutputStream output = new ObjectOutputStream(temp.getOutputStream());
 					ObjectInputStream input = new ObjectInputStream(temp.getInputStream());
@@ -124,24 +110,21 @@ public class CEServer extends JFrame
 					LoginPacket userLogin = (LoginPacket) input.readObject();
 					// TODO: Check to see if username and password are correct
 					// TODO: Instead of username, client name?
-					boolean correctInfo = userLogin.execute();
-					if (correctInfo)
-					{
+					boolean correctInfo = userLogin.execute(theUsers);
+					if (correctInfo) {
 						userName = userLogin.getName();
 						outputs.put(userName, output);
 						// spawn a thread to handle communication with this
 						// client
 						clientInit();
 						new Thread(new ClientHandler(input, output)).start();
-					} else
-					{
+					} else {
 
 						System.out.println("BBBB");
 						output.writeObject(correctInfo);
 					}
 
-				} catch (IOException | ClassNotFoundException e)
-				{
+				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();
 				}
 
@@ -152,8 +135,7 @@ public class CEServer extends JFrame
 		 * Simply adds our client to our list and calls update in view Also
 		 * popup saying someone connected
 		 */
-		private void clientInit()
-		{
+		private void clientInit() {
 			// Updating the client list!
 			activeUsers.add(userName);
 			ourView.updateClients(activeUsers);
@@ -165,27 +147,34 @@ public class CEServer extends JFrame
 	/*
 	 * Bare bones now, just stores the input and output stream of a client
 	 */
-	private class ClientHandler implements Runnable
-	{
+	private class ClientHandler implements Runnable {
 
-		private ObjectInputStream editorInput;
-		private ObjectOutputStream editorOutput;
-		public ClientHandler(ObjectInputStream inputArg, ObjectOutputStream outputArg)
-		{
-			editorInput = inputArg;
-			editorOutput = outputArg;
+		private ObjectInputStream inputStream;
+		private ObjectOutputStream outputStream;
+		public ClientHandler(ObjectInputStream inputArg, ObjectOutputStream outputArg) {
+			inputStream = inputArg;
+			outputStream = outputArg;
 		}
 
 		@Override
-		public void run()
-		{
-			// TODO This is going to handle making sure the client is fully
-			// updated right!
+		public void run() {
+			while (true) {
+				editRun();
+				chatRun();
+
+			}
+		}
+		/* This will deal with editor updates */
+		public void editRun() {
+
+		}
+		/* This will deal with chat updates */
+		public void chatRun() {
+
 		}
 	}
 	/*
 	 * Bare bones now, just stores the input and output stream of a client
 	 */
-	
 
 }

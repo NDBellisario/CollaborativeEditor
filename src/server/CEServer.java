@@ -31,7 +31,13 @@ import model.*;
  * Then create two new threads.  Editor and Chat which are bare now
  * 
  */
+
 public class CEServer extends JFrame implements Serializable {
+=======
+
+public class CEServer extends JFrame implements Serializable
+{
+>>>>>>> Stashed changes
 
 	/**
 	 * 

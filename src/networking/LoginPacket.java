@@ -1,14 +1,13 @@
 package networking;
 
 
-public class LoginPacket {
-=======
+
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class LoginPacket extends Packet implements Serializable 
+public class LoginPacket implements Serializable 
 {
->>>>>>> Stashed changes
+
 
 	String userName;
 	String password;

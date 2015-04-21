@@ -32,12 +32,11 @@ import model.*;
  * 
  */
 
-public class CEServer extends JFrame implements Serializable {
-=======
+
 
 public class CEServer extends JFrame implements Serializable
 {
->>>>>>> Stashed changes
+
 
 	/**
 	 * 

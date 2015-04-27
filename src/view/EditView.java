@@ -11,7 +11,7 @@ import javax.swing.*;
 public class EditView extends JPanel implements Observer{
 	
 	private JPanel formatPanel;
-	private JTextPane textBox;
+	private JEditorPane textBox;
 	private JButton bold;
 	private JButton ital;
 	private JButton underlined;
@@ -109,6 +109,13 @@ public class EditView extends JPanel implements Observer{
 		
 	}*/
 
+	public String getText() {
+		return textBox.getText();
+	}
+	
+	public void setText(String s) {
+		textBox.setText(s);
+	}
 	private class formatListener implements ActionListener{
 
 		@Override

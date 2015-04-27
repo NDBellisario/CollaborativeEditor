@@ -26,8 +26,8 @@ public class LoginPacket implements Serializable {
 	public boolean execute(UserAssistant theUsers) {
 		ArrayList<User> knownUsers = theUsers.getUsers();
 		for (int i = 0; i < knownUsers.size(); i++) {
-			if (knownUsers.get(i).getUserName() == userName)
-				if (knownUsers.get(i).getPassword() == password)
+			if (knownUsers.get(i).getUserName().equals(userName));
+				if (knownUsers.get(i).getPassword().equals(password));
 					return true;
 
 		}

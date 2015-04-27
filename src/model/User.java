@@ -30,11 +30,11 @@ public class User implements Serializable{
 	 */
 	//Sketchy to return a boolean?
 	public boolean setUserName(String userName) {
-		if (userName.length() > 4) {
+		//if (userName.length() > 4) {
 			this.userName = userName;
 			return true;
-		}
-		return false;
+		//}
+		//return false;
 	}
 	
 	
@@ -45,13 +45,13 @@ public class User implements Serializable{
 	 * @return true if the password was set correctly, false otherwise
 	 */
 	public boolean setPassword(String password) {
-		if (password.length() > 4) {
+		//if (password.length() > 4) {
 			this.password = password;
 			return true;
-		}
-		else {
-			return false;
-		}	
+		//}
+		//else {
+		//	return false;
+		//}	
 		
 	}
 	/**

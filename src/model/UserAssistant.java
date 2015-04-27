@@ -24,8 +24,8 @@ public class UserAssistant extends Observable {
 	public void addUser(String userName, String password, int permission)
 	{
 		userList.add(new User(userName, password, permission));
-		setChanged();
-		notifyObservers();
+		//setChanged();
+		//notifyObservers();
 	}
 	
 	public User getUser(String username) {

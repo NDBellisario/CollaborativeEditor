@@ -3,16 +3,12 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
-import networking.LoginPacket;
-import view.ServerView;
+import networking.*;
+import view.*;
 import model.*;
-
+/* Test Username: cat Password = meow */
 /*
  * Written by Taylor Cox
  * Here's what Happens
@@ -29,8 +25,24 @@ import model.*;
  * Then create two new threads.  Editor and Chat which are bare now
  * 
  */
-public class CEServer extends JFrame {
 
+/*
+ * Packet Order!
+ * 
+ * 1.	Recieved: LogInPacket
+ * 			.Execute() which returns a boolean value if info matched on file
+ * 2.	Sent: Boolean Value
+ * 			True = Login Successful, False = Info doesn't match
+ * 3.	Sent: The User object of who connected
+ * 			The Client then should create GUI based on this User
+ * 4.	Recieved:
+ * 			Packet with text to add
+ * 5.	Sent:
+ * 			Updated master text field
+ * 
+ * Second Packet 
+ */
+public class CEServer extends JFrame {
 	/**
 	 * 
 	 */
@@ -43,10 +55,9 @@ public class CEServer extends JFrame {
 	private UserAssistant theUsers;
 	private ArrayList<String> activeUsers;
 	private ServerView ourView;
-	private ServerSocket ourServer;
-
+	private static ServerSocket ourServer;
+	private String masterList;
 	public static void main(String[] args) {
-
 		new CEServer();
 	}
 	/*
@@ -60,9 +71,10 @@ public class CEServer extends JFrame {
 		this.editsLog = new ArrayList<String>(); // log of edits
 		this.activeUsers = new ArrayList<String>(); // log of edits
 		this.outputs = new HashMap<String, ObjectOutputStream>(); // setup the
-																	// map
+		masterList = "This is coming from the server"; // map
 		RevisionAssistant revStack = new RevisionAssistant();
 		this.theUsers = new UserAssistant();
+		theUsers.addUser("cat", "meow", 3);
 		ourView = new ServerView(theUsers);
 		int portNumber = ourView.getPortNumber();
 		try {
@@ -81,25 +93,19 @@ public class CEServer extends JFrame {
 			}
 			ourView.roundTwo();
 		}
-
 	}
-
 	public void updateChats(ArrayList<String> arg) {
 	}
-
 	public void updateEdits(ArrayList<String> arg) {
 	}
-
 	public void updateUsers(ArrayList<String> arg) {
 	}
 	/*
-	 * This gets out input/output stream Reads in a login packed containing
-	 * username and password Executes and gets a boolean. True means we are
-	 * good, false means no If true, update list on server side and spawn an
-	 * edit and chat thread If false, let the client know so they can fix it.
+	 * This class accepts connections from the server, gathers the streams of
+	 * the socket, and passes it onto a new thread who's goal is to initialize
+	 * the connection and have the user login
 	 */
 	private class ClientAccepter implements Runnable {
-
 		String userName;
 		@Override
 		public void run() {
@@ -109,45 +115,63 @@ public class CEServer extends JFrame {
 					temp = ourServer.accept();
 					ObjectOutputStream output = new ObjectOutputStream(temp.getOutputStream());
 					ObjectInputStream input = new ObjectInputStream(temp.getInputStream());
-
-					// read if clients username/password are correct
-					LoginPacket userLogin = (LoginPacket) input.readObject();
-					// TODO: Check to see if username and password are correct
-					// TODO: Instead of username, client name?
-					boolean correctInfo = userLogin.execute(theUsers);
-					if (correctInfo) {
-						//theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
-						User toPass = theUsers.getUser(userLogin.getName());
-						userName = userLogin.getName();
-						output.writeObject(correctInfo);
-						output.writeObject(toPass);
-
-						outputs.put(userLogin.getName(), output);
-						// spawn a thread to handle communication with this
-						// client
-						clientInit();
-						new Thread(new ClientHandler(input, output, toPass)).start();
-					} else {
-
-						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
-						userName = userLogin.getName();
-						User toPass = theUsers.getUser(userLogin.getName());
-						output.writeObject(correctInfo);
-						output.writeObject(toPass);
-
-						outputs.put(userLogin.getName(), output);
-						// spawn a thread to handle communication with this
-						// client
-						clientInit();
-						new Thread(new ClientHandler(input, output, toPass)).start();
-					}
-
-				} catch (IOException | ClassNotFoundException e) {
+					new Thread(new ClientListener(temp, output, input)).start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 			}
-
+		}
+	}
+	/*
+	 * This gets out input/output stream Reads in a login packed containing
+	 * username and password Executes and gets a boolean. True means we are
+	 * good, false means no If true, update list on server side and spawn an
+	 * edit and chat thread If false, let the client know so they can fix it.
+	 */
+	private class ClientListener implements Runnable {
+		private ObjectOutputStream output;
+		private ObjectInputStream input;
+		private Socket tempSocket;
+		private String userName;
+		public ClientListener(Socket socketArg, ObjectOutputStream argOutput, ObjectInputStream argInput) {
+			tempSocket = socketArg;
+			input = argInput;
+			output = argOutput;
+		}
+		@Override
+		public void run() {
+			try {
+				// read if clients username/password are correct
+				LoginPacket userLogin = (LoginPacket) input.readObject();
+				// TODO: Check to see if username and password are correct
+				// TODO: Instead of username, client name?
+				boolean correctInfo = userLogin.execute(theUsers);
+				if (correctInfo) {
+					userName = userLogin.getName();
+					User toPass = theUsers.getUser(userLogin.getName());
+					output.writeObject(correctInfo);
+					output.writeObject(toPass);
+					outputs.put(userLogin.getName(), output);
+					// spawn a thread to handle communication with this
+					// client
+					clientInit();
+					new Thread(new ClientHandler(input, output, toPass)).start();
+				} else {
+					theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
+					userName = userLogin.getName();
+					User toPass = theUsers.getUser(userLogin.getName());
+					output.writeObject(correctInfo);
+					output.writeObject(toPass);
+					outputs.put(userLogin.getName(), output);
+					// spawn a thread to handle communication with this
+					// client
+					clientInit();
+					new Thread(new ClientHandler(input, output, toPass)).start();
+				}
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 		/*
 		 * Simply adds our client to our list and calls update in view Also
@@ -159,38 +183,38 @@ public class CEServer extends JFrame {
 			ourView.updateClients(activeUsers);
 			ourView.userConnect();
 			// TODO: Send the clients cool stuff
-
 		}
 	}
 	/*
-	 * Bare bones now, just stores the input and output stream of a client
+	 * Bare bones now, working with the beginning functionality of revisions and
+	 * how those are sent to the Users via packets
 	 */
 	private class ClientHandler implements Runnable {
-
 		private ObjectInputStream inputStream;
 		private ObjectOutputStream outputStream;
 		private User mainUser;
-		
 		public ClientHandler(ObjectInputStream inputArg, ObjectOutputStream outputArg, User user) {
 			inputStream = inputArg;
 			outputStream = outputArg;
 			mainUser = user;
-			
-			run();
 		}
-
+		/*
+		 * What's happening? Client sends a packet with the new text to add The
+		 * packet's execute creates a new revision instance Updates master list,
+		 * and writes it out!
+		 */
 		@Override
 		public void run() {
 			while (true) {
-				//editRun();
-				//chatRun();
 				try {
-					Revision revision = new Revision(mainUser, (String) inputStream.readObject());
-					RevisionAssistant.revisionStack.add(revision);
-					
-					String revText = revision.getText();
-					outputStream.writeObject(revText);
-					
+					EditPacket readPacket = (EditPacket) inputStream.readObject();
+					masterList = readPacket.execute(mainUser);
+					// Done in .execute
+					// Revision revision = new Revision(mainUser, (String)
+					// inputStream.readObject());
+					// RevisionAssistant.revisionStack.add(revision);
+					// String revText = revision.getText();
+					outputStream.writeObject(masterList);
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -198,21 +222,7 @@ public class CEServer extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-
 			}
 		}
-		/* This will deal with editor updates */
-		public void editRun() {
-
-		}
-		/* This will deal with chat updates */
-		public void chatRun() {
-
-		}
 	}
-	/*
-	 * Bare bones now, just stores the input and output stream of a client
-	 */
-
 }

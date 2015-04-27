@@ -1,8 +1,12 @@
 package view;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 import javax.swing.*;
+
 import model.UserAssistant;
 
 /*
@@ -97,12 +101,22 @@ public class ServerView extends JFrame
 		fileMenu.add(aboutItem);
 
 		quitItem = new JMenuItem("Quit");// item that will quit the program
-		// quitItem.addActionListener(new QuitActionListener());//action
+		quitItem.addActionListener(new QuitActionListener());//action
 		// listener to quit the application
 		fileMenu.add(quitItem);
 
 		theMenuBar.add(fileMenu);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
+	// quits Server connection
+	private class QuitActionListener implements ActionListener{
 
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			System.exit(0);
+		}
+		
 	}
 	/*
 	 * This sets up the info of who is on our server!

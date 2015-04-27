@@ -13,8 +13,8 @@ public class LoginPacket implements Serializable {
 	String password;
 
 	public LoginPacket(String uname, String pw) {
-		userName = uname;
-		password = pw;
+		this.userName = uname;
+		this.password = pw;
 	}
 	public String getName() {
 		return userName;

@@ -30,7 +30,7 @@ public class UserAssistant extends Observable {
 	
 	public User getUser(String username) {
 		for (User user : userList) {
-			if (user.userName.equals(username)) {
+			if (user.getUserName().equalsIgnoreCase(username)) {
 				return user;
 			} 
 		}

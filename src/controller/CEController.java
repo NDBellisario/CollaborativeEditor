@@ -65,23 +65,18 @@ public class CEController extends JFrame implements Serializable
 			inputStrm = new ObjectInputStream(serversoc.getInputStream());
 		
 			outputStrm.writeObject(lPK);
-			
 			if((boolean)inputStrm.readObject()){
+				user = (User)inputStrm.readObject();
+				JOptionPane.showMessageDialog(this,"Welcome Back!");
 				setupGui();
 				new Thread(new ServerListener(serversoc)).start();
-				System.out.println("Connect");
 			}else{
-				
+				user = (User)inputStrm.readObject();
 				JOptionPane.showMessageDialog(this, "non exisiting acocunt!/n new account made!");
 				setupGui();
 				new Thread(new ServerListener(serversoc)).start();
 			}
-			
-			
-			
-			
-			
-			
+		
 		}catch(Exception e){
 			e.printStackTrace();
 			

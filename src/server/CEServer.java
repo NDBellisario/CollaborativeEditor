@@ -114,6 +114,8 @@ public class CEServer extends JFrame {
 					boolean correctInfo = userLogin.execute(theUsers);
 					if (correctInfo) {
 						userName = userLogin.getName();
+						User toPass = theUsers.getUser(userLogin.getName());
+						output.writeObject(toPass);
 						outputs.put(userName, output);
 						// spawn a thread to handle communication with this
 						// client
@@ -123,7 +125,8 @@ public class CEServer extends JFrame {
 
 						output.writeObject(correctInfo);
 						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
-						theusers,getUser
+						User toPass = theUsers.getUser(userLogin.getName());
+						output.writeObject(toPass);
 					}
 
 				} catch (IOException | ClassNotFoundException e) {

@@ -44,9 +44,8 @@ public class RevisionAssistant extends EditAssistant
 	{
 	}
 	
-	public void addRevision(String text, User user, int count) {
-		Revision toAdd = new Revision(user, text);
-		revisionStack.add(toAdd);
+	public void addRevision(Revision revision) {
+		revisionStack.push(revision);
 	}
 	
 	public Stack<Revision> getStack() {

@@ -11,5 +11,9 @@ public class Revision {
 			revisor = user;
 			revision = text;
 		}
+		
+		public String getText() {
+			return revision;
+		}
 
 	}

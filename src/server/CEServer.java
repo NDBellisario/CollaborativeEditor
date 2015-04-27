@@ -178,6 +178,10 @@ public class CEServer extends JFrame {
 				//chatRun();
 				try {
 					Revision revision = new Revision(mainUser, (String) inputStream.readObject());
+					RevisionAssistant.revisionStack.add(revision);
+					
+					String revText = revision.getText();
+					outputStream.writeObject(revText);
 					
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block

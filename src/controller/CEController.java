@@ -72,7 +72,7 @@ public class CEController extends JFrame implements Serializable
 				new Thread(new ServerListener(serversoc)).start();
 			}else{
 				user = (User)inputStrm.readObject();
-				JOptionPane.showMessageDialog(this, "non exisiting acocunt!/n new account made!");
+				JOptionPane.showMessageDialog(this, "non exisiting acocunt!\n new account made!");
 				setupGui();
 				new Thread(new ServerListener(serversoc)).start();
 			}

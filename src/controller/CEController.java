@@ -87,7 +87,7 @@ public class CEController extends JFrame implements Serializable {
 			outputStrm.writeObject(lPK);
 			if ((boolean) inputStrm.readObject()) {
 				user = (User) inputStrm.readObject();
-				
+
 				setupGui();
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
@@ -309,13 +309,15 @@ public class CEController extends JFrame implements Serializable {
 
 		@Override
 		public void run() {
-			try {
-				editView.setText((String) inputStrm.readObject());
-			} catch (ClassNotFoundException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			while (true) {
+				try {
+					editView.setText((String) inputStrm.readObject());
+				} catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
+			}
 		}
 
 	}

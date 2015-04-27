@@ -5,10 +5,11 @@ import java.util.Stack;
 public class RevisionAssistant extends EditAssistant
 {
 	
-	public Stack<Revision> revisionStack;
+	public static Stack<Revision> revisionStack;
 	
 	public RevisionAssistant()
 	{
+		revisionStack = new Stack<Revision>();
 	}
 	
 	/**
@@ -53,18 +54,6 @@ public class RevisionAssistant extends EditAssistant
 		return temp;
 	}
 	
-	private class Revision {
-		
-		//private int revisionCount;
-		private User revisor;
-		private String revision;
-		
-		Revision(User user, String text) {//, int count) {
-			//revisionCount = count;
-			revisor = user;
-			revision = text;
-		}
 
-	}
 
 }

@@ -2,11 +2,13 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+
 import networking.LoginPacket;
 import view.ServerView;
 import model.*;
@@ -59,6 +61,7 @@ public class CEServer extends JFrame {
 		this.activeUsers = new ArrayList<String>(); // log of edits
 		this.outputs = new HashMap<String, ObjectOutputStream>(); // setup the
 																	// map
+		RevisionAssistant revStack = new RevisionAssistant();
 		this.theUsers = new UserAssistant();
 		ourView = new ServerView(theUsers);
 		int portNumber = ourView.getPortNumber();
@@ -173,7 +176,16 @@ public class CEServer extends JFrame {
 			while (true) {
 				//editRun();
 				//chatRun();
-				//String revision = inputStream.readObject();
+				try {
+					Revision revision = new Revision(mainUser, (String) inputStream.readObject());
+					
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 
 			}

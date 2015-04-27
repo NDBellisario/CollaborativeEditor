@@ -53,16 +53,17 @@ public class CEController extends JFrame implements Serializable
 		
 	}
 	private void initUserModels(){
-		String userName=JOptionPane.showInputDialog("Username");
-		String passWord=JOptionPane.showInputDialog("Password");
+	String userName=JOptionPane.showInputDialog("Username");
+	String passWord=JOptionPane.showInputDialog("Password");
 		
-		LoginPacket lPK = new LoginPacket(userName, passWord);
+		
+	LoginPacket lPK = new LoginPacket(userName, passWord);
 		enterCredentials();
 		try{
 			serversoc = new Socket(serverAddress, Integer.parseInt(port));
 			outputStrm = new ObjectOutputStream(serversoc.getOutputStream());
 			inputStrm = new ObjectInputStream(serversoc.getInputStream());
-			
+		
 			outputStrm.writeObject(lPK);
 			
 			if((boolean)inputStrm.readObject()){
@@ -70,10 +71,13 @@ public class CEController extends JFrame implements Serializable
 				new Thread(new ServerListener(serversoc)).start();
 				System.out.println("Connect");
 			}else{
-				JOptionPane.showMessageDialog(this, "Invald Account!");
-				JOptionPane.showInternalConfirmDialog(this, "Make Account");
-				System.out.println("Bam you FAILED!");
+				
+				JOptionPane.showMessageDialog(this, "non exisiting acocunt!/n new account made!");
+				setupGui();
+				new Thread(new ServerListener(serversoc)).start();
 			}
+			
+			
 			
 			
 			

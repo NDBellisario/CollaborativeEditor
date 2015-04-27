@@ -19,14 +19,16 @@ public class LoginPacket implements Serializable {
 	public String getName() {
 		return userName;
 	}
+	public String getPassword() {
+		return password;
+	}
 
 	public boolean execute(UserAssistant theUsers) {
 		ArrayList<User> knownUsers = theUsers.getUsers();
-		for(int i = 0; i < knownUsers.size(); i++)
-		{
-			if(knownUsers.get(i).getUserName() == userName)
-						if(knownUsers.get(i).getPassword() == password)
-							return true;
+		for (int i = 0; i < knownUsers.size(); i++) {
+			if (knownUsers.get(i).getUserName() == userName)
+				if (knownUsers.get(i).getPassword() == password)
+					return true;
 
 		}
 

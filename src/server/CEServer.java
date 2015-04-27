@@ -119,11 +119,11 @@ public class CEServer extends JFrame {
 						// client
 						clientInit();
 						new Thread(new ClientHandler(input, output)).start();
-						System.out.println("AAAA");
 					} else {
 
-						System.out.println("BBBB");
 						output.writeObject(correctInfo);
+						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
+						theusers,getUser
 					}
 
 				} catch (IOException | ClassNotFoundException e) {

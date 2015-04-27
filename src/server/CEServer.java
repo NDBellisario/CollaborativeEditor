@@ -120,7 +120,7 @@ public class CEServer extends JFrame {
 						// spawn a thread to handle communication with this
 						// client
 						clientInit();
-						new Thread(new ClientHandler(input, output)).start();
+						new Thread(new ClientHandler(input, output, toPass)).start();
 					} else {
 
 						output.writeObject(correctInfo);
@@ -156,16 +156,23 @@ public class CEServer extends JFrame {
 
 		private ObjectInputStream inputStream;
 		private ObjectOutputStream outputStream;
-		public ClientHandler(ObjectInputStream inputArg, ObjectOutputStream outputArg) {
+		private User mainUser;
+		
+		public ClientHandler(ObjectInputStream inputArg, ObjectOutputStream outputArg, User user) {
 			inputStream = inputArg;
 			outputStream = outputArg;
+			mainUser = user;
+			
+			run();
 		}
 
 		@Override
 		public void run() {
 			while (true) {
-				editRun();
-				chatRun();
+				//editRun();
+				//chatRun();
+				//String revision = inputStream.readObject();
+				
 
 			}
 		}

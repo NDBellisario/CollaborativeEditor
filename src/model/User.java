@@ -30,7 +30,7 @@ public class User implements Serializable{
 	 */
 	//Sketchy to return a boolean?
 	public boolean setUserName(String userName) {
-		if (userName.length() < 4) {
+		if (userName.length() > 4) {
 			this.userName = userName;
 			return true;
 		}

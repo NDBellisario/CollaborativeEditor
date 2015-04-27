@@ -43,16 +43,26 @@ public class RevisionAssistant extends EditAssistant
 	{
 	}
 	
+	public void addRevision(String text, User user, int count) {
+		Revision toAdd = new Revision(user, text);
+		revisionStack.add(toAdd);
+	}
+	
+	public Stack<Revision> getStack() {
+		Stack<Revision> temp = revisionStack;
+		return temp;
+	}
+	
 	private class Revision {
 		
-		private int revisionCount;
+		//private int revisionCount;
 		private User revisor;
 		private String revision;
 		
-		Revision(User user, String text, int count) {
-			this.revisionCount = count;
-			this.revisor = user;
-			this.revision = text;
+		Revision(User user, String text) {//, int count) {
+			//revisionCount = count;
+			revisor = user;
+			revision = text;
 		}
 
 	}

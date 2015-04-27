@@ -113,7 +113,7 @@ public class CEServer extends JFrame {
 					// TODO: Instead of username, client name?
 					boolean correctInfo = userLogin.execute(theUsers);
 					if (correctInfo) {
-						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
+						//theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
 						User toPass = theUsers.getUser(userLogin.getName());
 						output.writeObject(correctInfo);
 						output.writeObject(toPass);

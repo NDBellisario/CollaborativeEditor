@@ -132,6 +132,12 @@ public class CEServer extends JFrame {
 						User toPass = theUsers.getUser(userLogin.getName());
 						output.writeObject(correctInfo);
 						output.writeObject(toPass);
+
+						outputs.put(userLogin.getName(), output);
+						// spawn a thread to handle communication with this
+						// client
+						clientInit();
+						new Thread(new ClientHandler(input, output, toPass)).start();
 					}
 
 				} catch (IOException | ClassNotFoundException e) {

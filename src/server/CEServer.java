@@ -118,6 +118,7 @@ public class CEServer extends JFrame {
 					if (correctInfo) {
 						//theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
 						User toPass = theUsers.getUser(userLogin.getName());
+						userName = userLogin.getName();
 						output.writeObject(correctInfo);
 						output.writeObject(toPass);
 
@@ -129,6 +130,7 @@ public class CEServer extends JFrame {
 					} else {
 
 						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
+						userName = userLogin.getName();
 						User toPass = theUsers.getUser(userLogin.getName());
 						output.writeObject(correctInfo);
 						output.writeObject(toPass);

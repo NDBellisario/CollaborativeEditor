@@ -1,6 +1,12 @@
 package model;
+
+import java.util.Stack;
+
 public class RevisionAssistant extends EditAssistant
 {
+	
+	public Stack<Revision> revisionStack;
+	
 	public RevisionAssistant()
 	{
 	}
@@ -36,4 +42,19 @@ public class RevisionAssistant extends EditAssistant
 	public void newDoc()
 	{
 	}
+	
+	private class Revision {
+		
+		private int revisionCount;
+		private User revisor;
+		private String revision;
+		
+		Revision(User user, String text, int count) {
+			this.revisionCount = count;
+			this.revisor = user;
+			this.revision = text;
+		}
+
+	}
+
 }

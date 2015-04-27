@@ -3,10 +3,11 @@ package model;
 import java.util.*;
 
 public class UserAssistant extends Observable {
+	
 	ArrayList<User> userList;
 
 	// When would we ever create an instance of UserAssistant?
-
+	
 	public UserAssistant() {
 
 		userList = new ArrayList<User>();
@@ -25,6 +26,16 @@ public class UserAssistant extends Observable {
 		userList.add(new User(userName, password, permission));
 		setChanged();
 		notifyObservers();
+	}
+	
+	public User getUser(String username) {
+		for (User user : userList) {
+			if (user.userName.equals(username)) {
+				return user;
+			} 
+		}
+		//If user doesn't exist
+		return null;
 	}
 
 	/**

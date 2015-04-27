@@ -1,7 +1,13 @@
 package model;
+import java.io.Serializable;
 import java.net.InetAddress;
 
-public class User implements Comparable<User>{
+public class User implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	String password;
 	String userName;
@@ -15,6 +21,7 @@ public class User implements Comparable<User>{
 		setPassword(password);
 		setPermission(permission);
 	}	
+	
 	
 	/**
 	 * 

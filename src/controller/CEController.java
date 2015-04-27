@@ -305,6 +305,15 @@ public class CEController extends JFrame implements Serializable {
 					}
 					System.out.println("hey");
 				}
+				try {
+					editView.setText((String) inputStrm.readObject());
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 

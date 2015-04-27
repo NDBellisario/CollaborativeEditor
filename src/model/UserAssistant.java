@@ -7,10 +7,9 @@ public class UserAssistant extends Observable {
 
 	// When would we ever create an instance of UserAssistant?
 
-	public UserAssistant(String userName, String password, int permission) {
+	public UserAssistant() {
 
 		userList = new ArrayList<User>();
-		addUser(userName, password, permission);
 	}
 
 	/**

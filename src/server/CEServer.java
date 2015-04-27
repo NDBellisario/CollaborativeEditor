@@ -59,6 +59,7 @@ public class CEServer extends JFrame {
 		this.activeUsers = new ArrayList<String>(); // log of edits
 		this.outputs = new HashMap<String, ObjectOutputStream>(); // setup the
 																	// map
+		this.theUsers = new UserAssistant();
 		ourView = new ServerView(theUsers);
 		int portNumber = ourView.getPortNumber();
 		try {
@@ -118,6 +119,7 @@ public class CEServer extends JFrame {
 						// client
 						clientInit();
 						new Thread(new ClientHandler(input, output)).start();
+						System.out.println("AAAA");
 					} else {
 
 						System.out.println("BBBB");

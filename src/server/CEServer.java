@@ -147,28 +147,23 @@ public class CEServer extends JFrame {
 				// TODO: Check to see if username and password are correct
 				// TODO: Instead of username, client name?
 				boolean correctInfo = userLogin.execute(theUsers);
-				if (correctInfo) {
-					userName = userLogin.getName();
-					User toPass = theUsers.getUser(userLogin.getName());
-					output.writeObject(correctInfo);
-					output.writeObject(toPass);
-					outputs.put(userLogin.getName(), output);
-					// spawn a thread to handle communication with this
-					// client
-					clientInit();
-					new Thread(new ClientHandler(input, output, toPass)).start();
-				} else {
-					theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
-					userName = userLogin.getName();
-					User toPass = theUsers.getUser(userLogin.getName());
-					output.writeObject(correctInfo);
-					output.writeObject(toPass);
-					outputs.put(userLogin.getName(), output);
-					// spawn a thread to handle communication with this
-					// client
-					clientInit();
-					new Thread(new ClientHandler(input, output, toPass)).start();
+				User toPass;
+				if (correctInfo == false) {
+					toPass = theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
+					
+
 				}
+				else
+				{
+					toPass = theUsers.getUser(userName);
+				}
+				userName = userLogin.getName();
+				
+				output.writeObject(correctInfo);
+				output.writeObject(toPass);
+				outputs.put(userLogin.getName(), output);
+				clientInit();
+				new Thread(new ClientHandler(input, output, toPass)).start();
 			} catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -207,8 +202,10 @@ public class CEServer extends JFrame {
 		public void run() {
 			while (true) {
 				try {
-					/* TODO: Note server throwing massive End of File exception the reporting in this run
-					   TODO: any ideas? */ 
+					/*
+					 * TODO: Note server throwing massive End of File exception
+					 * the reporting in this run TODO: any ideas?
+					 */
 					EditPacket readPacket = (EditPacket) inputStream.readObject();
 					masterList = readPacket.execute(mainUser);
 					// Done in .execute

@@ -21,9 +21,11 @@ public class UserAssistant extends Observable {
 	 * @param basePermissions
 	 */
 	// This is the equivalent of adding to the arraylist?
-	public void addUser(String userName, String password, int permission)
+	public User addUser(String userName, String password, int permission)
 	{
-		userList.add(new User(userName, password, permission));
+		User toReturn = new User(userName, password, permission);
+		userList.add(toReturn);
+		return toReturn;
 		//setChanged();
 		//notifyObservers();
 	}

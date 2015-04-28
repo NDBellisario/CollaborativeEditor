@@ -85,7 +85,8 @@ public class CEController extends JFrame implements Serializable {
 			outputStrm = new ObjectOutputStream(serversoc.getOutputStream());
 			inputStrm = new ObjectInputStream(serversoc.getInputStream());
 			outputStrm.writeObject(lPK);
-			if ((boolean) inputStrm.readObject()) {
+			boolean toTest = (boolean) inputStrm.readObject();
+			if (toTest) {
 				user = (User) inputStrm.readObject();
 
 				setupGui();
@@ -93,7 +94,7 @@ public class CEController extends JFrame implements Serializable {
 				new Thread(new ServerRevisionRead()).start();
 			} else {
 				user = (User) inputStrm.readObject();
-				JOptionPane.showMessageDialog(this, "Non Exisiting Acocunt!\n New Account Made!");
+				//JOptionPane.showMessageDialog(this, "Non Exisiting Acocunt!\n New Account Made!");
 				setupGui();
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
@@ -173,8 +174,8 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		chatView = new ChatView(user.getUserName());
-		editView = new EditView(user.getUserName() + " Client");
+		chatView = new ChatView("");
+		editView = new EditView("" + " Client");
 		this.setLayout(new BorderLayout());
 		this.add(chatView, BorderLayout.EAST);
 		this.add(editView, BorderLayout.CENTER);

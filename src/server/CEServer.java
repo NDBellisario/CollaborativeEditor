@@ -207,7 +207,7 @@ public class CEServer extends JFrame {
 		public void run() {
 			while (true) {
 				try {
-					/* TODO: Note server throwing massive End of File exception the repating in this run
+					/* TODO: Note server throwing massive End of File exception the reporting in this run
 					   TODO: any ideas? */ 
 					EditPacket readPacket = (EditPacket) inputStream.readObject();
 					masterList = readPacket.execute(mainUser);

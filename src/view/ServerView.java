@@ -3,6 +3,8 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -196,7 +198,16 @@ public class ServerView extends JFrame {
 
 			} else if (s.equals("Stop The Server")) {
 				JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(mainStuff), "Clicking 'OK' Will Close The Server");
-
+//				for(ObjectOutputStream arg : CEServer.outputs.values())
+//						{
+//							try {
+//								arg.close();
+//								arg.
+//							} catch (IOException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						}
 				System.exit(0);
 
 			}

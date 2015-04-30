@@ -47,7 +47,7 @@ public class CEServer extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private HashMap<String, ObjectOutputStream> outputs;
+	public static HashMap<String, ObjectOutputStream> outputs;
 	private ChatAssistant theChats;
 	private ArrayList<String> chatLog;
 	private EditAssistant theEdits;
@@ -96,12 +96,7 @@ public class CEServer extends JFrame {
 			ourView.roundTwo();
 		}
 	}
-	public void updateChats(ArrayList<String> arg) {
-	}
-	public void updateEdits(ArrayList<String> arg) {
-	}
-	public void updateUsers(ArrayList<String> arg) {
-	}
+
 	/*
 	 * This class accepts connections from the server, gathers the streams of
 	 * the socket, and passes it onto a new thread who's goal is to initialize

@@ -62,24 +62,60 @@ public class CEController extends JFrame implements Serializable {
 	private JMenuItem removeUser;
 	private JMenuItem changePermission;
 	private JMenuItem showOptions;
-	private User user;
+	private User mainUser;
 	private JPanel chatView;
 	private EditView editView;
 	JDialog serverconnect;
 	private Socket serversoc;
 	private ObjectOutputStream outputStrm;
 	private ObjectInputStream inputStrm;
-	private String serverAddress;
-	private String port;
+
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
 		initUserModels();
 	}
 	/* Connects to the server and makes sure the login info matches an account */
 	private void initUserModels() {
-		String userName = JOptionPane.showInputDialog("Username");
-		String passWord = JOptionPane.showInputDialog("Password");
+		// This will ask for an IP and port to connect to!
+		boolean enteredVariables = false;
+		//
+		JTextField field1 = new JTextField();
+		JTextField field2 = new JTextField();
+		JTextField field3 = new JTextField();
+		JTextField field4 = new JTextField();
+		String userName = "cat";
+		String passWord = "meow";
+		String serverAddress = "localhost";
+		String port = "9001";
+		Object[] message = {"Please Enter The Required Credentials\nTest Only, Leave Blank for Defaults\n\n", "Server:", field1, "Port:", field2, "Username:", field3, "Password:", field4,};
+		int option = JOptionPane.showConfirmDialog(this, message, "Enter all your values", JOptionPane.OK_CANCEL_OPTION);
+		if (option == JOptionPane.OK_OPTION) {
+			if (!field1.getText().equals(""))
+				if (!field1.getText().equals(""))
+					serverAddress = field1.getText();
+			if (!field2.getText().equals(""))
+				port = field2.getText();
+			if (!field3.getText().equals(""))
+				userName = field3.getText();
+			if (!field4.getText().equals(""))
+				passWord = field4.getText();
+		}
+		//
+		// serverAddress = null;
+		// port = null;
+		// while (!enteredVariables) {
+		// serverAddress = JOptionPane.showInputDialog("IPAddress");
+		// port = JOptionPane.showInputDialog("Port ID");
+		// if (serverAddress.length() >= 8 && port.length() >= 4) {
+		// return;
+		// }
+		// JOptionPane.showMessageDialog(null,
+		// "No Server information Try again");
+		// }
+		// Gather the username!
+		// String userName = JOptionPane.showInputDialog("Username");
+		// String passWord = JOptionPane.showInputDialog("Password");
 		LoginPacket lPK = new LoginPacket(userName, passWord);
-		enterCredentials();
+
 		try {
 			serversoc = new Socket(serverAddress, Integer.parseInt(port));
 			outputStrm = new ObjectOutputStream(serversoc.getOutputStream());
@@ -87,14 +123,15 @@ public class CEController extends JFrame implements Serializable {
 			outputStrm.writeObject(lPK);
 			boolean toTest = (boolean) inputStrm.readObject();
 			if (toTest) {
-				user = (User) inputStrm.readObject();
+				mainUser = (User) inputStrm.readObject();
 
 				setupGui();
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
 			} else {
-				user = (User) inputStrm.readObject();
-				//JOptionPane.showMessageDialog(this, "Non Exisiting Acocunt!\n New Account Made!");
+				mainUser = (User) inputStrm.readObject();
+				// JOptionPane.showMessageDialog(this,
+				// "Non Exisiting Acocunt!\n New Account Made!");
 				setupGui();
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
@@ -103,20 +140,7 @@ public class CEController extends JFrame implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	/* Deals with server connecting from user input */
-	private void enterCredentials() {
-		boolean enteredVariables = false;
-		serverAddress = null;
-		port = null;
-		while (!enteredVariables) {
-			serverAddress = JOptionPane.showInputDialog("IPAddress");
-			port = JOptionPane.showInputDialog("Port ID");
-			if (serverAddress.length() >= 8 && port.length() >= 4) {
-				return;
-			}
-			JOptionPane.showMessageDialog(null, "No Server information Try again");
-		}
-	}
+
 	/* Setups the GUI */
 	private void setupGui() {
 		// Permissions Pop up

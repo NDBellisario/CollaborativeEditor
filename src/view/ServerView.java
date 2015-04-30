@@ -166,7 +166,15 @@ public class ServerView extends JFrame {
 	 * How the CEServer gets the port
 	 */
 	public int getPortNumber() {
-		return Integer.parseInt(portNumber);
+
+		if (portNumber.equals(""))
+		{
+			portNumber = "9001";
+			return 9001;
+		}
+		else
+			return Integer.parseInt(portNumber);
+		
 
 	}
 	/*

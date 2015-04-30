@@ -136,7 +136,7 @@ public class CEController extends JFrame implements Serializable {
 			} else {
 				// JOptionPane.showInputDialog(this,"Non Exisiting Acocunt!\n New Account Made!");
 				field1.setText("");
-				Object[] invalidAccount = {"Invalid Account! What Would You Like To Do?\nLeave Blank To Create New Account\n\n", "Recover (Enter Username):", field1};
+				Object[] invalidAccount = {"Invalid Account! What Would You Like To Do?\nLeave Blank To Create New Account\n\n", "OR:\tRecover (Enter Username):", field1};
 				int option2 = JOptionPane.showConfirmDialog(this, invalidAccount, "ERROR", JOptionPane.OK_CANCEL_OPTION);
 				if (option2 == JOptionPane.OK_OPTION) {
 					outputStrm.writeObject(field1.getText());

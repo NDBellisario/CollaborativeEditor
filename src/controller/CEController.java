@@ -26,23 +26,6 @@ import networking.*;
  * 
  */
 
-/*
- * Packet Order!
- * 
- * 1.	Sent: LogInPacket
- * 			Username and Password of the User
- * 2.	Recieved: Boolean Value
- * 			True = Login Successful, False = Info doesn't match
- * 3.	Recieved: The User object of who connected
- * 			The Client then should create GUI based on this User
- * 4.	Sent
- * 			New Text Packet
- * 5.	Recieved:
- * 			New updated master list
- * 
- * Second Packet 
- */
-
 public class CEController extends JFrame implements Serializable {
 	/**
 	 * 
@@ -66,28 +49,30 @@ public class CEController extends JFrame implements Serializable {
 	private User mainUser;
 	private JPanel chatView;
 	private EditView editView;
-	JDialog serverconnect;
 	private Socket serversoc;
 	private ObjectOutputStream outputStrm;
 	private ObjectInputStream inputStrm;
-	private boolean newAcctBoolean;
+
+	public static void main(String[] args) {
+		new CEController(null, null, null);
+	}
 
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
 		initUserModels();
 	}
 	/* Connects to the server and makes sure the login info matches an account */
 	private void initUserModels() {
-		// This will ask for an IP and port to connect to!
-		boolean enteredVariables = false;
-		//
+		// Setting up the main data entry fields, un/pw/server stuff
 		JTextField field1 = new JTextField();
 		JTextField field2 = new JTextField();
 		JTextField field3 = new JTextField();
 		JTextField field4 = new JTextField();
-		String userName = "cat";
+		String userName = "cat"; // TODO: Delete this+4 lines down
 		String passWord = "meow";
 		String serverAddress = "localhost";
 		String port = "9001";
+		// The popup asking for credentials
+		// Also deals with getting the text and setting it
 		Object[] message = {"Please Enter The Required Credentials\nTest Only, Leave Blank for Defaults\n\n", "Server:", field1, "Port:", field2, "Username:", field3, "Password:", field4,};
 		int option = JOptionPane.showConfirmDialog(this, message, "Enter all your values", JOptionPane.OK_CANCEL_OPTION);
 		if (option == JOptionPane.OK_OPTION) {
@@ -101,58 +86,50 @@ public class CEController extends JFrame implements Serializable {
 			if (!field4.getText().equals(""))
 				passWord = field4.getText();
 		}
-		//
-		// serverAddress = null;
-		// port = null;
-		// while (!enteredVariables) {
-		// serverAddress = JOptionPane.showInputDialog("IPAddress");
-		// port = JOptionPane.showInputDialog("Port ID");
-		// if (serverAddress.length() >= 8 && port.length() >= 4) {
-		// return;
-		// }
-		// JOptionPane.showMessageDialog(null,
-		// "No Server information Try again");
-		// }
-		// Gather the username!
-		// String userName = JOptionPane.showInputDialog("Username");
-		// String passWord = JOptionPane.showInputDialog("Password");
+		// Login packet based off of the previously fields
 		LoginPacket lPK = new LoginPacket(userName, passWord);
-		newAcctBoolean = false;
 		try {
+			// COnnects to server, gets Streams, and writes out the packet
 			serversoc = new Socket(serverAddress, Integer.parseInt(port));
 			outputStrm = new ObjectOutputStream(serversoc.getOutputStream());
 			inputStrm = new ObjectInputStream(serversoc.getInputStream());
 			outputStrm.writeObject(lPK);
+			// Reads whether or not the login was a succcess/
 			boolean toTest = (boolean) inputStrm.readObject();
+			// If sm = grab the User, set up GUI w EditView, welcome back!
 			if (toTest) {
 				mainUser = (User) inputStrm.readObject();
 				setupGui();
 				JOptionPane.showMessageDialog(this, "Welcome Back!");
 				editView.setText((String) inputStrm.readObject());
-				// editView.setText("True");
-				System.out.println("b");
+				// Starts threads to read and write
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
 			} else {
-				// JOptionPane.showInputDialog(this,"Non Exisiting Acocunt!\n New Account Made!");
-				field1.setText("");
+				// This means that the user's info wasn't right
+				field1.setText(""); // Default value
+				// Deals with the popup that comes, can recover pw or create
+				// account from previous data.
 				Object[] invalidAccount = {"Invalid Account! What Would You Like To Do?\nLeave Blank To Create New Account\n\n", "OR:\tRecover (Enter Username):", field1};
 				int option2 = JOptionPane.showConfirmDialog(this, invalidAccount, "ERROR", JOptionPane.OK_CANCEL_OPTION);
 				if (option2 == JOptionPane.OK_OPTION) {
+					// Writes to the Server what we chose and they send back
+					// response
 					outputStrm.writeObject(field1.getText());
 					String recovery = (String) inputStrm.readObject();
-					if(recovery.length() > 30)
+					if (recovery.length() > 30)
+						// In here means that the user account didn't already
+						// exist
 						JOptionPane.showMessageDialog(this, recovery + "\nLogging You In!");
-					else if(!recovery.equals("404"))
-					JOptionPane.showMessageDialog(this, "Your Password:\n" + recovery + "\nLogging You In!");
-
+					else if (!recovery.equals("404"))
+						// Here means that the user account existed already
+						JOptionPane.showMessageDialog(this, "Your Password:\n" + recovery + "\nLogging You In!");
 				}
-
+				// Reads in the main user from server
 				mainUser = (User) inputStrm.readObject();
-
 				setupGui();
+				// Sets text field with default values and starts thread
 				editView.setText((String) inputStrm.readObject());
-				// editView.setText("False");
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
 			}
@@ -165,7 +142,6 @@ public class CEController extends JFrame implements Serializable {
 	private void setupGui() {
 		// Permissions Pop up
 		// Initializing graphic user interface variables
-
 		menuBarCore = new JMenuBar();
 		fileContainer = new JMenu("File");
 		editContainer = new JMenu("Edit");
@@ -260,7 +236,6 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
-
 	private class VersionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -285,22 +260,18 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
-	/* Once connection is set up, this deals with the server comms */
+
+	/* Once connection is set up, this deals writing out updates */
 	private class ServerRevisionWrite implements Runnable {
-		Timer timer = new Timer(3000, null);
 
 		public void run() {
-
 			while (true) {
-				/* Following Code Is A Test, Feel Free To Change */
 
 				try {
-					// synchronized(CEServer.lock){
+					// New edit packet and write it out!
 					EditPacket newTimedRevision = new EditPacket(editView, mainUser);
 					outputStrm.writeObject(newTimedRevision);
-					// CEServer.lock.notifyAll();
-					Thread.sleep(3000);
-					// }
+					Thread.sleep(2000); // Only want to send every 2000 ms.
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -309,25 +280,6 @@ public class CEController extends JFrame implements Serializable {
 					e.printStackTrace();
 				}
 
-				// if (!timer.isRunning()) {
-				// try {
-				// outputStrm.writeObject(editView.getText());
-				// timer.restart();
-				// } catch (IOException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-				// System.out.println("hey");
-				// }
-				// try {
-				// editView.setText((String) inputStrm.readObject());
-				// } catch (ClassNotFoundException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// } catch (IOException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
 			}
 		}
 	}
@@ -338,15 +290,14 @@ public class CEController extends JFrame implements Serializable {
 		public void run() {
 			while (true) {
 				try {
+					// Sets text to the ReadIn
 					editView.setText((String) inputStrm.readObject());
 				} catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 			}
 		}
-
 	}
 	private class showOptionsListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -364,7 +315,5 @@ public class CEController extends JFrame implements Serializable {
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 	}
-	public static void main(String[] args) {
-		CEController CEC = new CEController(null, null, null);
-	}
+
 }

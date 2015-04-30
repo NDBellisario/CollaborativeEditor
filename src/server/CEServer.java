@@ -2,99 +2,75 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 import javax.swing.*;
-
 import networking.*;
 import view.*;
 import model.*;
+
 /* Test Username: cat Password = meow */
 /*
  * Written by Taylor Cox
- * Here's what Happens
  * 
- * We create a new ServerView which asks for a port
- * If the port is valid, we use it, if not, default to 9001.
- * Boom new thread for accepting
- * 
- * Begin accepting clients, we read in a LoginPacket that we execute
- * True means username and password = cool, False = they're not.
- * (This is written out to the Client's stream so they can act appropriately!)
- * If true, add to our server's client list in view, and update it.
- * 
- * Then create two new threads.  Editor and Chat which are bare now
+ * This class handles several things.
+ * 1: Connecting to the server
+ * 2. Account Login/Creation/Recovery
+ * 3. Communication to the server for text/chat updates
  * 
  */
 
-/*
- * Packet Order!
- * 
- * 1.	Recieved: LogInPacket
- * 			.Execute() which returns a boolean value if info matched on file
- * 2.	Sent: Boolean Value
- * 			True = Login Successful, False = Info doesn't match
- * 3.	Sent: The User object of who connected
- * 			The Client then should create GUI based on this User
- * 4.	Recieved:
- * 			Packet with text to add
- * 5.	Sent:
- * 			Updated master text field
- * 
- * Second Packet 
- */
 public class CEServer extends JFrame {
-	/**
-	 * 
+	/*
+	 * Private Instance Variables
 	 */
 	private static final long serialVersionUID = 1L;
-	public static HashMap<String, ObjectOutputStream> outputs;
-	private ChatAssistant theChats;
-	private ArrayList<String> chatLog;
-	private EditAssistant theEdits;
-	private ArrayList<String> editsLog;
+	public HashMap<String, ObjectOutputStream> outputs;
 	private UserAssistant theUsers;
 	private ArrayList<String> activeUsers;
 	private ServerView ourView;
 	private static ServerSocket ourServer;
 	public static String masterList;
-	public static Object lock = new Object();
+	/*
+	 * The constructor that starts the server
+	 */
 	public static void main(String[] args) {
 		new CEServer();
 	}
 	/*
 	 * Initializes the variables Gets a port, and jamborees with the view as
-	 * needed If a failed attempt to setup, uses a default port If we get
-	 * someone, we spawn an acceptor
+	 * needed If a failed attempt to setup, uses a default port.
 	 */
 	public CEServer() {
 
-		this.chatLog = new ArrayList<String>(); // create the chat log
-		this.editsLog = new ArrayList<String>(); // log of edits
-		this.activeUsers = new ArrayList<String>(); // log of edits
-		this.outputs = new HashMap<String, ObjectOutputStream>(); // setup the
-		// masterList = "This is coming from the server"; // map
-		RevisionAssistant revStack = new RevisionAssistant();
-		masterList = "";
-		this.theUsers = new UserAssistant();
-		theUsers.addUser("cat", "meow", 3);
-		ourView = new ServerView(theUsers);
+		// Time to Initialize Variables!
+		initVariables();
+
+		// Setting up the Server.
 		int portNumber = ourView.getPortNumber();
-		try {
+		try { // Tries to start the server on the given port
 			ourServer = new ServerSocket(portNumber);
 			ourView.roundTwo();
 			new Thread(new ClientAccepter()).start();
-		} catch (IOException e) {
+		} catch (IOException e) { // If it can't it defaults to 9002
 			ourView.youScrewedUp();
 			portNumber = ourView.getPortNumber();
-			new Thread(new ClientAccepter()).start();
+
 			try {
-				ourServer = new ServerSocket(portNumber);
+				ourServer = new ServerSocket(portNumber); // Sets up the server.
+				new Thread(new ClientAccepter()).start(); // Starts accepting
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			ourView.roundTwo();
+			ourView.roundTwo(); // Adds everything to view frame
 		}
+	}
+	public void initVariables() {
+		this.activeUsers = new ArrayList<String>(); // log of connected users
+		this.outputs = new HashMap<String, ObjectOutputStream>(); // the outputs
+		RevisionAssistant revStack = new RevisionAssistant(); // TODO: Revision
+		masterList = ""; // List of text panel
+		this.theUsers = new UserAssistant(); // TODO: Read from file
+		theUsers.addUser("cat", "meow", 3); // A Default account to use.
+		ourView = new ServerView(theUsers); // New Server View
 	}
 
 	/*
@@ -103,7 +79,7 @@ public class CEServer extends JFrame {
 	 * the connection and have the user login
 	 */
 	private class ClientAccepter implements Runnable {
-		String userName;
+
 		@Override
 		public void run() {
 			while (true) {
@@ -112,7 +88,7 @@ public class CEServer extends JFrame {
 					temp = ourServer.accept();
 					ObjectOutputStream output = new ObjectOutputStream(temp.getOutputStream());
 					ObjectInputStream input = new ObjectInputStream(temp.getInputStream());
-					new Thread(new ClientListener(temp, output, input)).start();
+					new Thread(new ClientFirstContact(output, input)).start();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -126,78 +102,81 @@ public class CEServer extends JFrame {
 	 * good, false means no If true, update list on server side and spawn an
 	 * edit and chat thread If false, let the client know so they can fix it.
 	 */
-	private class ClientListener implements Runnable {
+	// TODO: Account creation button
+	private class ClientFirstContact implements Runnable {
 		private ObjectOutputStream output;
 		private ObjectInputStream input;
-		private Socket tempSocket;
 		private String userName;
-		public ClientListener(Socket socketArg, ObjectOutputStream argOutput, ObjectInputStream argInput) {
-			tempSocket = socketArg;
+		public ClientFirstContact(ObjectOutputStream argOutput, ObjectInputStream argInput) {
 			input = argInput;
 			output = argOutput;
 		}
 		@Override
 		public void run() {
 			try {
-				// read if clients username/password are correct
+				// Read from controller the info of the user trying to log in
 				LoginPacket userLogin = (LoginPacket) input.readObject();
-				// TODO: Check to see if username and password are correct
-				// TODO: Instead of username, client name?
+				// Executes it, false means wrong info, true means good to go
 				boolean correctInfo = userLogin.execute(theUsers);
-				User toPass;
+				User toPass; // The user whom the controller is to be set up for
+				// Writes login success to client
 				output.writeObject(correctInfo);
 				if (correctInfo == false) {
-
+					// Here means log in un/pw didn't match
+					// Reads "" or "username" from the client
 					String inputArg = (String) input.readObject();
-					if (!inputArg.equals(""))
-					{
-						String toSend = userLogin.getRecovery(inputArg, theUsers);
-						output.writeObject(toSend);
-						if(toSend.length() > 40)
-						{
-							toPass = theUsers.addUser(inputArg, "0000", 3);
-						}
-						else
-						{
-						toPass = theUsers.getUser(userLogin.getName());
-						}
-					}
-					else
-					{
-						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
-						output.writeObject("Created User With Previously Entered Username/Password Combo");
-						toPass = theUsers.getUser(userLogin.getName());
-					}
 
+					if (!inputArg.equals("")) {
+						// Here means we are tasked with recovering an account
+						// Gets user recovery info
+						String toSend = userLogin.getRecovery(inputArg, theUsers);
+						output.writeObject(toSend); // Writes out
+						if (toSend.length() > 40) {
+							// Here means that the UN didn't exist!, so we will
+							// give default value
+							toPass = theUsers.addUser(inputArg, "0000", 3);
+						} else {
+							// Here means they do exist so let's set toPass to
+							// our user
+							toPass = theUsers.getUser(userLogin.getName());
+						}
+					} else {
+						// Get here know that we had "" and OP wants new account
+						// Adds the new User
+						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
+						// Write out this String to CE
+						output.writeObject("Created User With Previously Entered Username/Password Combo");
+						// Grabs the suer we want to write
+						toPass = theUsers.getUser(userLogin.getName());
+					}
 				} else
+					// If login boolean was True, then just log them in
 					toPass = theUsers.getUser(userLogin.getName());
 
 				userName = userLogin.getName();
+				output.writeObject(toPass); // Writes out the User Object
+				output.writeObject(masterList); // Writes out the current List
+				outputs.put(userLogin.getName(), output); // Puts on output map
+				clientInit(); // Adds user to session so server can keep track
 
-				output.writeObject(toPass);
-				output.writeObject(masterList);
-				outputs.put(userLogin.getName(), output);
-				clientInit();
+				// New thread to deal with user
 				new Thread(new ClientHandler(input, output, toPass)).start();
 			} catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
 		/*
-		 * Simply adds our client to our list and calls update in view Also
-		 * popup saying someone connected
+		 * Let's the server know we have a new Client
 		 */
 		private void clientInit() {
-			// Updating the client list!
 			activeUsers.add(userName);
 			ourView.updateClients(activeUsers);
 			ourView.userConnect();
-			// TODO: Send the clients cool stuff
 		}
 	}
 	/*
-	 * Bare bones now, working with the beginning functionality of revisions and
-	 * how those are sent to the Users via packets
+	 * This is actually what deals with communicating with the Client for
+	 * updates!
 	 */
 	private class ClientHandler implements Runnable {
 		private ObjectInputStream inputStream;
@@ -208,42 +187,29 @@ public class CEServer extends JFrame {
 			outputStream = outputArg;
 			mainUser = user;
 		}
-		/*
-		 * What's happening? Client sends a packet with the new text to add The
-		 * packet's execute creates a new revision instance Updates master list,
-		 * and writes it out!
-		 */
+
 		@Override
 		public void run() {
-			int i = 0;
-			// masterList =
+
 			while (true) {
 				try {
-					// synchronized(lock){
-
+					// Reads packet from the controller
 					EditPacket readPacket = (EditPacket) inputStream.readObject();
+					// Executes the packet
 					String newText = readPacket.execute();
-					if (!newText.equals(""))
-
-					{
+					// Checks to see if we even have something aka not null.
+					if (!newText.equals("")) {
+						// Writes it out to ALL of the Client's
 						for (ObjectOutputStream temp : outputs.values()) {
 							masterList = newText;
 							temp.writeObject(masterList);
 						}
 					}
-
-					// lock.wait();
-					// }
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
-				// catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				// e.printStackTrace(); }
 				catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

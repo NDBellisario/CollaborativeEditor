@@ -23,6 +23,8 @@ public class LoginPacket implements Serializable {
 	public String getPassword() {
 		return password;
 	}
+	// Method is for recovery of users, if the user exists, get PW
+	// Otherwise return this String.
 	public String getRecovery(String arg, UserAssistant theUsers) {
 
 		ArrayList<User> knownUsers = theUsers.getUsers();

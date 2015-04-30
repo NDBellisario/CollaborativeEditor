@@ -56,7 +56,8 @@ public class CEServer extends JFrame {
 	private ArrayList<String> activeUsers;
 	private ServerView ourView;
 	private static ServerSocket ourServer;
-	private String masterList;
+	public static String masterList;
+	public static Object lock = new Object();
 	public static void main(String[] args) {
 		new CEServer();
 	}
@@ -71,7 +72,7 @@ public class CEServer extends JFrame {
 		this.editsLog = new ArrayList<String>(); // log of edits
 		this.activeUsers = new ArrayList<String>(); // log of edits
 		this.outputs = new HashMap<String, ObjectOutputStream>(); // setup the
-		masterList = "This is coming from the server"; // map
+		//masterList = "This is coming from the server"; // map
 		RevisionAssistant revStack = new RevisionAssistant();
 		this.theUsers = new UserAssistant();
 		theUsers.addUser("cat", "meow", 3);
@@ -150,15 +151,12 @@ public class CEServer extends JFrame {
 				User toPass;
 				if (correctInfo == false) {
 					toPass = theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
-					
 
-				}
-				else
-				{
+				} else {
 					toPass = theUsers.getUser(userName);
 				}
 				userName = userLogin.getName();
-				
+
 				output.writeObject(correctInfo);
 				output.writeObject(toPass);
 				outputs.put(userLogin.getName(), output);
@@ -200,24 +198,34 @@ public class CEServer extends JFrame {
 		 */
 		@Override
 		public void run() {
+			int i = 0;
+			// masterList =
 			while (true) {
 				try {
-					/*
-					 * TODO: Note server throwing massive End of File exception
-					 * the reporting in this run TODO: any ideas?
-					 */
+					// synchronized(lock){
+
 					EditPacket readPacket = (EditPacket) inputStream.readObject();
-					masterList = readPacket.execute(mainUser);
-					// Done in .execute
-					// Revision revision = new Revision(mainUser, (String)
-					// inputStream.readObject());
-					// RevisionAssistant.revisionStack.add(revision);
-					// String revText = revision.getText();
-					outputStream.writeObject(masterList);
-				} catch (ClassNotFoundException e) {
+					String newText = readPacket.execute();
+					if (!newText.equals(""))
+						
+					{
+						for (ObjectOutputStream temp : outputs.values()) {
+							masterList = newText;
+							temp.writeObject(masterList);
+						}
+					}
+
+					// lock.wait();
+					// }
+				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
+					e1.printStackTrace();
+				}
+
+				// catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace(); }
+				catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

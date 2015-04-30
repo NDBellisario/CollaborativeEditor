@@ -13,6 +13,7 @@ import java.net.Socket;
 import javax.swing.*;
 
 import model.*;
+import server.CEServer;
 import view.*;
 import networking.*;
 
@@ -292,13 +293,18 @@ public class CEController extends JFrame implements Serializable {
 			 * Server then writes out new master list which the second thread
 			 * picks up and updates GUI of all connected clients.
 			 */
+			
+			 
 			while (true) {
 				/* Following Code Is A Test, Feel Free To Change */
-				EditPacket newTimedRevision = new EditPacket(editView);
 
 				try {
+					//synchronized(CEServer.lock){
+					EditPacket newTimedRevision = new EditPacket(editView, mainUser);
 					outputStrm.writeObject(newTimedRevision);
-					Thread.sleep(5000);
+					//CEServer.lock.notifyAll();
+					Thread.sleep(3000);
+					//}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -306,6 +312,7 @@ public class CEController extends JFrame implements Serializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 
 				// if (!timer.isRunning()) {
 				// try {

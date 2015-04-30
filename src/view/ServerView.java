@@ -62,7 +62,7 @@ public class ServerView extends JFrame {
 	 * This occurs when a user connects TODO: Make it say their actual name.
 	 */
 	public void userConnect() {
-		JOptionPane.showMessageDialog(this, "User Connected!");
+		//JOptionPane.showMessageDialog(this, "User Connected!");
 	}
 	/*
 	 * This lays out the display of the server GUI

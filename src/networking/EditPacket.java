@@ -7,6 +7,7 @@ import model.Revision;
 import model.RevisionAssistant;
 import model.User;
 import model.UserAssistant;
+import server.CEServer;
 import view.EditView;
 
 /*
@@ -18,20 +19,27 @@ import view.EditView;
  */
 public class EditPacket implements Serializable {
 	private String newText;
-	private String masterText;
+	User theUser;
 	private static final long serialVersionUID = 1L;
 	
-	public EditPacket(EditView editView) {
+	public EditPacket(EditView editView, User arg) {
 		newText = editView.getText();
+		theUser = arg;
 	}
-	public void setMaster(String arg){
-		masterText = arg;
-	}
-	public String execute(User mainUser) {
-		Revision revision = new Revision(mainUser, newText);
+
+	public String execute() {
+		Revision revision = new Revision(theUser, newText);
 		RevisionAssistant.revisionStack.add(revision);
-		masterText+= newText;
-		return masterText;
+		//if(masterText.length() %15 == 0)
+			//masterText += "\n";
+		//int masterLength = masterText.length();
+		//CEServer.masterList = newText;
+		//String newMaster = masterText.substring(masterLength);
+		if(newText.equals(CEServer.masterList) && !newText.equals("null"))
+			return "";
+		else if(newText.length() == 80)
+			newText += "\n";
+		return newText;
 
 	}
 

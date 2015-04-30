@@ -114,7 +114,9 @@ public class EditView extends JPanel implements Observer{
 	}
 	
 	public void setText(String s) {
+		
 		textBox.setText(s);
+		textBox.setCaretPosition(s.length());
 	}
 	private class formatListener implements ActionListener{
 

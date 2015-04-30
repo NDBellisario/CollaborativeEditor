@@ -72,7 +72,7 @@ public class CEServer extends JFrame {
 		this.editsLog = new ArrayList<String>(); // log of edits
 		this.activeUsers = new ArrayList<String>(); // log of edits
 		this.outputs = new HashMap<String, ObjectOutputStream>(); // setup the
-		//masterList = "This is coming from the server"; // map
+		// masterList = "This is coming from the server"; // map
 		RevisionAssistant revStack = new RevisionAssistant();
 		masterList = "";
 		this.theUsers = new UserAssistant();
@@ -145,15 +145,35 @@ public class CEServer extends JFrame {
 				// TODO: Instead of username, client name?
 				boolean correctInfo = userLogin.execute(theUsers);
 				User toPass;
+				output.writeObject(correctInfo);
 				if (correctInfo == false) {
-					toPass = theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
 
-				} else {
-					toPass = theUsers.getUser(userName);
-				}
+					String inputArg = (String) input.readObject();
+					if (!inputArg.equals(""))
+					{
+						String toSend = userLogin.getRecovery(inputArg, theUsers);
+						output.writeObject(toSend);
+						if(toSend.length() > 40)
+						{
+							toPass = theUsers.addUser(inputArg, "0000", 3);
+						}
+						else
+						{
+						toPass = theUsers.getUser(userLogin.getName());
+						}
+					}
+					else
+					{
+						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
+						output.writeObject("Created User With Previously Entered Username/Password Combo");
+						toPass = theUsers.getUser(userLogin.getName());
+					}
+
+				} else
+					toPass = theUsers.getUser(userLogin.getName());
+
 				userName = userLogin.getName();
 
-				output.writeObject(correctInfo);
 				output.writeObject(toPass);
 				output.writeObject(masterList);
 				outputs.put(userLogin.getName(), output);
@@ -204,7 +224,7 @@ public class CEServer extends JFrame {
 					EditPacket readPacket = (EditPacket) inputStream.readObject();
 					String newText = readPacket.execute();
 					if (!newText.equals(""))
-						
+
 					{
 						for (ObjectOutputStream temp : outputs.values()) {
 							masterList = newText;

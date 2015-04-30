@@ -70,6 +70,7 @@ public class CEController extends JFrame implements Serializable {
 	private Socket serversoc;
 	private ObjectOutputStream outputStrm;
 	private ObjectInputStream inputStrm;
+	private boolean newAcctBoolean;
 
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
 		initUserModels();
@@ -116,7 +117,7 @@ public class CEController extends JFrame implements Serializable {
 		// String userName = JOptionPane.showInputDialog("Username");
 		// String passWord = JOptionPane.showInputDialog("Password");
 		LoginPacket lPK = new LoginPacket(userName, passWord);
-
+		newAcctBoolean = false;
 		try {
 			serversoc = new Socket(serverAddress, Integer.parseInt(port));
 			outputStrm = new ObjectOutputStream(serversoc.getOutputStream());
@@ -125,17 +126,33 @@ public class CEController extends JFrame implements Serializable {
 			boolean toTest = (boolean) inputStrm.readObject();
 			if (toTest) {
 				mainUser = (User) inputStrm.readObject();
-
 				setupGui();
+				JOptionPane.showMessageDialog(this, "Welcome Back!");
 				editView.setText((String) inputStrm.readObject());
+				// editView.setText("True");
+				System.out.println("b");
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
 			} else {
+				// JOptionPane.showInputDialog(this,"Non Exisiting Acocunt!\n New Account Made!");
+				field1.setText("");
+				Object[] invalidAccount = {"Invalid Account! What Would You Like To Do?\nLeave Blank To Create New Account\n\n", "Recover (Enter Username):", field1};
+				int option2 = JOptionPane.showConfirmDialog(this, invalidAccount, "ERROR", JOptionPane.OK_CANCEL_OPTION);
+				if (option2 == JOptionPane.OK_OPTION) {
+					outputStrm.writeObject(field1.getText());
+					String recovery = (String) inputStrm.readObject();
+					if(recovery.length() > 30)
+						JOptionPane.showMessageDialog(this, recovery + "\nLogging You In!");
+					else if(!recovery.equals("404"))
+					JOptionPane.showMessageDialog(this, "Your Password:\n" + recovery + "\nLogging You In!");
+
+				}
+
 				mainUser = (User) inputStrm.readObject();
-				// JOptionPane.showMessageDialog(this,
-				// "Non Exisiting Acocunt!\n New Account Made!");
+
 				setupGui();
-				editView.setText("False");
+				editView.setText((String) inputStrm.readObject());
+				// editView.setText("False");
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
 			}
@@ -201,8 +218,8 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		chatView = new ChatView("Default User");
-		editView = new EditView("Username" + "'s Client");
+		chatView = new ChatView(mainUser.getUserName());
+		editView = new EditView(mainUser.getUserName() + "'s Client");
 		this.setLayout(new BorderLayout());
 		this.add(chatView, BorderLayout.EAST);
 		this.add(editView, BorderLayout.CENTER);
@@ -210,7 +227,7 @@ public class CEController extends JFrame implements Serializable {
 		// pack and create!
 		this.pack();
 		this.setVisible(true);
-		JOptionPane.showMessageDialog(this, "Welcome Back!");
+
 	}
 	// Listener Private Classes
 	private class ExitListener implements ActionListener {
@@ -243,6 +260,7 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
+
 	private class VersionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -272,17 +290,17 @@ public class CEController extends JFrame implements Serializable {
 		Timer timer = new Timer(3000, null);
 
 		public void run() {
-			
+
 			while (true) {
 				/* Following Code Is A Test, Feel Free To Change */
 
 				try {
-					//synchronized(CEServer.lock){
+					// synchronized(CEServer.lock){
 					EditPacket newTimedRevision = new EditPacket(editView, mainUser);
 					outputStrm.writeObject(newTimedRevision);
-					//CEServer.lock.notifyAll();
+					// CEServer.lock.notifyAll();
 					Thread.sleep(3000);
-					//}
+					// }
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -290,7 +308,6 @@ public class CEController extends JFrame implements Serializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 
 				// if (!timer.isRunning()) {
 				// try {

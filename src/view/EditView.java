@@ -83,7 +83,7 @@ public class EditView extends JPanel implements Observer{
 		return formats;
 	}
 
-	public EditView(String fileName){
+	public EditView(String userName){
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(700, 600));
 		

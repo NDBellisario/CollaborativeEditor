@@ -74,6 +74,7 @@ public class CEServer extends JFrame {
 		this.outputs = new HashMap<String, ObjectOutputStream>(); // setup the
 		//masterList = "This is coming from the server"; // map
 		RevisionAssistant revStack = new RevisionAssistant();
+		masterList = "";
 		this.theUsers = new UserAssistant();
 		theUsers.addUser("cat", "meow", 3);
 		ourView = new ServerView(theUsers);
@@ -159,6 +160,7 @@ public class CEServer extends JFrame {
 
 				output.writeObject(correctInfo);
 				output.writeObject(toPass);
+				output.writeObject(masterList);
 				outputs.put(userLogin.getName(), output);
 				clientInit();
 				new Thread(new ClientHandler(input, output, toPass)).start();

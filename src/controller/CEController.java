@@ -127,6 +127,7 @@ public class CEController extends JFrame implements Serializable {
 				mainUser = (User) inputStrm.readObject();
 
 				setupGui();
+				editView.setText((String) inputStrm.readObject());
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
 			} else {
@@ -134,6 +135,7 @@ public class CEController extends JFrame implements Serializable {
 				// JOptionPane.showMessageDialog(this,
 				// "Non Exisiting Acocunt!\n New Account Made!");
 				setupGui();
+				editView.setText("False");
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
 			}
@@ -199,8 +201,8 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		chatView = new ChatView("");
-		editView = new EditView("" + " Client");
+		chatView = new ChatView("Default User");
+		editView = new EditView("Username" + "'s Client");
 		this.setLayout(new BorderLayout());
 		this.add(chatView, BorderLayout.EAST);
 		this.add(editView, BorderLayout.CENTER);
@@ -270,31 +272,7 @@ public class CEController extends JFrame implements Serializable {
 		Timer timer = new Timer(3000, null);
 
 		public void run() {
-			/*
-			 * This class needs to use a .sleep() function instead of a timer.
-			 * 
-			 * Also it needs to use packets and write that out to the server, in
-			 * which the server will then execute
-			 * 
-			 * Every 5 seconds when it autosaves, send a packet to the server,
-			 * which the server executes (creates new Revison on the stack) and
-			 * will send back a String of the new master document view.
-			 * 
-			 * What happens when 2+ clients are all trying to send to the server
-			 * and stuck on read. How does the serve prioritize? The server only
-			 * "reads" input from one client then moves on in code execution. So
-			 * if two clients write a packet at the same time, only one will be
-			 * picked up server side.
-			 * 
-			 * My Solution:
-			 * 
-			 * One thread every 5 seconds sends an updated view to Server via
-			 * packet, Server executes the code and adds it to the master list,
-			 * Server then writes out new master list which the second thread
-			 * picks up and updates GUI of all connected clients.
-			 */
 			
-			 
 			while (true) {
 				/* Following Code Is A Test, Feel Free To Change */
 

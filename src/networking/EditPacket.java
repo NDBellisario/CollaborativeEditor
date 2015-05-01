@@ -2,6 +2,7 @@ package networking;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 import model.Revision;
 import model.RevisionAssistant;
@@ -28,8 +29,9 @@ public class EditPacket implements Serializable {
 	}
 
 	public String execute() {
-		Revision revision = new Revision(theUser, newText);
-		RevisionAssistant.revisionStack.add(revision);
+		Date date = new Date();
+		Revision revision = new Revision(theUser, newText, date);
+		
 		//if(masterText.length() %15 == 0)
 			//masterText += "\n";
 		//int masterLength = masterText.length();

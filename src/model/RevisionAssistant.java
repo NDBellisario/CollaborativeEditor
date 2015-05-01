@@ -1,15 +1,15 @@
 package model;
 
-import java.util.Stack;
+import java.util.ArrayList;
 
 public class RevisionAssistant extends EditAssistant
 {
 	
-	public static Stack<Revision> revisionStack;
+	public ArrayList<Revision> revisionList;
 	
 	public RevisionAssistant()
 	{
-		revisionStack = new Stack<Revision>();
+		revisionList = new ArrayList<Revision>();
 	}
 	
 	/**
@@ -45,13 +45,15 @@ public class RevisionAssistant extends EditAssistant
 	}
 	
 	public void addRevision(Revision revision) {
-		revisionStack.push(revision);
+		revisionList.add(revision);
 	}
 	
-	public Stack<Revision> getStack() {
-		Stack<Revision> temp = revisionStack;
+	public ArrayList<Revision> getStack() {
+		ArrayList<Revision> temp = revisionList;
 		return temp;
 	}
+	
+	
 	
 
 

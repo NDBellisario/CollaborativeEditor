@@ -7,10 +7,12 @@ import java.util.*;
 
 import javax.swing.*;
 
+import model.User;
+
 //import model.AddMessageCommand;
 //import view.ChatPanel.EnterListener;
 
-public class ChatView extends JPanel implements Observer{
+public class ChatView extends JPanel{
 	
     private JPanel chatPanel;
     private JPanel typePanel;
@@ -22,8 +24,8 @@ public class ChatView extends JPanel implements Observer{
     private String username;
 
 
-    public ChatView(String username){
-    	this.username = username;
+    public ChatView(User user){
+    	this.username = user.getUserName();
 	    this.setLayout(new BorderLayout());
 	    this.setPreferredSize(new Dimension(280, 600));
 	    
@@ -88,11 +90,21 @@ public class ChatView extends JPanel implements Observer{
     }
     
     //To be filled in later.
-    @Override
+   /* @Override
     public void update(Observable o, Object arg){
 	 
   // TODO Auto-generated method stub
-    }
+    }*/
+    
+	public void updateChatPanel(List<String> messages) {
+		String s = "";
+		for (String message: messages)
+			s = s + message + "\n";
+		
+		textArea.setText(s);
+		textArea.setCaretPosition(s.length());
+		repaint();
+	}
 
 
     //Don't need this method. Panel is set up in Constructor method.

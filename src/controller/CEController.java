@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -47,7 +48,7 @@ public class CEController extends JFrame implements Serializable {
 	private JMenuItem changePermission;
 	private JMenuItem showOptions;
 	private User mainUser;
-	private JPanel chatView;
+	private ChatView chatView;
 	private EditView editView;
 	private Socket serversoc;
 	private ObjectOutputStream outputStrm;
@@ -194,8 +195,8 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		chatView = new ChatView(mainUser.getUserName());
-		editView = new EditView(mainUser.getUserName() + "'s Client");
+		chatView = new ChatView(mainUser);
+		editView = new EditView(mainUser);
 		this.setLayout(new BorderLayout());
 		this.add(chatView, BorderLayout.EAST);
 		this.add(editView, BorderLayout.CENTER);
@@ -314,6 +315,10 @@ public class CEController extends JFrame implements Serializable {
 			frame.pack();
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
+	}
+	
+	public void updateChat(List<String> allMessages){
+		chatView.updateChatPanel(allMessages);
 	}
 
 }

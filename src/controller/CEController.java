@@ -318,7 +318,7 @@ public class CEController extends JFrame implements Serializable {
 	}
 	
 	public void updateChat(List<String> allMessages){
-		chatView.update(allMessages);
+		chatView.updateChat(allMessages);
 	}
 
 }

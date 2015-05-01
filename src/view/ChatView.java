@@ -96,7 +96,7 @@ public class ChatView extends JPanel{
   // TODO Auto-generated method stub
     }*/
     
-	public void update(List<String> messages) {
+	public void updateChat(List<String> messages) {
 		String s = "";
 		for (String message: messages)
 			s = s + message + "\n";

@@ -14,7 +14,7 @@ public class ChatPacket implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String chatText;
-	private ArrayList<String> allChat, oldChats;
+	private ArrayList<String> oldChats;
 
 	public ChatPacket(String text) {
 		chatText = text;
@@ -24,7 +24,7 @@ public class ChatPacket implements Serializable {
 	}
 
 	public ArrayList<String> execute() {
-		allChat.add(chatText);
-		return allChat;
+		oldChats.add(chatText);
+		return oldChats;
 	}
 }

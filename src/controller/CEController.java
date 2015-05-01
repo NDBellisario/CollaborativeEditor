@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
@@ -296,11 +297,18 @@ public class CEController extends JFrame implements Serializable {
 			while (true) {
 				try {
 					// Sets text to the ReadIn
-					Object unknown = inputStrm.readObject());
+					Object unknown = inputStrm.readObject();
 					if(unknown instanceof String)
 					{
 						String toAdd = (String) unknown;
-						editView.setText(unknown)
+						editView.setText(toAdd);
+					}
+					else if(unknown instanceof ArrayList)
+					{
+						@SuppressWarnings("unchecked")
+						ArrayList<String> toSet = (ArrayList<String>) unknown;
+						updateChat(toSet);
+						
 					}
 					
 				} catch (ClassNotFoundException | IOException e) {
@@ -327,7 +335,7 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	
-	public void updateChat(List<String> allMessages){
+	public void updateChat(ArrayList<String> allMessages){
 		chatView.updateChatPanel(allMessages);
 	}
 

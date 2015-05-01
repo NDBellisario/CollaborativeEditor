@@ -110,7 +110,7 @@ public class ChatView extends JPanel{
   // TODO Auto-generated method stub
     }*/
     
-	public void updateChatPanel(List<String> messages) {
+	public void updateChatPanel(ArrayList<String> messages) {
 		String s = "";
 		for (String message: messages)
 			s = s + message + "\n";

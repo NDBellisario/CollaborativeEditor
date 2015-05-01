@@ -1,6 +1,7 @@
 package networking;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sun.security.ntlm.Client;
@@ -10,25 +11,20 @@ import server.CEServer;
 import model.User;
 
 public class ChatPacket implements Serializable {
-	private String chatText;
-	private List<String> allChat;
-	private User theUser;
-		
-		
-		
-		public ChatPacket(String text){
-			this.chatText = text;
-			
-		}
-		public ChatPacket(List<String> newMessages){
-			this.allChat = newMessages;
-		}
 
-	public void Execute(CEServer executeOn){
-		executeOn.updateChat(chatText);
+	private static final long serialVersionUID = 1L;
+	private String chatText;
+	private ArrayList<String> allChat, oldChats;
+
+	public ChatPacket(String text) {
+		chatText = text;
 	}
-	
-	public void Execute(CEController executeOn){
-		executeOn.updateChat(allChat);
+	public void setCurrent(ArrayList<String> arg) {
+		oldChats = arg;
+	}
+
+	public ArrayList<String> execute() {
+		allChat.add(chatText);
+		return allChat;
 	}
 }

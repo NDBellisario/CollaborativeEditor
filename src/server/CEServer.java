@@ -29,7 +29,7 @@ public class CEServer extends JFrame {
 	private ServerView ourView;
 	private static ServerSocket ourServer;
 	public static String masterList;
-	private List<String> allChatmessages;
+	private ArrayList<String> allChatMessages;
 	/*
 	 * The constructor that starts the server
 	 */
@@ -68,6 +68,7 @@ public class CEServer extends JFrame {
 		this.activeUsers = new ArrayList<String>(); // log of connected users
 		this.outputs = new HashMap<String, ObjectOutputStream>(); // the outputs
 		RevisionAssistant revStack = new RevisionAssistant(); // TODO: Revision
+		allChatMessages = new ArrayList<String>();
 		masterList = ""; // List of text panel
 		this.theUsers = new UserAssistant(); // TODO: Read from file
 		theUsers.addUser("cat", "meow", 3); // A Default account to use.
@@ -97,24 +98,7 @@ public class CEServer extends JFrame {
 			}
 		}
 	}
-	
-	public void updateChat(String chatMessage){
-		allChatmessages.add(chatMessage);
-		updateConnected();
-		
-	}
-	
-	public void updateConnected(){
-		ChatPacket chat = new ChatPacket(allChatmessages);
-		try{
-			for (ObjectOutputStream out: outputs.values()){
-				out.writeObject(chat);
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-			
-		}
-	}
+
 	/*
 	 * This gets out input/output stream Reads in a login packed containing
 	 * username and password Executes and gets a boolean. True means we are
@@ -206,32 +190,34 @@ public class CEServer extends JFrame {
 			outputStream = outputArg;
 			mainUser = user;
 		}
-	
+
 		@Override
 		public void run() {
 
 			while (true) {
 				try {
 					Object temp = inputStream.readObject();
-							// Reads packet from the controller
-					if(temp instanceof EditPacket)
-					{
-					EditPacket readPacket = (EditPacket) temp;
-					// Executes the packet
-					String newText = readPacket.execute();
-					// Checks to see if we even have something aka not null.
-					if (!newText.equals("")) {
-						// Writes it out to ALL of the Client's
-						for (ObjectOutputStream OPtemp : outputs.values()) {
-							masterList = newText;
-							OPtemp.writeObject(masterList);
+					// Reads packet from the controller
+					if (temp instanceof EditPacket) {
+						EditPacket readPacket = (EditPacket) temp;
+						// Executes the packet
+						String newText = readPacket.execute();
+						// Checks to see if we even have something aka not null.
+						if (!newText.equals("")) {
+							// Writes it out to ALL of the Client's
+							for (ObjectOutputStream OPtemp : outputs.values()) {
+								masterList = newText;
+								OPtemp.writeObject(masterList);
+							}
 						}
 					}
-					}
 					// If the packet is a chat packet
-					else if(temp instanceof ChatPacket)
-					{
-						
+					else if (temp instanceof ChatPacket) {
+						ChatPacket newChat = (ChatPacket) temp;
+						newChat.setCurrent(allChatMessages);
+						allChatMessages.clear();
+						allChatMessages = newChat.execute();
+						updateConnected();
 					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -241,6 +227,17 @@ public class CEServer extends JFrame {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	public void updateConnected() {
+		try {
+			for (ObjectOutputStream out : outputs.values()) {
+				out.writeObject(allChatMessages);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
 		}
 	}
 }

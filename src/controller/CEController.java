@@ -296,7 +296,13 @@ public class CEController extends JFrame implements Serializable {
 			while (true) {
 				try {
 					// Sets text to the ReadIn
-					editView.setText((String) inputStrm.readObject());
+					Object unknown = inputStrm.readObject());
+					if(unknown instanceof String)
+					{
+						String toAdd = (String) unknown;
+						editView.setText(unknown)
+					}
+					
 				} catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

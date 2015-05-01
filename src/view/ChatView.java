@@ -85,11 +85,6 @@ public class ChatView extends JPanel{
 	 
     	public void actionPerformed(ActionEvent arg0) {
 			String s = textField.getText();
-			/*try{
-				output.writeObject(new AddMessageCommand(clientName + ":  " + s));
-			}catch(Exception e){
-				e.printStackTrace();
-			}*/
 			textArea.append(username+": "+s);
 			textArea.append("\n\n");
 			textField.setText("");

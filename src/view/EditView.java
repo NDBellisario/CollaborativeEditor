@@ -8,7 +8,9 @@ import java.util.*;
 
 import javax.swing.*;
 
-public class EditView extends JPanel implements Observer{
+import model.User;
+
+public class EditView extends JPanel{
 	
 	private JPanel formatPanel;
 	private JEditorPane textBox;
@@ -24,6 +26,7 @@ public class EditView extends JPanel implements Observer{
 	private JButton fontSize;
 	private JButton annotate;
 	private JButton insertCode;
+	private int permission;
 	
 	private JPanel formatPanel(){
 		JPanel formats = new JPanel();
@@ -83,12 +86,16 @@ public class EditView extends JPanel implements Observer{
 		return formats;
 	}
 
-	public EditView(String userName){
+	public EditView(User user){
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(700, 600));
 		
+		permission = user.getPermission();
 		textBox = new JTextPane();
-		textBox.setEditable(true);
+		//If user's permissions  is set to 3, can't edit.
+		if(permission==3) textBox.setEditable(false);
+		//Otherwise, user can edit.
+		else textBox.setEditable(true);
 		this.add(new JScrollPane(textBox), BorderLayout.CENTER);
 		
 		formatPanel = formatPanel();
@@ -98,11 +105,11 @@ public class EditView extends JPanel implements Observer{
 	}
 	
 	//Have not written this yet.
-	@Override
+	/*@Override
 	public void update(Observable o, Object arg){
 		
 		// TODO Auto-generated method stub
-	}
+	}*/
 
 	//Do not need this method.
 	/*public void setUpGUI(){
@@ -202,7 +209,7 @@ public class EditView extends JPanel implements Observer{
 	}*/
 	
 	//Main method to test its functionality.
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		JFrame frame = new JFrame();
 		frame.setLayout(new BorderLayout());
 		ChatView chat = new ChatView("Blitzer");
@@ -215,5 +222,5 @@ public class EditView extends JPanel implements Observer{
 		frame.setResizable(true);
 		frame.pack();
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-    }
+    }*/
 }

@@ -212,17 +212,26 @@ public class CEServer extends JFrame {
 
 			while (true) {
 				try {
-					// Reads packet from the controller
-					EditPacket readPacket = (EditPacket) inputStream.readObject();
+					Object temp = inputStream.readObject();
+							// Reads packet from the controller
+					if(temp instanceof EditPacket)
+					{
+					EditPacket readPacket = (EditPacket) temp;
 					// Executes the packet
 					String newText = readPacket.execute();
 					// Checks to see if we even have something aka not null.
 					if (!newText.equals("")) {
 						// Writes it out to ALL of the Client's
-						for (ObjectOutputStream temp : outputs.values()) {
+						for (ObjectOutputStream OPtemp : outputs.values()) {
 							masterList = newText;
-							temp.writeObject(masterList);
+							OPtemp.writeObject(masterList);
 						}
+					}
+					}
+					// If the packet is a chat packet
+					else if(temp instanceof ChatPacket)
+					{
+						
 					}
 				} catch (IOException e1) {
 					e1.printStackTrace();

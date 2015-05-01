@@ -29,6 +29,7 @@ public class CEServer extends JFrame {
 	private ServerView ourView;
 	private static ServerSocket ourServer;
 	public static String masterList;
+	private List<String> allChatmessages;
 	/*
 	 * The constructor that starts the server
 	 */
@@ -94,6 +95,24 @@ public class CEServer extends JFrame {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	public void updateChat(String chatMessage){
+		allChatmessages.add(chatMessage);
+		updateConnected();
+		
+	}
+	
+	public void updateConnected(){
+		ChatPacket chat = new ChatPacket(allChatmessages);
+		try{
+			for (ObjectOutputStream out: outputs.values()){
+				out.writeObject(chat);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			
 		}
 	}
 	/*
@@ -187,7 +206,7 @@ public class CEServer extends JFrame {
 			outputStream = outputArg;
 			mainUser = user;
 		}
-
+	
 		@Override
 		public void run() {
 

@@ -61,6 +61,9 @@ public class CEController extends JFrame implements Serializable {
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
 		initUserModels();
 	}
+	
+
+	
 	/* Connects to the server and makes sure the login info matches an account */
 	private void initUserModels() {
 		// Setting up the main data entry fields, un/pw/server stuff
@@ -195,7 +198,7 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		chatView = new ChatView(mainUser);
+		chatView = new ChatView(mainUser,outputStrm);
 		editView = new EditView(mainUser);
 		this.setLayout(new BorderLayout());
 		this.add(chatView, BorderLayout.EAST);
@@ -261,6 +264,7 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
+
 
 	/* Once connection is set up, this deals writing out updates */
 	private class ServerRevisionWrite implements Runnable {

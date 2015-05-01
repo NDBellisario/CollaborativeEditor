@@ -3,10 +3,15 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.*;
 
 import javax.swing.*;
 
+import networking.ChatPacket;
+import controller.CEController;
 import model.User;
 
 //import model.AddMessageCommand;
@@ -22,9 +27,9 @@ public class ChatView extends JPanel{
     private JTextArea textField; // field where user enters text
     private JTextArea whoIsTyping;
     private String username;
+    private ObjectOutputStream output;
 
-
-    public ChatView(User user){
+    public ChatView(User user,ObjectOutputStream outputSet){
     	this.username = user.getUserName();
 	    this.setLayout(new BorderLayout());
 	    this.setPreferredSize(new Dimension(280, 600));
@@ -50,6 +55,8 @@ public class ChatView extends JPanel{
 	 	//textField.addActionListener(listener);
 	 	enterButton.addActionListener(listener);
 	 	
+	 	//Sets out stream
+	 	this.output = outputSet;
 	 	
 	 	//Text area to show who is typing. NOT currently networked. 
 	 	whoIsTyping = new JTextArea();
@@ -86,9 +93,21 @@ public class ChatView extends JPanel{
 			textArea.append(username+": "+s);
 			textArea.append("\n\n");
 			textField.setText("");
+			ServerChatWrite(s);
+			
+			
 		}
     }
-    
+    public void ServerChatWrite(String text2Send) {
+		
+		ChatPacket message = new ChatPacket(text2Send);
+		try {
+			 output.writeObject(message);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
     //To be filled in later.
    /* @Override
     public void update(Observable o, Object arg){

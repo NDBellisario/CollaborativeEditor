@@ -62,9 +62,7 @@ public class CEController extends JFrame implements Serializable {
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
 		initUserModels();
 	}
-	
 
-	
 	/* Connects to the server and makes sure the login info matches an account */
 	private void initUserModels() {
 		// Setting up the main data entry fields, un/pw/server stuff
@@ -107,6 +105,9 @@ public class CEController extends JFrame implements Serializable {
 				setupGui();
 				JOptionPane.showMessageDialog(this, "Welcome Back!");
 				editView.setText((String) inputStrm.readObject());
+				List<String> toSet;
+				toSet = (List<String>) inputStrm.readObject();
+				updateChat(toSet);
 				// Starts threads to read and write
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
@@ -135,12 +136,19 @@ public class CEController extends JFrame implements Serializable {
 				setupGui();
 				// Sets text field with default values and starts thread
 				editView.setText((String) inputStrm.readObject());
+				List<String> toSet;
+				toSet = (List<String>) inputStrm.readObject();
+				updateChat(toSet);
 				new Thread(new ServerRevisionWrite()).start();
 				new Thread(new ServerRevisionRead()).start();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		// Sets up le chat.
+
+
+
 	}
 
 	/* Setups the GUI */
@@ -199,7 +207,7 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		chatView = new ChatView(mainUser,outputStrm);
+		chatView = new ChatView(mainUser, outputStrm);
 		editView = new EditView(mainUser);
 		this.setLayout(new BorderLayout());
 		this.add(chatView, BorderLayout.EAST);
@@ -266,7 +274,6 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 
-
 	/* Once connection is set up, this deals writing out updates */
 	private class ServerRevisionWrite implements Runnable {
 
@@ -297,20 +304,22 @@ public class CEController extends JFrame implements Serializable {
 			while (true) {
 				try {
 					// Sets text to the ReadIn
+					// Object unknown = inputStrm.readObject();
 					Object unknown = inputStrm.readObject();
-					if(unknown instanceof String)
-					{
+
+					if (unknown instanceof String) {
 						String toAdd = (String) unknown;
 						editView.setText(toAdd);
-					}
-					else if(unknown instanceof ArrayList)
+					} else if (unknown instanceof List<?>)
+
 					{
+						// System.out.println("A");
 						@SuppressWarnings("unchecked")
-						ArrayList<String> toSet = (ArrayList<String>) unknown;
+						List<String> toSet = (ArrayList<String>) unknown;
 						updateChat(toSet);
-						
+
 					}
-					
+
 				} catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -334,8 +343,9 @@ public class CEController extends JFrame implements Serializable {
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 	}
-	
-	public void updateChat(ArrayList<String> allMessages){
+
+	public void updateChat(List<String> allMessages) {
+
 		chatView.updateChatPanel(allMessages);
 	}
 

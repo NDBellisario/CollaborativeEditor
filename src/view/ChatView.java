@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.*;
 
 import javax.swing.*;
@@ -17,9 +18,13 @@ import model.User;
 //import model.AddMessageCommand;
 //import view.ChatPanel.EnterListener;
 
-public class ChatView extends JPanel{
+public class ChatView extends JPanel implements Serializable{
 	
-    private JPanel chatPanel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel chatPanel;
     private JPanel typePanel;
     private JButton sendButton;
     private JTextPane groupText, personalTest;
@@ -85,10 +90,11 @@ public class ChatView extends JPanel{
 	 
     	public void actionPerformed(ActionEvent arg0) {
 			String s = textField.getText();
-			textArea.append(username+": "+s);
-			textArea.append("\n\n");
+			String temp = username+": "+s;
+		//	textArea.append(username+": "+s);
+		//	textArea.append("\n\n");
 			textField.setText("");
-			ServerChatWrite(s);
+			ServerChatWrite(temp);
 			
 			
 		}
@@ -103,49 +109,15 @@ public class ChatView extends JPanel{
 			e.printStackTrace();
 		}
 	}
-    //To be filled in later.
-   /* @Override
-    public void update(Observable o, Object arg){
-	 
-  // TODO Auto-generated method stub
-    }*/
+
     
-	public void updateChatPanel(ArrayList<String> messages) {
+	public void updateChatPanel(List<String> arg) {
 		String s = "";
-		for (String message: messages)
-			s = s + message + "\n";
+		for (String message: arg)
+			s = s + message;
 		
 		textArea.setText(s);
 		textArea.setCaretPosition(s.length());
 		repaint();
 	}
-
-
-    //Don't need this method. Panel is set up in Constructor method.
-    /*public void setUpGui(){
-	 
-    }*/
-
-      
-    //not sure why the user would need a document select button in the
-    //chat panel. this panel is just for chatting.
-   /* private class documentSelect implements ActionListener{
-	 
-        public void actionPerformed(ActionEvent arg0){
-        	
-        }
-    }*/
-    
-    //Just a main to test its appeareance.
-   /* public static void main(String[] args){
-    	JFrame frame = new JFrame();
-    	frame.setLayout(new BorderLayout());
-    	ChatView chat = new ChatView();
-    	chat.setVisible(true);
-    	frame.add(chat, BorderLayout.CENTER);
-    	frame.setVisible(true);
-    	frame.setResizable(true);
-    	frame.pack();
-    	frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-    }*/
 }

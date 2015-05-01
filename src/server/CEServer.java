@@ -18,7 +18,7 @@ import model.*;
  * 
  */
 
-public class CEServer extends JFrame {
+public class CEServer extends JFrame implements Serializable{
 	/*
 	 * Private Instance Variables
 	 */
@@ -29,7 +29,7 @@ public class CEServer extends JFrame {
 	private ServerView ourView;
 	private static ServerSocket ourServer;
 	public static String masterList;
-	private ArrayList<String> allChatMessages;
+	private static List<String> allChatMessages;
 	/*
 	 * The constructor that starts the server
 	 */
@@ -71,7 +71,7 @@ public class CEServer extends JFrame {
 		allChatMessages = new ArrayList<String>();
 		masterList = ""; // List of text panel
 		this.theUsers = new UserAssistant(); // TODO: Read from file
-		theUsers.addUser("cat", "meow", 3); // A Default account to use.
+		theUsers.addUser("cat", "meow", 2); // A Default account to use.
 		ourView = new ServerView(theUsers); // New Server View
 	}
 
@@ -137,7 +137,7 @@ public class CEServer extends JFrame {
 						if (toSend.length() > 40) {
 							// Here means that the UN didn't exist!, so we will
 							// give default value
-							toPass = theUsers.addUser(inputArg, "0000", 3);
+							toPass = theUsers.addUser(inputArg, "0000", 2);
 						} else {
 							// Here means they do exist so let's set toPass to
 							// our user
@@ -146,7 +146,7 @@ public class CEServer extends JFrame {
 					} else {
 						// Get here know that we had "" and OP wants new account
 						// Adds the new User
-						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 3);
+						theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 2);
 						// Write out this String to CE
 						output.writeObject("Created User With Previously Entered Username/Password Combo");
 						// Grabs the suer we want to write
@@ -159,6 +159,7 @@ public class CEServer extends JFrame {
 				userName = userLogin.getName();
 				output.writeObject(toPass); // Writes out the User Object
 				output.writeObject(masterList); // Writes out the current List
+				output.writeObject(allChatMessages);
 				outputs.put(userLogin.getName(), output); // Puts on output map
 				clientInit(); // Adds user to session so server can keep track
 
@@ -181,7 +182,11 @@ public class CEServer extends JFrame {
 	 * This is actually what deals with communicating with the Client for
 	 * updates!
 	 */
-	private class ClientHandler implements Runnable {
+	private class ClientHandler implements Runnable, Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private ObjectInputStream inputStream;
 		private ObjectOutputStream outputStream;
 		private User mainUser;
@@ -214,8 +219,8 @@ public class CEServer extends JFrame {
 					// If the packet is a chat packet
 					else if (temp instanceof ChatPacket) {
 						ChatPacket newChat = (ChatPacket) temp;
+					;
 						newChat.setCurrent(allChatMessages);
-						allChatMessages.clear();
 						allChatMessages = newChat.execute();
 						updateConnected();
 					}
@@ -233,7 +238,10 @@ public class CEServer extends JFrame {
 	public void updateConnected() {
 		try {
 			for (ObjectOutputStream out : outputs.values()) {
+				out.reset();
 				out.writeObject(allChatMessages);
+
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

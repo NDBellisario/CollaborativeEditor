@@ -48,7 +48,7 @@ public class CEController extends JFrame implements Serializable {
 	private JMenuItem changePermission;
 	private JMenuItem showOptions;
 	private User mainUser;
-	private JPanel chatView;
+	private ChatView chatView;
 	private EditView editView;
 	private Socket serversoc;
 	private ObjectOutputStream outputStrm;
@@ -318,7 +318,7 @@ public class CEController extends JFrame implements Serializable {
 	}
 	
 	public void updateChat(List<String> allMessages){
-		chatView.updateChat(allMessages);
+		chatView.updateChatPanel(allMessages);
 	}
 
 }

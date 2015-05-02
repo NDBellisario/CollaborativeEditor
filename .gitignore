@@ -84,3 +84,8 @@ bin/view/ServerView.class
 bin/view/ChatView$chatSendListener.class
 
 bin/view/ChatView.class
+
+# Intellij
+.idea/
+*.iml
+*.iws

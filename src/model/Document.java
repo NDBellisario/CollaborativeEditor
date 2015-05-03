@@ -12,9 +12,24 @@ public class Document implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String docName;
 	private int docIdentification;
-	private String Owner;
-	private ArrayList<Integer> editors;
-	private String docContents;
+	private int ownerId;
+	private ArrayList<Integer> editorIds;
 	private ArrayList<String> annotations;
+	private String docContents;
+	
+	
+	public Document(String docName, int docId, int ownerId, ArrayList<Integer> editorIds) {
+		this.docName = docName;
+		this.docIdentification = docId;
+		this.ownerId = ownerId;
+		this.editorIds = editorIds;
+		this.annotations = new ArrayList<String>();
+		buildBaseDocument();
+		
+	}
+	
+	public void buildBaseDocument() {
+		this.docContents = "";
+	}
 	
 }

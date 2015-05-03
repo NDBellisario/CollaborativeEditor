@@ -13,13 +13,15 @@ public class DocumentAssistant implements Serializable {
 	
 	private ArrayList<Document> documentList;
 	
+	/*
 	public DocumentAssistant() {
 		this.documentList = new ArrayList<Document>();
 	}
 	
-	public void newDocument(String name, ) {
-		
+	public void newDocument(String docName, int ownerId, ArrayList<Integer> editorIds) {
+		//documentList.add(new Document());
 	}
+	*/
 	
 
 }

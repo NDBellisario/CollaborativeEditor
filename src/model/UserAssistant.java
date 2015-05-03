@@ -29,6 +29,11 @@ public class UserAssistant implements Serializable {
         //notifyObservers();
     }
 
+    
+    public User getUser(int identificationNumber) {
+    	return userList.get(identificationNumber - 1);
+    }
+    
     public User getUser(String username) {
         for (User user : userList) {
             if (user.getUserName().equalsIgnoreCase(username)) {

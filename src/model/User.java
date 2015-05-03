@@ -1,6 +1,5 @@
 package model;
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

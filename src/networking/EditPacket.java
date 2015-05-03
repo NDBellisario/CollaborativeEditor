@@ -35,8 +35,8 @@ public class EditPacket implements Serializable {
         //String newMaster = masterText.substring(masterLength);
         if (newText.equals(CEServer.masterList) && !newText.equals("null"))
             return "";
-        else if (newText.length() == 100)
-            newText += "\n";
+        //else if (newText.length() == 100)
+        //    newText += "\n";
         return newText;
 
     }

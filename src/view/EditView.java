@@ -2,11 +2,23 @@ package view;
 import model.User;
 
 import javax.swing.*;
+import javax.swing.text.EditorKit;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.html.HTMLEditorKit;
+
 import java.awt.*;
 import java.awt.event.*;
 
 public class EditView extends JPanel {
-    private JPanel formatPanel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel formatPanel;
     private JEditorPane textBox;
     private JButton bold;
     private JButton ital;
@@ -27,8 +39,20 @@ public class EditView extends JPanel {
         this.setPreferredSize(new Dimension(700, 600));
 
         permission = user.getPermission();
-        textBox = new JTextPane();
+        textBox = new JEditorPane(new HTMLEditorKit().getContentType(), "");
+        textBox.setMargin(new Insets(0,40,0,40));
         //If user's permissions  is set to 3, can't edit.
+        
+        //Change the StyleSheet of HTMLEditor to Bold ON when bold is clicked and others etc..
+        //http://docs.oracle.com/javase/7/docs/api/javax/swing/text/html/StyleSheet.html
+        //http://docs.oracle.com/javase/7/docs/api/javax/swing/text/html/HTMLEditorKit.html
+        //http://docs.oracle.com/javase/7/docs/api/javax/swing/JEditorPane.html
+        //http://docs.oracle.com/javase/7/docs/api/javax/swing/text/MutableAttributeSet.html //
+        //http://docs.oracle.com/javase/7/docs/api/javax/swing/text/StyleConstants.html#Bold //STYLES!!!
+        
+        
+        
+        
         if (permission == 3)
             textBox.setEditable(false);
             //Otherwise, user can edit.
@@ -36,11 +60,15 @@ public class EditView extends JPanel {
             textBox.setEditable(true);
         this.add(new JScrollPane(textBox), BorderLayout.CENTER);
 
+        
         formatPanel = formatPanel();
         this.add(formatPanel, BorderLayout.WEST);
 
         this.add(new JLabel("No Document Selected.", SwingConstants.CENTER), BorderLayout.NORTH);
     }
+    
+    
+    
 public void changePermission(int arg)
 {
     permission = arg;
@@ -86,7 +114,12 @@ public void changePermission(int arg)
 
         insertCode = new JButton("Insert Code");
         insertCode.addActionListener(listener);
+        
+        textBox.setText("<p style=\"color:red\">This is a paragraph.</p>");
 
+        
+        
+        
         formats.add(bold);
         formats.add(ital);
         formats.add(underlined);
@@ -100,6 +133,7 @@ public void changePermission(int arg)
         formats.add(annotate);
         formats.add(insertCode);
         return formats;
+        
     }
 
     //Have not written this yet.
@@ -124,13 +158,14 @@ public void changePermission(int arg)
         textBox.setCaretPosition(s.length());
     }
 
-    private class formatListener implements ActionListener {
+    public class formatListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == bold) {
-                // textBox.setFont(new Font(name, Font.BOLD, alignmentX));
+            	
+            	
             } else if (e.getSource() == ital) {
-
+            	
             } else if (e.getSource() == underlined) {
 
             } else if (e.getSource() == colored) {

@@ -36,9 +36,6 @@ public class LoginPacket implements Serializable {
                 toReturn = 1;
 
                 if (new String(knownUsers.get(i).getPassword()).equals(new String(password))) {
-                    System.out.println(new String(knownUsers.get(i).getPassword()));
-                    System.out.println(new String(password));
-                    System.out.println("03");
                     toReturn = 0;
                 }
             }

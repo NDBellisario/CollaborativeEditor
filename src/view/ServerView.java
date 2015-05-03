@@ -1,9 +1,12 @@
 package view;
+import com.sun.java.swing.action.SaveAction;
 import model.UserAssistant;
+import server.CEServer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serializable;
 import java.util.*;
 
 /*
@@ -14,7 +17,8 @@ import java.util.*;
  * stuff can be found here.  Server controller also has access to boot users,
  * or see their documents.  Kind of like a suepr cool admin
  */
-public class ServerView extends JFrame {
+public class ServerView extends JFrame implements Serializable {
+    private static final long serialVersionUID = 1L;
     DefaultListModel<String> userList;
     private JPanel mainStuff, userStuff, buttons;
     private JMenuBar theMenuBar;
@@ -23,16 +27,18 @@ public class ServerView extends JFrame {
     private UserAssistant passedUser;
     private String portNumber;
     private ArrayList<String> theUsers;
+    private CEServer ourServer;
 
     /*
      * This sets up the menu, and out blank document before asking for a port to
      * use
      */
-    public ServerView(UserAssistant arg) {
+    public ServerView(UserAssistant arg, CEServer serverArg) {
         passedUser = arg;
         setUpMenu();
         setPref();
         portNumber = JOptionPane.showInputDialog(this, "Please Enter A Port To Host On");
+        ourServer = serverArg;
 
     }
 
@@ -89,6 +95,10 @@ public class ServerView extends JFrame {
         // setup the JMenu
         theMenuBar = new JMenuBar();
         fileMenu = new JMenu("File");// create the file menu on our menu bar
+
+        JMenuItem saveItem = new JMenuItem("Save");
+        fileMenu.add(saveItem);
+        saveItem.addActionListener(new SaveActionListener());
         JMenuItem aboutItem = new JMenuItem("About");// create our about menu
         // item
         // aboutItem.addActionListener(new AboutActionListener());//action
@@ -214,4 +224,11 @@ public class ServerView extends JFrame {
         }
     }
 
+    private class SaveActionListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+           ourServer.save();
+
+        }
+    }
 }

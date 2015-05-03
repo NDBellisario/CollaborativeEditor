@@ -6,10 +6,7 @@ import networking.*;
 import view.ServerView;
 
 import javax.swing.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -52,6 +49,7 @@ public class CEServer extends JFrame implements Serializable {
         try { // Tries to start the server on the given port
             ourServer = new ServerSocket(portNumber);
             ourView.roundTwo();
+            // Now time to read from a file!
             new Thread(new ClientAccepter()).start();
         } catch (IOException e) { // If it can't it defaults to 9002
             ourView.youScrewedUp();
@@ -67,12 +65,7 @@ public class CEServer extends JFrame implements Serializable {
         }
     }
 
-    /*
-     * The constructor that starts the server
-     */
-    public static void main(String[] args) {
-        new CEServer();
-    }
+
 
     public void initVariables() {
         this.activeUsers = new ArrayList<String>(); // log of connected users
@@ -82,7 +75,8 @@ public class CEServer extends JFrame implements Serializable {
         masterList = ""; // List of text panel
         this.theUsers = new UserAssistant(); // TODO: Read from file
         theUsers.addUser("cat", "meow"); // A Default account to use.
-        ourView = new ServerView(theUsers); // New Server View
+        ourView = new ServerView(theUsers, this); // New Server View
+
     }
 
     /*
@@ -247,6 +241,41 @@ public class CEServer extends JFrame implements Serializable {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+    public void save(){
+        ObjectOutputStream saveStream = null;
+        String fileName = "";
+
+        while(fileName.equals("")){
+            fileName = JOptionPane.showInputDialog("Enter the name of the file you'd like to save to.");
+            if(fileName == null){
+                return;
+            }
+        }
+
+        //Create the stream and file to save to.
+        try {
+            saveStream = new ObjectOutputStream(new FileOutputStream(fileName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Write the model to the file.
+        try {
+            saveStream.writeObject(this+".ser");
+            JOptionPane.showMessageDialog(this, "File Successfully Saved!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Make sure to close the stream!!!1!
+        try {
+            saveStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

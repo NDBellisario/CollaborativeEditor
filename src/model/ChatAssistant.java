@@ -6,7 +6,7 @@ public class ChatAssistant extends Observable {
     private String toSend;
 
     /**
-     * Constructor for chat assistant
+     * Constructor for the chat assistant
      */
     public ChatAssistant() {
 

@@ -296,7 +296,7 @@ public class CEController extends JFrame implements Serializable {
                     // New edit packet and write it out!
                     EditPacket newTimedRevision = new EditPacket(editView, mainUser);
                     outputStrm.writeObject(newTimedRevision);
-                    Thread.sleep(2000); // Only want to send every 2000 ms.
+                    Thread.sleep(1000); // Only want to send every 2000 ms.
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

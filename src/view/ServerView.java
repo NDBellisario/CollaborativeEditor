@@ -21,19 +21,16 @@ public class ServerView extends JFrame implements Serializable {
     DefaultListModel<String> userList;
     private JPanel mainStuff, userStuff, buttons;
     private JMenuBar theMenuBar;
-    private JMenu fileMenu;
-    private JMenuItem aboutItem, quitItem;
-    private UserAssistant passedUser;
+    //private UserAssistant passedUserAssistant;
     private String portNumber;
-    private ArrayList<String> theUsers;
     private CEServer ourServer;
 
     /*
      * This sets up the menu, and out blank document before asking for a port to
      * use
      */
-    public ServerView(UserAssistant arg, CEServer serverArg) {
-        passedUser = arg;
+    public ServerView(CEServer serverArg) {
+        //passedUserAssistant = arg;
         setUpMenu();
         setPref();
         portNumber = JOptionPane.showInputDialog(this, "Please Enter A Port To Host On");
@@ -93,7 +90,7 @@ public class ServerView extends JFrame implements Serializable {
 
         // setup the JMenu
         theMenuBar = new JMenuBar();
-        fileMenu = new JMenu("File");// create the file menu on our menu bar
+        JMenu fileMenu = new JMenu("File");
 
         JMenuItem saveItem = new JMenuItem("Save");
         fileMenu.add(saveItem);
@@ -104,7 +101,7 @@ public class ServerView extends JFrame implements Serializable {
         // listener that will display our "about" dialog
         fileMenu.add(aboutItem);
 
-        quitItem = new JMenuItem("Quit");// item that will quit the program
+        JMenuItem quitItem = new JMenuItem("Quit");
         quitItem.addActionListener(new QuitActionListener());// action
         // listener to quit the application
         fileMenu.add(quitItem);
@@ -130,8 +127,8 @@ public class ServerView extends JFrame implements Serializable {
         userList = new DefaultListModel<String>();
         JList<String> currentUsersTemp;
         // TODO: Uncommment
-        // ArrayList<String> theUsers = passedUser.getUsers();
-        theUsers = new ArrayList<String>();
+        // ArrayList<String> theUsers = passedUserAssistant.getUsers();
+        ArrayList<String> theUsers = new ArrayList<String>();
         // ^^
         for (String temp : theUsers)
             userList.addElement(temp);

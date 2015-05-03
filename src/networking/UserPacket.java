@@ -3,7 +3,10 @@ import com.sun.xml.internal.bind.v2.TODO;
 import model.User;
 import model.UserAssistant;
 
-public class UserPacket {
+import java.io.Serializable;
+
+public class UserPacket implements Serializable{
+    private static final long serialVersionUID = 1L;
     private String username;
     private String password;
 

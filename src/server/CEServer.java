@@ -1,5 +1,4 @@
 package server;
-import model.RevisionAssistant;
 import model.User;
 import model.UserAssistant;
 import networking.*;
@@ -27,23 +26,97 @@ public class CEServer extends JFrame implements Serializable {
      * Private Instance Variables
      */
     private static final long serialVersionUID = 1L;
-    public static String masterList;
-    private static ServerSocket ourServer;
-    private static List<String> allChatMessages;
-    public HashMap<String, ObjectOutputStream> outputs;
+    public String masterList;
+    private transient static ServerSocket ourServer;
+    private List<String> allChatMessages;
+    public transient HashMap<String, ObjectOutputStream> outputs;
     private UserAssistant theUsers;
     private ArrayList<String> activeUsers;
-    private ServerView ourView;
+    private transient ServerView ourView;
 
     /*
      * Initializes the variables Gets a port, and jamborees with the view as
      * needed If a failed attempt to setup, uses a default port.
      */
     public CEServer() {
+        readFromFile();
+        //initVariables();
+        startServer();
+    }
 
-        // Time to Initialize Variables!
-        initVariables();
+    public void readFromFile() {
+        boolean noPreviousConfig = false;
 
+        String loadFileName = JOptionPane.showInputDialog("Enter The Name Of The Previous Saved Server State\nLeave Blank For a New Server");
+
+        if (loadFileName != null && !loadFileName.equals("")) {
+            ObjectInputStream loadStream = null;
+
+            try {
+                loadStream = new ObjectInputStream(new FileInputStream(loadFileName));
+            } catch (FileNotFoundException e) {
+                JOptionPane.showMessageDialog(null, "There is no file by that name. Starting new server.");
+                noPreviousConfig = true;
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Bad file.");
+                noPreviousConfig = true;
+            }
+
+            CEServer loadedController = null;
+
+            try {
+                if (loadStream != null)
+                    loadedController = (CEServer) loadStream.readObject();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "The class's ID has changed.");
+                noPreviousConfig = true;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (ClassCastException cce) {
+                JOptionPane.showMessageDialog(null, "That file does not contain a saved CEServer. Starting New");
+                noPreviousConfig = true;
+            }
+
+            if (loadStream != null) {
+                try {
+                    loadStream.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            if (loadedController != null) {
+                this.activeUsers = loadedController.activeUsers;
+                this.ourView = new ServerView(this); // New Server View
+                this.outputs = new HashMap<String, ObjectOutputStream>();
+                this.theUsers = loadedController.theUsers;
+                this.allChatMessages = loadedController.allChatMessages;
+                this.masterList = loadedController.masterList;
+
+
+            }
+        } else {
+            noPreviousConfig = true;
+        }
+        if (noPreviousConfig) {
+            this.activeUsers = new ArrayList<String>();
+            this.ourView = new ServerView(this); // New Server View
+            this.outputs = new HashMap<String, ObjectOutputStream>();
+            this.theUsers = new UserAssistant();
+            this.allChatMessages = new ArrayList<String>();
+            this.masterList = ""; // List of text panel
+            this.theUsers.addUser("cat", "meow"); // A Default account to use.
+        }
+
+    }
+
+    /**
+     *
+     *
+     *
+     */
+    public void startServer() {
         // Setting up the Server.
         int portNumber = ourView.getPortNumber();
         try { // Tries to start the server on the given port
@@ -65,19 +138,20 @@ public class CEServer extends JFrame implements Serializable {
         }
     }
 
-
-
-    public void initVariables() {
-        this.activeUsers = new ArrayList<String>(); // log of connected users
-        this.outputs = new HashMap<String, ObjectOutputStream>(); // the outputs
-        RevisionAssistant revStack = new RevisionAssistant(); // TODO: Revision
-        allChatMessages = new ArrayList<String>();
-        masterList = ""; // List of text panel
-        this.theUsers = new UserAssistant(); // TODO: Read from file
-        theUsers.addUser("cat", "meow"); // A Default account to use.
-        ourView = new ServerView(theUsers, this); // New Server View
-
-    }
+    //    public void initVariables() {
+    //        if (!previousConfig) {
+    //            this.activeUsers = new ArrayList<String>();
+    //            this.ourView = new ServerView(this); // New Server View
+    //            this.outputs = new HashMap<String, ObjectOutputStream>();
+    //            this.theUsers = new UserAssistant();
+    //
+    //            allChatMessages = new ArrayList<String>();
+    //            masterList = ""; // List of text panel
+    //            this.theUsers = new UserAssistant(); // TODO: Read from file
+    //            theUsers.addUser("cat", "meow"); // A Default account to use.
+    //        }
+    //
+    //    }
 
     /*
      * This class accepts connections from the server, gathers the streams of
@@ -147,16 +221,16 @@ public class CEServer extends JFrame implements Serializable {
                     toPass = theUsers.getUser(userLogin.getName());
                 } else if (executeValue == 1) {
                     boolean success = false;
-                   while(!success) { // Means we have a wrong password
-                       RecoverPacket toRecover = (RecoverPacket) input.readObject();
-                       success = toRecover.execute(theUsers);
-                       output.writeObject(success);
-                       if (success) {
-                           toPass = theUsers.getUser(toRecover.getUserName());
-                           break;
+                    while (!success) { // Means we have a wrong password
+                        RecoverPacket toRecover = (RecoverPacket) input.readObject();
+                        success = toRecover.execute(theUsers);
+                        output.writeObject(success);
+                        if (success) {
+                            toPass = theUsers.getUser(toRecover.getUserName());
+                            break;
 
-                       }
-                   }
+                        }
+                    }
 
                 }
                 if (executeValue == 2) {
@@ -218,7 +292,7 @@ public class CEServer extends JFrame implements Serializable {
                     if (temp instanceof EditPacket) {
                         EditPacket readPacket = (EditPacket) temp;
                         // Executes the packet
-                        String newText = readPacket.execute();
+                        String newText = readPacket.execute(masterList);
                         // Checks to see if we even have something aka not null.
                         if (!newText.equals("")) {
                             // Writes it out to ALL of the Client's
@@ -243,13 +317,14 @@ public class CEServer extends JFrame implements Serializable {
             }
         }
     }
-    public void save(){
+
+    public void save() {
         ObjectOutputStream saveStream = null;
         String fileName = "";
 
-        while(fileName.equals("")){
+        while (fileName.equals("")) {
             fileName = JOptionPane.showInputDialog("Enter the name of the file you'd like to save to.");
-            if(fileName == null){
+            if (fileName == null) {
                 return;
             }
         }
@@ -265,17 +340,24 @@ public class CEServer extends JFrame implements Serializable {
 
         //Write the model to the file.
         try {
-            saveStream.writeObject(this+".ser");
-            JOptionPane.showMessageDialog(this, "File Successfully Saved!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            //            saveStream.writeObject(activeUsers);
+            //            saveStream.writeObject(ourView);
+            //            saveStream.writeObject(outputs);
+            //            saveStream.writeObject(theUsers);
+            //            saveStream.writeObject(allChatMessages);
+            //            saveStream.writeObject(masterList);
+            CEServer toWrite = this;
+            saveStream.writeObject(this);
 
-        //Make sure to close the stream!!!1!
-        try {
+            JOptionPane.showMessageDialog(this, "File Successfully Saved!");
             saveStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public static void main(String[] args) {
+        new CEServer();
     }
 }

@@ -89,3 +89,4 @@ bin/view/ChatView.class
 .idea/
 *.iml
 *.iws
+/bin1/

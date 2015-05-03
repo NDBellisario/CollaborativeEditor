@@ -18,7 +18,7 @@ import java.util.*;
 
 /* Test Username: cat Password = meow */
 /*
- * Written by Taylor Cox
+ * Written By Taylor Cox
  * 
  * This class handles several things.
  * 1: Connecting to the server

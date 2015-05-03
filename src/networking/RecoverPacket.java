@@ -3,6 +3,7 @@ import model.User;
 import model.UserAssistant;
 
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class RecoverPacket implements Serializable {
@@ -23,7 +24,11 @@ public class RecoverPacket implements Serializable {
         boolean toReturn = false;
         for (int i = 0; i < knownUsers.size(); i++) {
             if (knownUsers.get(i).getUserName().equals(userName)) {
-                toReturn = knownUsers.get(i).setPassword(newPW);
+                try {
+                    toReturn = knownUsers.get(i).setPassword(newPW);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
             }
 
         }

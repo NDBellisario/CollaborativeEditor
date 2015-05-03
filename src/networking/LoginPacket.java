@@ -8,10 +8,10 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class LoginPacket implements Serializable {
     String userName;
-    String password;
+    byte[] password;
     String recover;
 
-    public LoginPacket(String uname, String pw) {
+    public LoginPacket(String uname, byte[] pw) {
         this.userName = uname;
         this.password = pw;
     }
@@ -20,7 +20,7 @@ public class LoginPacket implements Serializable {
         return userName;
     }
 
-    public String getPassword() {
+    public byte[] getPassword() {
         return password;
     }
 
@@ -29,17 +29,21 @@ public class LoginPacket implements Serializable {
         // 1: User found, wrong password
         // 2: No account found, need to create one
         int toReturn = 2;
+
         ArrayList<User> knownUsers = theUsers.getUsers();
         for (int i = 0; i < knownUsers.size(); i++) {
             if (knownUsers.get(i).getUserName().equals(userName)) {
                 toReturn = 1;
-                if (knownUsers.get(i).getPassword().equals(password)) {
+
+                if (new String(knownUsers.get(i).getPassword()).equals(new String(password))) {
+                    System.out.println(new String(knownUsers.get(i).getPassword()));
+                    System.out.println(new String(password));
+                    System.out.println("03");
                     toReturn = 0;
                 }
             }
 
         }
-
 
         return toReturn;
 

@@ -21,6 +21,8 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.util.*;
 import java.util.List;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /* Author: Nick Bellisario
  * 
@@ -58,6 +60,7 @@ public class CEController extends JFrame implements Serializable {
     private ObjectOutputStream outputStrm;
     private ObjectInputStream inputStrm;
 
+
     public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
         initUserModels();
     }
@@ -68,6 +71,9 @@ public class CEController extends JFrame implements Serializable {
 
     /* Connects to the server and makes sure the login info matches an account */
     private void initUserModels() {
+        // Setting up hashing
+
+
         // Setting up the main data entry fields, un/pw/server stuff
         JTextField ipField = new JTextField();
         JTextField portField = new JTextField();
@@ -99,10 +105,24 @@ public class CEController extends JFrame implements Serializable {
             confirmedPW = new String(passwordField.getPassword());
             if (!confirmedPW.equals("")) {
                 NewUserPacket newUSR = new NewUserPacket(userName, passWord);
+//                if(!confirmedPW.equals(passWord)){
+//
+//                    JOptionPane.showMessageDialog(this, "Passwords Do Not Match!");
+//                }
             }
         }
         // Login packet based off of the previously fields
-        LoginPacket lPK = new LoginPacket(userName, passWord);
+        byte[] passByte = null;
+
+        try {
+            MessageDigest hashSha = MessageDigest.getInstance("SHA-1");
+
+            passByte = hashSha.digest(passWord.getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        LoginPacket lPK = new LoginPacket(userName, passByte);
         try {
             // COnnects to server, gets Streams, and writes out the packet
             serversoc = new Socket(serverAddress, Integer.parseInt(port));
@@ -137,7 +157,9 @@ public class CEController extends JFrame implements Serializable {
             }
             if (toTest == 2) {
                 JOptionPane.showMessageDialog(this, "Account Doesn't Exist!\nClick 'OK' To Create Account With Previous Input");
-                NewUserPacket newUser = new NewUserPacket(lPK.getName(), lPK.getPassword());
+
+
+                NewUserPacket newUser = new NewUserPacket(userName, passWord);
                 outputStrm.writeObject(newUser);
 
             }

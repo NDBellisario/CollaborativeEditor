@@ -1,4 +1,6 @@
 package networking;
+import com.sun.xml.internal.bind.v2.TODO;
+import model.User;
 import model.UserAssistant;
 
 public class UserPacket {
@@ -9,7 +11,12 @@ public class UserPacket {
         username = nameArg;
         password = passArg;
     }
-
+public void changePermission(User userArg, int arg)
+{
+userArg.setPermission(arg);
+    //userArg.EditView.setChangedPermission;
+    // TODO: make this work!
+}
     public boolean execute(UserAssistant theUser) {
         theUser.addUser(username, password, 2);
         return true;

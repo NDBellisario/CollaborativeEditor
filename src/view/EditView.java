@@ -41,7 +41,10 @@ public class EditView extends JPanel {
 
         this.add(new JLabel("No Document Selected.", SwingConstants.CENTER), BorderLayout.NORTH);
     }
-
+public void changePermission(int arg)
+{
+    permission = arg;
+}
     private JPanel formatPanel() {
         JPanel formats = new JPanel();
         formats.setLayout(new GridLayout(12, 1));

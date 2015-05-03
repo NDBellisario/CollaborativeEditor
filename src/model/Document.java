@@ -1,3 +1,4 @@
 package model;
-public class Document {
+
+public class Document implements Serializable {
 }

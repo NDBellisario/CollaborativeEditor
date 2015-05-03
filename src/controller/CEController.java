@@ -67,28 +67,28 @@ public class CEController extends JFrame implements Serializable {
     /* Connects to the server and makes sure the login info matches an account */
     private void initUserModels() {
         // Setting up the main data entry fields, un/pw/server stuff
-        JTextField field1 = new JTextField();
-        JTextField field2 = new JTextField();
-        JTextField field3 = new JTextField();
-        JTextField field4 = new JTextField();
+        JTextField ipField = new JTextField();
+        JTextField portField = new JTextField();
+        JTextField nameField = new JTextField();
+        JTextField passwordField = new JTextField();
         String userName = "cat"; // TODO: Delete this+4 lines down
         String passWord = "meow";
         String serverAddress = "localhost";
         String port = "9001";
         // The popup asking for credentials
         // Also deals with getting the text and setting it
-        Object[] message = {"Please Enter The Required Credentials\nTest Only, Leave Blank for Defaults\n\n", "Server:", field1, "Port:", field2, "Username:", field3, "Password:", field4,};
+        Object[] message = {"Please Enter The Required Credentials\nTest Only, Leave Blank for Defaults\n\n", "Server:", ipField, "Port:", portField, "Username:", nameField, "Password:", passwordField,};
         int option = JOptionPane.showConfirmDialog(this, message, "Enter all your values", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            if (!field1.getText().equals(""))
-                if (!field1.getText().equals(""))
-                    serverAddress = field1.getText();
-            if (!field2.getText().equals(""))
-                port = field2.getText();
-            if (!field3.getText().equals(""))
-                userName = field3.getText();
-            if (!field4.getText().equals(""))
-                passWord = field4.getText();
+            if (!ipField.getText().equals(""))
+                if (!ipField.getText().equals(""))
+                    serverAddress = ipField.getText();
+            if (!portField.getText().equals(""))
+                port = portField.getText();
+            if (!nameField.getText().equals(""))
+                userName = nameField.getText();
+            if (!passwordField.getText().equals(""))
+                passWord = passwordField.getText();
         }
         // Login packet based off of the previously fields
         LoginPacket lPK = new LoginPacket(userName, passWord);
@@ -114,15 +114,15 @@ public class CEController extends JFrame implements Serializable {
                 new Thread(new ServerRevisionRead()).start();
             } else {
                 // This means that the user's info wasn't right
-                field1.setText(""); // Default value
+                ipField.setText(""); // Default value
                 // Deals with the popup that comes, can recover pw or create
                 // account from previous data.
-                Object[] invalidAccount = {"Invalid Account! What Would You Like To Do?\nLeave Blank To Create New Account\n\n", "OR:\tRecover (Enter Username):", field1};
+                Object[] invalidAccount = {"Invalid Account! What Would You Like To Do?\nLeave Blank To Create New Account\n\n", "OR:\tRecover (Enter Username):", ipField};
                 int option2 = JOptionPane.showConfirmDialog(this, invalidAccount, "ERROR", JOptionPane.OK_CANCEL_OPTION);
                 if (option2 == JOptionPane.OK_OPTION) {
                     // Writes to the Server what we chose and they send back
                     // response
-                    outputStrm.writeObject(field1.getText());
+                    outputStrm.writeObject(ipField.getText());
                     String recovery = (String) inputStrm.readObject();
                     if (recovery.length() > 30)
                         // In here means that the user account didn't already

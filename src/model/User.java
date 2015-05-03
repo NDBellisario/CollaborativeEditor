@@ -1,22 +1,29 @@
 package model;
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class User implements Serializable {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-    String password;
+    byte[] password;
     String userName;
     int permission;
-    //In case we need the user's IP address?
-    InetAddress ip;
+    int identification;
 
-    public User(String userName, String password, int permission) {
+    public User(String userName, String password, int permission, int id) {
         setUserName(userName);
-        setPassword(password);
+        try {
+			setPassword(password);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         setPermission(permission);
+        setIdentification(id);
     }
 
     /**
@@ -25,7 +32,7 @@ public class User implements Serializable {
      * @param userName
      */
     //Sketchy to return a boolean?
-    public boolean setUserName(String userName) {
+    private boolean setUserName(String userName) {
         //if (userName.length() > 4) {
         this.userName = userName;
         return true;
@@ -40,16 +47,22 @@ public class User implements Serializable {
      *
      * @param password
      * @return true if the password was set correctly, false otherwise
+     * 
      */
-    public boolean setPassword(String password) {
+    public boolean setPassword(String password) throws NoSuchAlgorithmException {
         //if (password.length() > 4) {
-        this.password = password;
+        MessageDigest hashSha = MessageDigest.getInstance("SHA-1");
+    	this.password = hashSha.digest(password.getBytes());
         return true;
         //}
         //else {
         //	return false;
         //}
 
+    }
+    
+    public void setIdentification(int id) {
+    	this.identification = id;
     }
 
     /**
@@ -62,7 +75,7 @@ public class User implements Serializable {
     /**
      * @return Password
      */
-    public String getPassword() {
+    public byte[] getPassword() {
         return this.password;
     }
 
@@ -71,8 +84,10 @@ public class User implements Serializable {
     }
 
     /**
-     * Change the permissions of the users on the page. 0 is all permissions as in owner that can shut down with permissions 1, 2, 3 1 is moderator with everything but ability to shut down document 2
-     * can edit/chat but can't add people 3 can read and chat
+     * Change the permissions of the users on the page.  
+     * 1 is owner and the boss, add people and change permissions
+     * 2 can edit/chat but can't add people
+     * 3 can read and chat
      *
      * @param permission, depending on the integer, thats the new permission
      */

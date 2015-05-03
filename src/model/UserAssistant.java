@@ -1,13 +1,15 @@
 package model;
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class UserAssistant extends Observable {
-    ArrayList<User> userList;
+public class UserAssistant implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	ArrayList<User> userList;
 
     // When would we ever create an instance of UserAssistant?
 
     public UserAssistant() {
-
         userList = new ArrayList<User>();
     }
 
@@ -20,7 +22,7 @@ public class UserAssistant extends Observable {
      */
     // This is the equivalent of adding to the arraylist?
     public User addUser(String userName, String password, int permission) {
-        User toReturn = new User(userName, password, permission);
+        User toReturn = new User(userName, password, permission, userList.size() + 1); //creates new user sets their unique ID# to how many users we have plus 1
         userList.add(toReturn);
         return toReturn;
         //setChanged();
@@ -43,7 +45,9 @@ public class UserAssistant extends Observable {
      * @param username    - User whose password is to be changed
      * @param newPassword - New password that user wants
      */
-    public String recoverPassword(String username) {
+    
+    /*
+    public byte[] recoverPassword(String username) {
         for (User user : userList) {
             if (user.userName.equals(username)) {
                 return user.getPassword();
@@ -52,6 +56,7 @@ public class UserAssistant extends Observable {
         }
         return "NO USERNAME EXISTS";
     }
+    */
 
     /**
      * Get all the users

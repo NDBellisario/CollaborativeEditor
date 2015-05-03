@@ -26,29 +26,37 @@ public class LoginPacket implements Serializable {
 
     // Method is for recovery of users, if the user exists, get PW
     // Otherwise return this String.
-    public String getRecovery(String arg, UserAssistant theUsers) {
+//    public boolean recoverPassword(String userName, String newPW, UserAssistant theUsers) {
+//
+//        ArrayList<User> knownUsers = theUsers.getUsers();
+//        boolean toReturn = false;
+//        for (int i = 0; i < knownUsers.size(); i++) {
+//            if (knownUsers.get(i).getUserName().equals(userName)) {
+//                toReturn = knownUsers.get(i).setPassword(newPW);
+//            }
+//
+//        }
+//        return toReturn;
+//    }
 
+    public int execute(UserAssistant theUsers) {
+        // 0: Login Success!
+        // 1: User found, wrong password
+        // 2: No account found, need to create one
+        int toReturn = 2;
         ArrayList<User> knownUsers = theUsers.getUsers();
         for (int i = 0; i < knownUsers.size(); i++) {
             if (knownUsers.get(i).getUserName().equals(userName)) {
-                return knownUsers.get(i).getPassword();
-            }
-
-        }
-        return "Username Not Found!  Creating Account With Password '0000'";
-    }
-
-    public boolean execute(UserAssistant theUsers) {
-        ArrayList<User> knownUsers = theUsers.getUsers();
-        for (int i = 0; i < knownUsers.size(); i++) {
-            if (knownUsers.get(i).getUserName().equals(userName)) {
-
-                return knownUsers.get(i).getPassword().equals(password);
+                toReturn = 1;
+                if (knownUsers.get(i).getPassword().equals(password)) {
+                    toReturn = 0;
+                }
             }
 
         }
 
-        return false;
+
+        return toReturn;
 
     }
 }

@@ -21,8 +21,8 @@ public class UserAssistant implements Serializable {
      * @param basePermissions
      */
     // This is the equivalent of adding to the arraylist?
-    public User addUser(String userName, String password, int permission) {
-        User toReturn = new User(userName, password, permission, userList.size() + 1); //creates new user sets their unique ID# to how many users we have plus 1
+    public User addUser(String userName, String password) {
+        User toReturn = new User(userName, password, userList.size() + 1); //creates new user sets their unique ID# to how many users we have plus 1
         userList.add(toReturn);
         return toReturn;
         //setChanged();

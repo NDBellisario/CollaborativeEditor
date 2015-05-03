@@ -14,7 +14,7 @@ public class User implements Serializable {
     int permission;
     int identification;
 
-    public User(String userName, String password, int permission, int id) {
+    public User(String userName, String password, int id) {
         setUserName(userName);
         try {
 			setPassword(password);

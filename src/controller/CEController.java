@@ -5,6 +5,8 @@ import model.User;
 import model.UserAssistant;
 import networking.EditPacket;
 import networking.LoginPacket;
+import networking.NewUserPacket;
+import networking.RecoverPacket;
 import view.ChatView;
 import view.DocumentView;
 import view.EditView;
@@ -70,14 +72,18 @@ public class CEController extends JFrame implements Serializable {
         JTextField ipField = new JTextField();
         JTextField portField = new JTextField();
         JTextField nameField = new JTextField();
-        JTextField passwordField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+        passwordField.setEchoChar('*');
+        JPasswordField passwordConfirm = new JPasswordField();
+        passwordConfirm.setEchoChar('*');
         String userName = "cat"; // TODO: Delete this+4 lines down
         String passWord = "meow";
         String serverAddress = "localhost";
         String port = "9001";
+        String confirmedPW = "";
         // The popup asking for credentials
         // Also deals with getting the text and setting it
-        Object[] message = {"Please Enter The Required Credentials\nTest Only, Leave Blank for Defaults\n\n", "Server:", ipField, "Port:", portField, "Username:", nameField, "Password:", passwordField,};
+        Object[] message = {"Please Enter The Required Credentials\n\n", "Server:", ipField, "Port:", portField, "Username:", nameField, "Password:", passwordField, "Confirm Password\n(Or Fill Out To Create Account)", passwordConfirm};
         int option = JOptionPane.showConfirmDialog(this, message, "Enter all your values", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             if (!ipField.getText().equals(""))
@@ -87,8 +93,13 @@ public class CEController extends JFrame implements Serializable {
                 port = portField.getText();
             if (!nameField.getText().equals(""))
                 userName = nameField.getText();
-            if (!passwordField.getText().equals(""))
-                passWord = passwordField.getText();
+            if (!(new String(passwordField.getPassword()).equals("")))
+                passWord = new String(passwordField.getPassword());
+            //
+            confirmedPW = new String(passwordField.getPassword());
+            if (!confirmedPW.equals("")) {
+                NewUserPacket newUSR = new NewUserPacket(userName, passWord);
+            }
         }
         // Login packet based off of the previously fields
         LoginPacket lPK = new LoginPacket(userName, passWord);
@@ -99,50 +110,48 @@ public class CEController extends JFrame implements Serializable {
             inputStrm = new ObjectInputStream(serversoc.getInputStream());
             outputStrm.writeObject(lPK);
             // Reads whether or not the login was a succcess/
-            boolean toTest = (boolean) inputStrm.readObject();
-            // If sm = grab the User, set up GUI w EditView, welcome back!
-            if (toTest) {
-                mainUser = (User) inputStrm.readObject();
-                setupGui();
-                JOptionPane.showMessageDialog(this, "Welcome Back!");
-                editView.setText((String) inputStrm.readObject());
-                List<String> toSet;
-                toSet = (List<String>) inputStrm.readObject();
-                updateChat(toSet);
-                // Starts threads to read and write
-                new Thread(new ServerRevisionWrite()).start();
-                new Thread(new ServerRevisionRead()).start();
-            } else {
-                // This means that the user's info wasn't right
-                ipField.setText(""); // Default value
-                // Deals with the popup that comes, can recover pw or create
-                // account from previous data.
-                Object[] invalidAccount = {"Invalid Account! What Would You Like To Do?\nLeave Blank To Create New Account\n\n", "OR:\tRecover (Enter Username):", ipField};
-                int option2 = JOptionPane.showConfirmDialog(this, invalidAccount, "ERROR", JOptionPane.OK_CANCEL_OPTION);
-                if (option2 == JOptionPane.OK_OPTION) {
-                    // Writes to the Server what we chose and they send back
-                    // response
-                    outputStrm.writeObject(ipField.getText());
-                    String recovery = (String) inputStrm.readObject();
-                    if (recovery.length() > 30)
-                        // In here means that the user account didn't already
-                        // exist
-                        JOptionPane.showMessageDialog(this, recovery + "\nLogging You In!");
-                    else if (!recovery.equals("404"))
-                        // Here means that the user account existed already
-                        JOptionPane.showMessageDialog(this, "Your Password:\n" + recovery + "\nLogging You In!");
+            int toTest = (int) inputStrm.readObject();
+
+            if (toTest == 1) {
+                boolean endLoop = false;
+                while (!endLoop) {
+                    JTextField unField = new JTextField();
+                    JPasswordField pwField = new JPasswordField();
+                    pwField.setEchoChar('*');
+                    Object[] recoverAcct = {"Invalid Password\n", "Please Enter Username And Desired New Password", unField, pwField};
+                    int option2 = JOptionPane.showConfirmDialog(this, recoverAcct, "ERROR", JOptionPane.OK_CANCEL_OPTION);
+
+                    if (option2 == JOptionPane.OK_OPTION) {
+                        RecoverPacket toPass = new RecoverPacket(unField.getText(), new String(pwField.getPassword()));
+                        outputStrm.writeObject(toPass);
+                        boolean recoverStatus = (boolean) inputStrm.readObject();
+                        if (recoverStatus) {
+                            JOptionPane.showMessageDialog(this, "Password Successfully Set, Logging In!!");
+                            endLoop = true;
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Invalid Username\nPlease Try Again.");
+                        }
+                    }
+                    //TODO: If cancel?
                 }
-                // Reads in the main user from server
-                mainUser = (User) inputStrm.readObject();
-                setupGui();
-                // Sets text field with default values and starts thread
-                editView.setText((String) inputStrm.readObject());
-                List<String> toSet;
-                toSet = (List<String>) inputStrm.readObject();
-                updateChat(toSet);
-                new Thread(new ServerRevisionWrite()).start();
-                new Thread(new ServerRevisionRead()).start();
             }
+            if (toTest == 2) {
+                JOptionPane.showMessageDialog(this, "Account Doesn't Exist!\nClick 'OK' To Create Account With Previous Input");
+                NewUserPacket newUser = new NewUserPacket(lPK.getName(), lPK.getPassword());
+                outputStrm.writeObject(newUser);
+
+            }
+
+            mainUser = (User) inputStrm.readObject();
+            setupGui();
+            // Sets text field with default values and starts thread
+            editView.setText((String) inputStrm.readObject());
+            List<String> toSet;
+            toSet = (List<String>) inputStrm.readObject();
+            updateChat(toSet);
+            new Thread(new ServerRevisionWrite()).start();
+            new Thread(new ServerRevisionRead()).start();
+            //}
         } catch (Exception e) {
             e.printStackTrace();
         }

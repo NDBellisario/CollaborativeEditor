@@ -81,7 +81,7 @@ public class CEServer extends JFrame implements Serializable {
         allChatMessages = new ArrayList<String>();
         masterList = ""; // List of text panel
         this.theUsers = new UserAssistant(); // TODO: Read from file
-        theUsers.addUser("cat", "meow", 2); // A Default account to use.
+        theUsers.addUser("cat", "meow"); // A Default account to use.
         ourView = new ServerView(theUsers); // New Server View
     }
 
@@ -144,65 +144,35 @@ public class CEServer extends JFrame implements Serializable {
             try {
                 // Read from controller the info of the user trying to log in
                 LoginPacket userLogin = (LoginPacket) input.readObject();
-                // Executes it, false means wrong info, true means good to go
                 int executeValue = userLogin.execute(theUsers);
-                User toPass; // The user whom the controller is to be set up for
+                User toPass = null; // The user whom the controller is to be set up for
                 // Writes login success to client
                 output.writeObject(executeValue);
-                if(executeValue == 0)
-                {
+                if (executeValue == 0) {
                     // We can login the user
                     toPass = theUsers.getUser(userLogin.getName());
-                }
-                else if(executeValue == 1)
-                {
-                    // Means we have a wrong password
-                    RecoverPacket toRecover = (RecoverPacket) input.readObject();
-                    output.writeObject(toRecover.execute(theUsers));
-                    toPass = theUsers.getUser(toRecover.getUserName());
+                } else if (executeValue == 1) {
+                    boolean success = false;
+                   while(!success) { // Means we have a wrong password
+                       RecoverPacket toRecover = (RecoverPacket) input.readObject();
+                       success = toRecover.execute(theUsers);
+                       output.writeObject(success);
+                       if (success) {
+                           toPass = theUsers.getUser(toRecover.getUserName());
+                           break;
+
+                       }
+                   }
 
                 }
-                else if(executeValue == 2)
-                {
+                if (executeValue == 2) {
                     NewUserPacket userToAdd = (NewUserPacket) input.readObject();
-                   userToAdd.execute(theUsers);
-                    toPass =
-                    //TODO: Need to create an account
-                }
-//                if (correctInfo == false) {
-//                    // Here means log in un/pw didn't match
-//                    // Reads "" or "username" from the client
-//                    String inputArg = (String) input.readObject();
-//
-//                    if (!inputArg.equals("")) {
-//                        // Here means we are tasked with recovering an account
-//                        // Gets user recovery info
-//                        String toSend = userLogin.getRecovery(inputArg, theUsers);
-//                        output.writeObject(toSend); // Writes out
-//                        if (toSend.length() > 40) {
-//                            // Here means that the UN didn't exist!, so we will
-//                            // give default value
-//                            toPass = theUsers.addUser(inputArg, "0000", 2);
-//                        } else {
-//                            // Here means they do exist so let's set toPass to
-//                            // our user
-//                            toPass = theUsers.getUser(userLogin.getName());
-//                        }
-//                    } else {
-//                        // Get here know that we had "" and OP wants new account
-//                        // Adds the new User
-//                        theUsers.addUser(userLogin.getName(), userLogin.getPassword(), 2);
-//                        // Write out this String to CE
-//                        output.writeObject("Created User With Previously Entered Username/Password Combo");
-//                        // Grabs the suer we want to write
-//                        toPass = theUsers.getUser(userLogin.getName());
-//                    }
-//                } else
-//                    // If login boolean was True, then just log them in
-//                    toPass = theUsers.getUser(userLogin.getName());
+                    toPass = userToAdd.execute(theUsers);
 
+                }
                 userName = userLogin.getName();
-                output.writeObject(toPass); // Writes out the User Object
+                // Writes out the User Object
+                output.writeObject(toPass);
                 output.writeObject(masterList); // Writes out the current List
                 output.writeObject(allChatMessages);
                 outputs.put(userLogin.getName(), output); // Puts on output map

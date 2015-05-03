@@ -18,7 +18,7 @@ userArg.setPermission(arg);
     // TODO: make this work!
 }
     public boolean execute(UserAssistant theUser) {
-        theUser.addUser(username, password, 2);
+        theUser.addUser(username, password);
         return true;
     }
 

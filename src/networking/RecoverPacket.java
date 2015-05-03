@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class RecoverPacket implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String userName;
     private String newPW;
 

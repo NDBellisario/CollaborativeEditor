@@ -24,7 +24,7 @@ public class EditPacket implements Serializable {
         theUser = arg;
     }
 
-    public String execute() {
+    public String execute(String theList) {
         Date date = new Date();
         Revision revision = new Revision(theUser, newText, date);
 
@@ -33,7 +33,7 @@ public class EditPacket implements Serializable {
         //int masterLength = masterText.length();
         //CEServer.masterList = newText;
         //String newMaster = masterText.substring(masterLength);
-        if (newText.equals(CEServer.masterList) && !newText.equals("null"))
+        if (newText.equals(theList) && !newText.equals("null"))
             return "";
         else if (newText.length() == 100)
             newText += "\n";

@@ -1,5 +1,4 @@
 package view;
-import com.sun.java.swing.action.SaveAction;
 import model.UserAssistant;
 import server.CEServer;
 

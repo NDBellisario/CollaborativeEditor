@@ -17,9 +17,9 @@ public class DocumentAssistant implements Serializable {
 		this.documentList = new ArrayList<Document>();
 	}
 	
-	public newDocument(User owner, )
-	
-	
+	public void newDocument(String name, ) {
+		
+	}
 	
 
 }

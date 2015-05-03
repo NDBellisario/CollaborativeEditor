@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class UserAssistant implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	ArrayList<User> userList;
+	private ArrayList<User> userList;
 
     // When would we ever create an instance of UserAssistant?
 

@@ -11,6 +11,7 @@ public class Document implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private String docName;
+	private int docIdentification;
 	private String Owner;
 	private ArrayList<Integer> editors;
 	private String docContents;

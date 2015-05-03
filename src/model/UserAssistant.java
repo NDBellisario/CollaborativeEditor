@@ -29,11 +29,11 @@ public class UserAssistant implements Serializable {
         //notifyObservers();
     }
 
-    
+
     public User getUser(int identificationNumber) {
     	return userList.get(identificationNumber - 1);
     }
-    
+
     public User getUser(String username) {
         for (User user : userList) {
             if (user.getUserName().equalsIgnoreCase(username)) {
@@ -44,30 +44,7 @@ public class UserAssistant implements Serializable {
         return null;
     }
 
-    /**
-     * Give the user a new Password
-     *
-     * @param username    - User whose password is to be changed
-     * @param newPassword - New password that user wants
-     */
-    
-    /*
-    public byte[] recoverPassword(String username) {
-        for (User user : userList) {
-            if (user.userName.equals(username)) {
-                return user.getPassword();
 
-            }
-        }
-        return "NO USERNAME EXISTS";
-    }
-    */
-
-    /**
-     * Get all the users
-     *
-     * @return The list of Users
-     */
     public ArrayList<User> getUsers() {
         return userList;
     }

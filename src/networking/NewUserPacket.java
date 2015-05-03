@@ -15,6 +15,7 @@ public class NewUserPacket implements Serializable {
     }
 
     public User execute(UserAssistant theUsers) {
+
         return theUsers.addUser(userName, password);
     }
 }

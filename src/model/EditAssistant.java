@@ -76,7 +76,7 @@ public class EditAssistant extends Observable {
     public User getUser(String name) {
         User toReturn = null;
         for (User user : theData) {
-            if (user.userName.equals(name)) {
+            if (user.getUserName().equals(name)) {
                 toReturn = user;
             }
         }

@@ -46,7 +46,7 @@ public class User implements Serializable {
      *
      * @param password
      * @return true if the password was set correctly, false otherwise
-     * 
+     *
      */
     public boolean setPassword(String password) throws NoSuchAlgorithmException {
         //if (password.length() > 4) {
@@ -59,7 +59,7 @@ public class User implements Serializable {
         //}
 
     }
-    
+
     public void setIdentification(int id) {
     	this.identification = id;
     }
@@ -83,7 +83,7 @@ public class User implements Serializable {
     }
 
     /**
-     * Change the permissions of the users on the page.  
+     * Change the permissions of the users on the page.
      * 1 is owner and the boss, add people and change permissions
      * 2 can edit/chat but can't add people
      * 3 can read and chat

@@ -27,9 +27,6 @@ import java.util.*;
  * 
  */
 
-// Comment here test git change
-
-
 public class CEServer extends JFrame implements Serializable {
     /*
      * Private Instance Variables

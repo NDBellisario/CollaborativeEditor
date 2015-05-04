@@ -1,4 +1,5 @@
 package server;
+import model.DocumentAssistant;
 import model.User;
 import model.UserAssistant;
 import networking.*;
@@ -26,7 +27,7 @@ public class CEServer extends JFrame implements Serializable {
      * Private Instance Variables
      */
     private static final long serialVersionUID = 1L;
-    public String masterList;
+    public DocumentAssistant masterList;
     private transient static ServerSocket ourServer;
     private List<String> allChatMessages;
     public transient HashMap<String, ObjectOutputStream> outputs;
@@ -105,7 +106,7 @@ public class CEServer extends JFrame implements Serializable {
             this.outputs = new HashMap<String, ObjectOutputStream>();
             this.theUsers = new UserAssistant();
             this.allChatMessages = new ArrayList<String>();
-            this.masterList = "<html><font color = red>SampleOutput</font></html>"; // List of text panel
+            this.masterList = new DocumentAssistant(); // List of text panel
             this.theUsers.addUser("cat", "meow"); // A Default account to use.
         }
 
@@ -281,12 +282,11 @@ public class CEServer extends JFrame implements Serializable {
                     if (temp instanceof EditPacket) {
                         EditPacket readPacket = (EditPacket) temp;
                         // Executes the packet
-                        String newText = readPacket.execute(masterList);
+                        readPacket.execute(masterList);
                         // Checks to see if we even have something aka not null.
-                        if (!newText.equals("")) {
+                        if (readPacket.getNewText().equals("")) {
                             // Writes it out to ALL of the Client's
                             for (ObjectOutputStream OPtemp : outputs.values()) {
-                                masterList = newText;
                                 OPtemp.writeObject(masterList);
                             }
                         }

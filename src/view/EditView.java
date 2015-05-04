@@ -2,6 +2,7 @@ package view;
 import model.User;
 
 import javax.swing.*;
+import javax.swing.text.html.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -33,6 +34,8 @@ public class EditView extends JPanel {
         permission = user.getPermission();
         //TODO: fix textBox = new JEditorPane(new HTMLEditorKit().getContentType(), "");
         textBox = new JEditorPane();
+        textBox.setEditorKit(new HTMLEditorKit());
+        //textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
         textBox.setMargin(new Insets(25, 25,25, 25));
         //If user's permissions  is set to 3, can't edit.
         //TODO: This stuff
@@ -102,7 +105,7 @@ public class EditView extends JPanel {
         insertCode = new JButton("Insert Code");
         insertCode.addActionListener(listener);
 
-        textBox.setText("<p style=\"color:red\">This is a paragraph.</p>");
+
 
         formats.add(bold);
         formats.add(ital);
@@ -139,7 +142,7 @@ public class EditView extends JPanel {
     public void setText(String s) {
 
         textBox.setText(s);
-        textBox.setCaretPosition(s.length());
+       // textBox.setCaretPosition(s.length());
     }
 
     public class formatListener implements ActionListener {

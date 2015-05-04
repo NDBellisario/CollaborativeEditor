@@ -105,7 +105,7 @@ public class CEServer extends JFrame implements Serializable {
             this.outputs = new HashMap<String, ObjectOutputStream>();
             this.theUsers = new UserAssistant();
             this.allChatMessages = new ArrayList<String>();
-            this.masterList = ""; // List of text panel
+            this.masterList = "<html><font color = red>SampleOutput</font></html>"; // List of text panel
             this.theUsers.addUser("cat", "meow"); // A Default account to use.
         }
 

@@ -230,7 +230,7 @@ public class CEController extends JFrame implements Serializable {
         editContainer.add(undo);
         editContainer.add(redo);
         editContainer.add(version);
-        // userContainer sub menu buttons
+        // userContextBox.setText("<p style=\"color:red\">This is a paragraph.</p>");tainer sub menu buttons
         userContainer.add(changePW);
         userContainer.add(addUser);
         userContainer.add(removeUser);
@@ -240,6 +240,7 @@ public class CEController extends JFrame implements Serializable {
         // Add ChatView
         chatView = new ChatView(mainUser, outputStrm);
         editView = new EditView(mainUser);
+        //editView.setText("<p style=\"color:red\">This is a paragraph.</p>");
         this.setLayout(new BorderLayout());
         this.add(chatView, BorderLayout.EAST);
         this.add(editView, BorderLayout.CENTER);

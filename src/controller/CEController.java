@@ -1,8 +1,5 @@
 package controller;
-import model.ChatAssistant;
-import model.EditAssistant;
-import model.User;
-import model.UserAssistant;
+import model.*;
 import networking.*;
 import view.ChatView;
 import view.DocumentView;
@@ -16,10 +13,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
-import java.util.*;
-import java.util.List;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.util.List;
+
 
 /* Author: Nick Bellisario
  * 
@@ -57,7 +55,8 @@ public class CEController extends JFrame implements Serializable {
     private Socket serversoc;
     private ObjectOutputStream outputStrm;
     private ObjectInputStream inputStrm;
-
+    private Doc currentSelectedDoc;
+    private ArrayList<Doc> ourDocs;
 
     public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
         initUserModels();
@@ -73,6 +72,7 @@ public class CEController extends JFrame implements Serializable {
 
 
         // Setting up the main data entry fields, un/pw/server stuff
+        ourDocs = new ArrayList<Doc>();
         JTextField ipField = new JTextField();
         JTextField portField = new JTextField();
         JTextField nameField = new JTextField();
@@ -103,10 +103,10 @@ public class CEController extends JFrame implements Serializable {
             confirmedPW = new String(passwordField.getPassword());
             if (!confirmedPW.equals("")) {
                 NewUserPacket newUSR = new NewUserPacket(userName, passWord);
-//                if(!confirmedPW.equals(passWord)){
-//
-//                    JOptionPane.showMessageDialog(this, "Passwords Do Not Match!");
-//                }
+                //                if(!confirmedPW.equals(passWord)){
+                //
+                //                    JOptionPane.showMessageDialog(this, "Passwords Do Not Match!");
+                //                }
             }
         }
         // Login packet based off of the previously fields
@@ -122,7 +122,7 @@ public class CEController extends JFrame implements Serializable {
 
         LoginPacket lPK = new LoginPacket(userName, passByte);
         try {
-            // COnnects to server, gets Streams, and writes out the packet
+            // Connects to server, gets Streams, and writes out the packet
             serversoc = new Socket(serverAddress, Integer.parseInt(port));
             outputStrm = new ObjectOutputStream(serversoc.getOutputStream());
             inputStrm = new ObjectInputStream(serversoc.getInputStream());
@@ -156,7 +156,6 @@ public class CEController extends JFrame implements Serializable {
             if (toTest == 2) {
                 JOptionPane.showMessageDialog(this, "Account Doesn't Exist!\nClick 'OK' To Create Account With Previous Input");
 
-
                 NewUserPacket newUser = new NewUserPacket(userName, passWord);
                 outputStrm.writeObject(newUser);
 
@@ -165,7 +164,8 @@ public class CEController extends JFrame implements Serializable {
             mainUser = (User) inputStrm.readObject();
             setupGui();
             // Sets text field with default values and starts thread
-            editView.setText((String) inputStrm.readObject());
+            Doc doc2Set = (Doc) inputStrm.readObject();
+            editView.setText(doc2Set.getDocContents());//new Doc("Test Doc",12345, 1, null))
             ChatPacket temp = (ChatPacket) inputStrm.readObject();
             List<String> toSet = temp.getChats();
             updateChat(toSet);
@@ -187,7 +187,7 @@ public class CEController extends JFrame implements Serializable {
         fileContainer = new JMenu("File");
         editContainer = new JMenu("Edit");
         userContainer = new JMenu("User");
-        documentContainer = new JMenu("Document Editor");
+        documentContainer = new JMenu("Doc Editor");
         save = new JMenuItem("Save");
         saveLocal = new JMenuItem("Save Local");
         quitOption = new JMenuItem("Quit");
@@ -213,7 +213,7 @@ public class CEController extends JFrame implements Serializable {
         addUser.addActionListener(new AddUserListener());
         removeUser.addActionListener(new RemoveUserListener());
         changePermission.addActionListener(new PermissionListener());
-        // Adding Action Listener for Document Editor
+        // Adding Action Listener for Doc Editor
         showOptions.addActionListener(new showOptionsListener());
         // add main menu buttons to bar
         menuBarCore.add(fileContainer);
@@ -267,7 +267,9 @@ public class CEController extends JFrame implements Serializable {
     private class SaveListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // TODO Auto-generated method stub
+            Doc temp = new Doc("Test Doc",12345, 1, null);
+            ourDocs.add(temp);
+            currentSelectedDoc = temp;
         }
     }
 
@@ -319,6 +321,7 @@ public class CEController extends JFrame implements Serializable {
             // TODO Auto-generated method stub
         }
     }
+
     private class ChangePWListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -333,7 +336,7 @@ public class CEController extends JFrame implements Serializable {
 
                 try {
                     // New edit packet and write it out!
-                    EditPacket newTimedRevision = new EditPacket(editView, mainUser);
+                    EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc.getDocIdentification());
                     outputStrm.writeObject(newTimedRevision);
                     Thread.sleep(777); // Only want to send every 2000 ms.
                 } catch (IOException e) {
@@ -358,15 +361,17 @@ public class CEController extends JFrame implements Serializable {
                     // Object unknown = inputStrm.readObject();
                     Object unknown = inputStrm.readObject();
 
-                    if (unknown instanceof String) {
-                        String toAdd = (String) unknown;
-                        editView.setText(toAdd);
+                    if (unknown instanceof EditPacket) {
+                        EditPacket newPacket = (EditPacket) unknown;
+                        if (newPacket.getDocID() == currentSelectedDoc.getDocIdentification()) {
+
+                            editView.setText(newPacket.getNewText());
+                        }
                     } else if (unknown instanceof ChatPacket)
 
                     {
                         @SuppressWarnings("unchecked") List<String> toSet = (ArrayList<String>) ((ChatPacket) unknown).getChats();
                         updateChat(toSet);
-
 
                     }
 
@@ -380,14 +385,17 @@ public class CEController extends JFrame implements Serializable {
 
     private class showOptionsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            String[] arr = new String[7];
-            for (int i = 0; i < 7; i++) {
-                arr[i] = "String" + i;
+            DefaultListModel docList = new DefaultListModel();
+            for (int i = 0; i < ourDocs.size(); i++) {
+                docList.addElement(ourDocs.get(i).getDocName());
             }
+
+            JList currentDocTemp = new JList<String>(docList);
+            JScrollPane currentDocs= new JScrollPane(currentDocTemp);
+
             JFrame frame = new JFrame();
-            frame.setLayout(new BorderLayout());
-            DocumentView doc = new DocumentView(arr);
-            frame.add(doc, BorderLayout.CENTER);
+
+            frame.add(currentDocs, BorderLayout.CENTER);
             frame.setVisible(true);
             frame.setResizable(true);
             frame.pack();

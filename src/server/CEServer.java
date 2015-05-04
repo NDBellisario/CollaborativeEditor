@@ -1,4 +1,5 @@
 package server;
+import model.Doc;
 import model.DocumentAssistant;
 import model.User;
 import model.UserAssistant;
@@ -230,7 +231,7 @@ public class CEServer extends JFrame implements Serializable {
                 userName = userLogin.getName();
                 // Writes out the User Object
                 output.writeObject(toPass);
-                output.writeObject(masterList); // Writes out the current List
+                output.writeObject(new Doc()); // Writes out the current List
                 ChatPacket toWrite = new ChatPacket(allChatMessages);
                 output.writeObject(toWrite);
                 outputs.put(userLogin.getName(), output); // Puts on output map

@@ -23,6 +23,7 @@ public class EditPacket implements Serializable {
         newText = editView.getText();
         theUser = arg;
     }
+    //TODO: Eventually implement revisions
     public String getNewText()
     {
         return newText;

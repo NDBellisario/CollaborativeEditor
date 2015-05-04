@@ -159,18 +159,6 @@ public class CEServer extends JFrame implements Serializable {
      * the connection and have the user login
      */
 
-    public void updateConnected() {
-        try {
-            for (ObjectOutputStream out : outputs.values()) {
-                out.reset();
-                out.writeObject(allChatMessages);
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-    }
 
     private class ClientAccepter implements Runnable {
         @Override
@@ -242,7 +230,8 @@ public class CEServer extends JFrame implements Serializable {
                 // Writes out the User Object
                 output.writeObject(toPass);
                 output.writeObject(masterList); // Writes out the current List
-                output.writeObject(allChatMessages);
+                ChatPacket toWrite = new ChatPacket(allChatMessages);
+                output.writeObject(toWrite);
                 outputs.put(userLogin.getName(), output); // Puts on output map
                 clientInit(); // Adds user to session so server can keep track
 
@@ -307,7 +296,16 @@ public class CEServer extends JFrame implements Serializable {
                         ChatPacket newChat = (ChatPacket) temp;
                         newChat.setCurrent(allChatMessages);
                         allChatMessages = newChat.execute();
-                        updateConnected();
+                        try {
+                            for (ObjectOutputStream out : outputs.values()) {
+                                out.reset();
+                                out.writeObject(newChat);
+
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+
+                        }
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();

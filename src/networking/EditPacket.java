@@ -23,6 +23,10 @@ public class EditPacket implements Serializable {
         newText = editView.getText();
         theUser = arg;
     }
+    public String getNewText()
+    {
+        return newText;
+    }
 
     public String execute(String theList) {
         Date date = new Date();
@@ -34,7 +38,7 @@ public class EditPacket implements Serializable {
         //CEServer.masterList = newText;
         //String newMaster = masterText.substring(masterLength);
         if (newText.equals(theList) && !newText.equals("null"))
-            return "";
+            return newText = "";
         //else if (newText.length() == 100)
         //    newText += "\n";
         return newText;

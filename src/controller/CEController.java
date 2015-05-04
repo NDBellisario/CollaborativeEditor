@@ -3,10 +3,7 @@ import model.ChatAssistant;
 import model.EditAssistant;
 import model.User;
 import model.UserAssistant;
-import networking.EditPacket;
-import networking.LoginPacket;
-import networking.NewUserPacket;
-import networking.RecoverPacket;
+import networking.*;
 import view.ChatView;
 import view.DocumentView;
 import view.EditView;
@@ -50,6 +47,7 @@ public class CEController extends JFrame implements Serializable {
     private JMenuItem redo;
     private JMenuItem version;
     private JMenuItem addUser;
+    private JMenuItem changePW;
     private JMenuItem removeUser;
     private JMenuItem changePermission;
     private JMenuItem showOptions;
@@ -168,11 +166,11 @@ public class CEController extends JFrame implements Serializable {
             setupGui();
             // Sets text field with default values and starts thread
             editView.setText((String) inputStrm.readObject());
-            List<String> toSet;
-            toSet = (List<String>) inputStrm.readObject();
+            ChatPacket temp = (ChatPacket) inputStrm.readObject();
+            List<String> toSet = temp.getChats();
             updateChat(toSet);
             new Thread(new ServerRevisionWrite()).start();
-            new Thread(new ServerRevisionRead()).start();
+            new Thread(new ServerCommunicator()).start();
             //}
         } catch (Exception e) {
             e.printStackTrace();
@@ -197,10 +195,11 @@ public class CEController extends JFrame implements Serializable {
         redo = new JMenuItem("Redo");
         version = new JMenuItem("Version");
         addUser = new JMenuItem("Add User");
+        changePW = new JMenuItem("Change Password");
         removeUser = new JMenuItem("Remove User");
         changePermission = new JMenuItem("Permissions Options");
         showOptions = new JMenuItem("Show Documents");
-        this.setTitle("CE Checkpoint 1");
+        this.setTitle("Collaborative Editor");
         // Adding action listeners for File
         quitOption.addActionListener(new ExitListener());
         save.addActionListener(new SaveListener());
@@ -210,6 +209,7 @@ public class CEController extends JFrame implements Serializable {
         redo.addActionListener(new RedoListener());
         version.addActionListener(new VersionListener());
         // Adding Action Listener for User
+        changePW.addActionListener(new ChangePWListener());
         addUser.addActionListener(new AddUserListener());
         removeUser.addActionListener(new RemoveUserListener());
         changePermission.addActionListener(new PermissionListener());
@@ -231,6 +231,7 @@ public class CEController extends JFrame implements Serializable {
         editContainer.add(redo);
         editContainer.add(version);
         // userContainer sub menu buttons
+        userContainer.add(changePW);
         userContainer.add(addUser);
         userContainer.add(removeUser);
         userContainer.add(changePermission);
@@ -317,6 +318,12 @@ public class CEController extends JFrame implements Serializable {
             // TODO Auto-generated method stub
         }
     }
+    private class ChangePWListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // TODO Auto-generated method stub
+        }
+    }
 
     /* Once connection is set up, this deals writing out updates */
     private class ServerRevisionWrite implements Runnable {
@@ -341,7 +348,7 @@ public class CEController extends JFrame implements Serializable {
     }
 
     /* This class will get new revisions and update GUI */
-    private class ServerRevisionRead implements Runnable {
+    private class ServerCommunicator implements Runnable {
         @Override
         public void run() {
             while (true) {
@@ -353,12 +360,12 @@ public class CEController extends JFrame implements Serializable {
                     if (unknown instanceof String) {
                         String toAdd = (String) unknown;
                         editView.setText(toAdd);
-                    } else if (unknown instanceof List<?>)
+                    } else if (unknown instanceof ChatPacket)
 
                     {
-                        // System.out.println("A");
-                        @SuppressWarnings("unchecked") List<String> toSet = (ArrayList<String>) unknown;
+                        @SuppressWarnings("unchecked") List<String> toSet = (ArrayList<String>) ((ChatPacket) unknown).getChats();
                         updateChat(toSet);
+
 
                     }
 

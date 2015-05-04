@@ -2,7 +2,7 @@ package model;
 import java.io.Serializable;
 import java.util.*;
 
-public class Document implements Serializable {
+public class Doc implements Serializable {
     /*
      * Author: Cameron Morrell
 	 * Instances of this class will be stored in an ArrayList on the server
@@ -16,14 +16,20 @@ public class Document implements Serializable {
     private ArrayList<String> annotations;
     private String docContents;
 
-    public Document(String docName, int docId, int ownerId, HashMap<Integer, User> editors) {
+    public Doc(String docName, int docId, int ownerId, HashMap<Integer, User> editors) {
         this.docName = docName;
         this.docIdentification = docId;
         this.ownerId = ownerId;
         this.editors = editors;
         this.annotations = new ArrayList<String>();
-        setDocContents("<html><font color = red>Document: " + docName + "</font></html>");
+        setDocContents("<html><font color = red>Doc: " + docName + "</font></html>");
 
+    }
+    public Doc(){
+
+    }
+    public String getDocName(){
+        return docName;
     }
 
     public String getDocContents() {

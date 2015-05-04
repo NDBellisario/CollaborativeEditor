@@ -1,5 +1,5 @@
 package networking;
-import model.Document;
+import model.Doc;
 import model.DocumentAssistant;
 import model.User;
 import view.EditView;
@@ -17,34 +17,36 @@ public class EditPacket implements Serializable {
     private static final long serialVersionUID = 1L;
     private User theUser;
     private String newText;
-    private Document theDoc;
-    private DocumentAssistant theAsst;
+    private int docID;
 
-    public EditPacket(EditView editView, User arg, Document docArg) {
+    public EditPacket(EditView editView, User arg, int argID) {
         newText = editView.getText();
         theUser = arg;
-        theDoc = docArg;
-        ;
+        docID = argID;
+
     }
 
-    public Document getTheDoc() {
-        return theDoc;
-    }
-    public String getNewText(){
+
+    public String getNewText() {
         return newText;
+    }
+
+    public int getDocID() {
+        return docID;
     }
 
     public void execute(DocumentAssistant masterArg) {
 
-        theAsst = masterArg;
+        for (int i = 0; i < masterArg.getList().size(); i++) {
+            if (masterArg.getList().get(i).getDocIdentification() == (docID)) {
 
-        int toSet = masterArg.getList().indexOf(theDoc);
-        if (newText.equals(theDoc.getDocContents()) && !newText.equals("null")) {
-            masterArg.getList().get(toSet).setDocContents("");
+                if (newText.equals(masterArg.getList().get(i).getDocContents()) && !newText.equals("null")) {
+                    masterArg.getList().get(i).setDocContents("");
+                }
+
+                masterArg.getList().get(i).setDocContents(newText);
+            }
         }
-
-        masterArg.getList().get(toSet).setDocContents(newText);
-
     }
 
 }

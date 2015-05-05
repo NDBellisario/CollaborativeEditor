@@ -19,7 +19,7 @@ private int docID;
 	}
 	public DocumentAssistant execute(DocumentAssistant arg){
 		DocumentAssistant newMaster = arg;
-		Integer docID = newMaster.addDocument(docName, ownerID, null);
+		int docID = newMaster.addDocument(docName, ownerID, null);
 
 		return newMaster;
 	}

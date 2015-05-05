@@ -6,6 +6,10 @@ import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import javax.swing.text.html.*;
 
 import java.awt.*;
@@ -17,7 +21,7 @@ public class EditView extends JPanel {
      */
 	private static final long serialVersionUID = 1L;
 	private JPanel formatPanel;
-	private JEditorPane textBox;
+	private JTextPane textBox;
 	private JButton bold;
 	private JButton ital;
 	private JButton underlined;
@@ -31,6 +35,13 @@ public class EditView extends JPanel {
 	private JButton annotate;
 	private JButton insertCode;
 	private int permission;
+	private Style bolder;
+	private Style italic;
+	private Style underline;
+	private Style indentL;
+	private Style indentR;
+	private Style indentC;
+	
 
 	public EditView(User user) {
 		this.setLayout(new BorderLayout());
@@ -39,7 +50,8 @@ public class EditView extends JPanel {
 		permission = user.getPermission();
 		// TODO: fix textBox = new JEditorPane(new
 		// HTMLEditorKit().getContentType(), "");
-		textBox = new JEditorPane();
+		textBox = new JTextPane();
+		textBox.setContentType("text/html");
 		textBox.setEditorKit(new HTMLEditorKit());
 		// textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
 		textBox.setMargin(new Insets(25, 25, 25, 25));
@@ -68,6 +80,7 @@ public class EditView extends JPanel {
 		this.add(new JLabel("No Document Selected.", SwingConstants.CENTER),
 				BorderLayout.NORTH);
 
+		
 	}
 
 	public void changePermission(int arg) {
@@ -82,25 +95,40 @@ public class EditView extends JPanel {
 
 		bold = new JButton("Bold");
 		bold.addActionListener(listener);
+		// For bold
+		bolder = textBox.addStyle("bold", null);
+		StyleConstants.setBold(bolder, true);
 
 		ital = new JButton("Italics");
 		ital.addActionListener(listener);
+		// For italics
+		italic = textBox.addStyle("ital", null);
+		StyleConstants.setItalic(italic, true);
 
 		underlined = new JButton("Underline");
 		underlined.addActionListener(listener);
+		// For underline
+		underline = textBox.addStyle("underlined", null);
+		StyleConstants.setUnderline(underline, true);
 
 		colored = new JButton("Color Font");
 		colored.addActionListener(listener);
 
-		indentLeft = new JButton("Indent Left");
+		indentLeft = new JButton("Align Left");
 		indentLeft.addActionListener(listener);
-
+		//for Indent left
+		indentL = textBox.addStyle("indentLeft", null);
+		StyleConstants.setAlignment(indentL, StyleConstants.ALIGN_LEFT);
+		
 		indentCenter = new JButton("Indent Center");
 		indentCenter.addActionListener(listener);
 
 		indentRight = new JButton("Indent Right");
 		indentRight.addActionListener(listener);
-
+		//For indent right
+		indentR = textBox.addStyle("indentRight", null);
+		StyleConstants.setAlignment(indentL, StyleConstants.ALIGN_RIGHT);
+		
 		bullets = new JButton("Bullet Points");
 		bullets.addActionListener(listener);
 
@@ -152,27 +180,24 @@ public class EditView extends JPanel {
 	}
 
 	public void setText(final String s) {
-		
-		
-		//textBox.setText(s);
-		
+
+		// textBox.setText(s);
+
 		int caretPos = textBox.getCaretPosition();
 		try {
 			textBox.getDocument().insertString(caretPos, s, null);
 		} catch (BadLocationException ex) {
 			ex.printStackTrace();
 		}
-		
-		
-		
+
 		/*
-		  CaretListener cListener = new CaretListener() {
-		  
-		  @Override public void caretUpdate(CaretEvent caretEvent) {
-		  textBox.setCaretPosition(caretEvent.getDot()); textBox.setText(s); }
-		  };
-		  
-		  textBox.addCaretListener(cListener);
+		 * CaretListener cListener = new CaretListener() {
+		 * 
+		 * @Override public void caretUpdate(CaretEvent caretEvent) {
+		 * textBox.setCaretPosition(caretEvent.getDot()); textBox.setText(s); }
+		 * };
+		 * 
+		 * textBox.addCaretListener(cListener);
 		 */
 
 		// textBox.setCaretPosition(caretPosition);
@@ -182,19 +207,19 @@ public class EditView extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == bold) {
-
+				makeBold();
 			} else if (e.getSource() == ital) {
-
+				makeItal();
 			} else if (e.getSource() == underlined) {
-
+				makeUnderline();
 			} else if (e.getSource() == colored) {
-
+				
 			} else if (e.getSource() == indentLeft) {
-
+				makeIndentLeft();
 			} else if (e.getSource() == indentCenter) {
 
 			} else if (e.getSource() == indentRight) {
-
+				makeIndentRight();
 			} else if (e.getSource() == bullets) {
 
 			} else if (e.getSource() == fontType) {
@@ -204,12 +229,68 @@ public class EditView extends JPanel {
 			} else if (e.getSource() == annotate) {
 
 			} else if (e.getSource() == insertCode) {
-
+				System.out.println(textBox.getText());
 			}
 
 		}
 
 	}
+
+	public void makeBold() {
+
+		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(),textBox.getSelectedText().length(), bolder, false);
+		} else {
+			MutableAttributeSet attrs = textBox.getInputAttributes();
+			StyleConstants.setBold(attrs, true);
+		}
+	}
+
+	public void makeItal() {
+		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+			int len = textBox.getSelectedText().length();
+			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, italic, false);
+		} else {
+			MutableAttributeSet attrs = textBox.getInputAttributes();
+			StyleConstants.setItalic(attrs, true);
+		}
+
+	}
+
+	public void makeUnderline() {
+		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+		int len = textBox.getSelectedText().length(); 
+		textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, underline, false);
+		} else {
+			MutableAttributeSet attrs = textBox.getInputAttributes();
+			StyleConstants.setUnderline(attrs, true);
+		}
+	}
+	
+	//Needs work
+	public void makeIndentLeft() {
+		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+		int len = textBox.getSelectedText().length(); 
+		textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentL, false);
+		} else {
+			MutableAttributeSet attrs = textBox.getInputAttributes();
+			StyleConstants.setAlignment(attrs, StyleConstants.ALIGN_LEFT);
+		}
+	}
+	//Needs work
+	public void makeIndentRight() {
+		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+		int len = textBox.getSelectedText().length(); 
+		textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentR, false);
+		
+		} else {
+			StyleContext context = new StyleContext();
+			Style style = textBox.getStyle(context.DEFAULT_STYLE);
+			StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT);
+		}
+	}
+	
+	
 
 	/*
 	 * private class CaretEvent implements CaretListener {

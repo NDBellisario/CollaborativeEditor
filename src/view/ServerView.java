@@ -3,7 +3,6 @@ import model.UserAssistant;
 import server.CEServer;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.Serializable;
@@ -194,6 +193,8 @@ public class ServerView extends JFrame implements Serializable {
         public void actionPerformed(ActionEvent arg0) {
             // TODO Auto-generated method stub
         	ourServer.stopServer();
+
+            
         }
 
     }
@@ -211,6 +212,7 @@ public class ServerView extends JFrame implements Serializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
             } else if (s.equals("Stop The Server")) {
                 JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(mainStuff), "Clicking 'OK' Will Close The Server");
                 //				for(ObjectOutputStream arg : CEServer.outputs.values())

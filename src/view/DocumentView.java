@@ -1,64 +1,77 @@
 package view;
 import javax.swing.*;
+
+import model.Doc;
+import model.DocumentAssistant;
+import controller.CEController;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class DocumentView extends JPanel implements Observer {
+public class DocumentView extends JPanel{
     private JList<String> documentList;
     private JButton selectDoc;
     private String[] files;
+    private DefaultListModel<String> listDocuments;
+    private JFrame frame;
+    private CEController theCaller;
+    
 
-    public DocumentView(String[] files) {
-        this.setLayout(new BorderLayout());
-        selectDoc = new JButton("Select Doc");
+    public DocumentView(CEController arg, ArrayList<Doc> theLists){
+       frame = new JFrame();
+     theCaller = arg;
+    	this.setLayout(new BorderLayout());
+        selectDoc = new JButton("Current Documents");
 
-        DefaultListModel<String> listDocuments = new DefaultListModel<String>();
-        this.files = files;
+         listDocuments = new DefaultListModel<String>();
 
-        for (int i = 0; i < files.length; i++) {
-            listDocuments.add(i, files[i]);
-        }
+     	ArrayList<Doc> ourDocs = theLists;
+     	listDocuments.clear();
+     	for(int i = 0; i < ourDocs.size(); i++){
+     		listDocuments.addElement(ourDocs.get(i).getDocName());
+     	}
+
 
         documentList = new JList<String>(listDocuments);
 
-        this.add(new JScrollPane(documentList), BorderLayout.CENTER);
+        frame.add(new JScrollPane(documentList), BorderLayout.CENTER);
 
-        this.add(selectDoc, BorderLayout.SOUTH);
+        //this.add(selectDoc, BorderLayout.SOUTH);
 
-        this.add(new JLabel("Welcome <username>, Select a " + "Doc to Edit!"), BorderLayout.NORTH);
-    }
+       frame.add(new JLabel("Your Documents"), BorderLayout.NORTH);
 
-    //No need for this method.
-    /*public void setUpGUI(){
-
-	}*/
-
-    public static void main(String[] args) {
-        String[] arr = new String[7];
-        for (int i = 0; i < 7; i++) {
-            arr[i] = "String" + i;
-        }
-        JFrame frame = new JFrame();
-        frame.setLayout(new BorderLayout());
-        DocumentView doc = new DocumentView(arr);
-        frame.add(doc, BorderLayout.CENTER);
+        JButton docSelect = new JButton("Open Document");
+        frame.add(docSelect, BorderLayout.SOUTH);
+        docSelect.addActionListener(new newDocument());
         frame.setVisible(true);
         frame.setResizable(true);
         frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    
 
-    //Haven't filled this in yet.
-    @Override
-    public void update(Observable o, Object arg) {
 
-        // TODO Auto-generated method stub
+
+    public void updateList(ArrayList<Doc> theLists){
+    	ArrayList<Doc> ourDocs = theLists;
+    	listDocuments.clear();
+    	for(int i = 0; i < ourDocs.size(); i++){
+    		listDocuments.addElement(ourDocs.get(i).getDocName());
+    	}
+
+    	repaint();
+
     }
+    
 
-    private class documentSelect implements ActionListener {
+
+    private class newDocument implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == selectDoc) {
+            	System.out.println("You Clicked The Button!");
+
+            	theCaller.NewDocument();
+            	
                 //enter (docformat)documentList.getSelectedValue();
             }
         }

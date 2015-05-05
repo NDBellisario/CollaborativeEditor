@@ -1,11 +1,9 @@
 package networking;
-import model.Revision;
+import model.DocumentAssistant;
 import model.User;
-import server.CEServer;
 import view.EditView;
 
 import java.io.Serializable;
-import java.util.*;
 
 /*
  * Manages the changes made to the text editor
@@ -16,34 +14,33 @@ import java.util.*;
  */
 public class EditPacket implements Serializable {
     private static final long serialVersionUID = 1L;
-    User theUser;
+    private User theUser;
     private String newText;
+    private int docID;
 
-    public EditPacket(EditView editView, User arg) {
+    public EditPacket(EditView editView, User arg, int argID) {
         newText = editView.getText();
         theUser = arg;
+        docID = argID;
+
     }
-    //TODO: Eventually implement revisions
-    public String getNewText()
-    {
+
+    public String getNewText() {
         return newText;
     }
 
-    public String execute(String theList) {
-        Date date = new Date();
-        Revision revision = new Revision(theUser, newText, date);
-
-        //if(masterText.length() %15 == 0)
-        //masterText += "\n";
-        //int masterLength = masterText.length();
-        //CEServer.masterList = newText;
-        //String newMaster = masterText.substring(masterLength);
-        if (newText.equals(theList) && !newText.equals("null"))
-            return newText = "";
-        //else if (newText.length() == 100)
-        //    newText += "\n";
-        return newText;
-
+    public int getDocID() {
+        return docID;
     }
 
+    public void execute(DocumentAssistant masterArg) {
+    // If the document contents has something new, and the value of the new change is not null, we need to set the doc contents
+        if (!(newText.equals(masterArg.getList().get(docID - 1).getDocContents()) && !newText.equals("null"))) {
+            masterArg.getList().get(docID-1).setDocContents(newText);
+        }
+
+    }
 }
+
+
+

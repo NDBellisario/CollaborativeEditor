@@ -24,6 +24,8 @@ public class ServerView extends JFrame implements Serializable {
     //private UserAssistant passedUserAssistant;
     private String portNumber;
     private CEServer ourServer;
+    private JList<String> currentUsersTemp;
+    
 
     /*
      * This sets up the menu, and out blank document before asking for a port to
@@ -125,7 +127,7 @@ public class ServerView extends JFrame implements Serializable {
 
         userStats.setForeground(Color.WHITE);
         userList = new DefaultListModel<String>();
-        JList<String> currentUsersTemp;
+       
         // TODO: Uncommment
         // ArrayList<String> theUsers = passedUserAssistant.getUsers();
         ArrayList<String> theUsers = new ArrayList<String>();
@@ -184,6 +186,7 @@ public class ServerView extends JFrame implements Serializable {
 
     }
 
+
     // quits Server connection
     private class QuitActionListener implements ActionListener {
         @Override
@@ -200,8 +203,8 @@ public class ServerView extends JFrame implements Serializable {
             if (s.equals("View User's Documents")) {
                 JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(mainStuff), "Unimplemented But Will Show User's Docs!");
             } else if (s.equals("Kick User(s) From Session")) {
-                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(mainStuff), "Unimplemented But Will Kick User");
-
+                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(mainStuff), "Kicking " + currentUsersTemp.getSelectedValue());
+                ourServer.kickUser(currentUsersTemp.getSelectedValue());
             } else if (s.equals("Stop The Server")) {
                 JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(mainStuff), "Clicking 'OK' Will Close The Server");
                 //				for(ObjectOutputStream arg : CEServer.outputs.values())
@@ -214,6 +217,8 @@ public class ServerView extends JFrame implements Serializable {
                 //								e.printStackTrace();
                 //							}
                 //						}
+                
+                ourServer.stopServer();
                 System.exit(0);
 
             }

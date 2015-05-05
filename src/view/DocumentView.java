@@ -11,7 +11,7 @@ public class DocumentView extends JPanel implements Observer {
 
     public DocumentView(String[] files) {
         this.setLayout(new BorderLayout());
-        selectDoc = new JButton("Select Document");
+        selectDoc = new JButton("Select Doc");
 
         DefaultListModel<String> listDocuments = new DefaultListModel<String>();
         this.files = files;
@@ -26,7 +26,7 @@ public class DocumentView extends JPanel implements Observer {
 
         this.add(selectDoc, BorderLayout.SOUTH);
 
-        this.add(new JLabel("Welcome <username>, Select a " + "Document to Edit!"), BorderLayout.NORTH);
+        this.add(new JLabel("Welcome <username>, Select a " + "Doc to Edit!"), BorderLayout.NORTH);
     }
 
     //No need for this method.

@@ -368,7 +368,6 @@ public class CEServer extends JFrame implements Serializable {
 						System.out.println("3");
 					} else if (temp instanceof CreateNewDocument) {
 						CreateNewDocument newPacket = (CreateNewDocument) temp;
-
 						masterList = newPacket.execute(masterList);
 						EditPacket newEdit = new EditPacket(null, mainUser, newPacket.getDocID());
 						clientOutputStream.writeObject(newPacket);

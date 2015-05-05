@@ -14,18 +14,18 @@ private String docName;
 private int ownerID;
 private int docID;
 	public CreateNewDocument(String name, Integer id) {
-		docName = name;
-		ownerID = id;
+		this.docName = name;
+		this.ownerID = id;
 	}
 	public DocumentAssistant execute(DocumentAssistant arg){
 		DocumentAssistant newMaster = arg;
-		int docID = newMaster.addDocument(docName, ownerID, null);
-
+		this.docID = newMaster.addDocument(docName, ownerID, null);
 		return newMaster;
 	}
 	public Integer getDocID() {
 		return docID;
 	}
+	
 
 
 

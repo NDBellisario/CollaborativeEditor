@@ -376,20 +376,17 @@ public class CEController extends JFrame implements Serializable {
                         @SuppressWarnings("unchecked") List<String> toSet = (ArrayList<String>) ((ChatPacket) unknown).getChats();
                         updateChat(toSet);
 
-<<<<<<< HEAD
+
 
                     }else if(unknown instanceof LogoutPacket ){
                     	LogoutPacket log = (LogoutPacket)unknown;
                     	log.execute(CEController.this);
                     	System.out.println("I was Called");
-=======
                     }
                     else if(unknown instanceof GetDocsPacket){
                         GetDocsPacket newPacket = (GetDocsPacket)  unknown;
                         displayCurrentDocs(newPacket);
->>>>>>> origin/master
                     }
-
                 } catch (ClassNotFoundException | IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -411,12 +408,12 @@ public class CEController extends JFrame implements Serializable {
 
         }
     }
-<<<<<<< HEAD
+
     public void logout(){
     	JOptionPane.showMessageDialog(this, "Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
     	
     	System.exit(0);
-=======
+    }
     private void displayCurrentDocs(GetDocsPacket arg){
 
         ourDocs = arg.getList();
@@ -435,7 +432,7 @@ public class CEController extends JFrame implements Serializable {
         frame.setResizable(true);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
->>>>>>> origin/master
+
     }
 
 }

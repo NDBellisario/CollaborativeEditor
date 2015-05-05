@@ -393,11 +393,16 @@ public class CEController extends JFrame implements Serializable {
         public void actionPerformed(ActionEvent e) {
 
             GetDocsPacket toSend = new GetDocsPacket(mainUser);
-            outputStrm.writeObject(toSend);
+            try {
+				outputStrm.writeObject(toSend);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
         }
     }
-    private class displayCurrentDocs(GetDocsPacket arg){
+    private void displayCurrentDocs(GetDocsPacket arg){
 
         ourDocs = arg.getList();
         DefaultListModel docList = new DefaultListModel();

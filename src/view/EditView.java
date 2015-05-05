@@ -1,234 +1,261 @@
 package view;
+
 import model.User;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.html.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
 public class EditView extends JPanel {
-    /**
+	/**
      *
      */
-    private static final long serialVersionUID = 1L;
-    private JPanel formatPanel;
-    private JEditorPane textBox;
-    private JButton bold;
-    private JButton ital;
-    private JButton underlined;
-    private JButton colored;
-    private JButton indentLeft;
-    private JButton indentCenter;
-    private JButton indentRight;
-    private JButton bullets;
-    private JButton fontType;
-    private JButton fontSize;
-    private JButton annotate;
-    private JButton insertCode;
-    private int permission;
+	private static final long serialVersionUID = 1L;
+	private JPanel formatPanel;
+	private JEditorPane textBox;
+	private JButton bold;
+	private JButton ital;
+	private JButton underlined;
+	private JButton colored;
+	private JButton indentLeft;
+	private JButton indentCenter;
+	private JButton indentRight;
+	private JButton bullets;
+	private JButton fontType;
+	private JButton fontSize;
+	private JButton annotate;
+	private JButton insertCode;
+	private int permission;
 
-    public EditView(User user) {
-        this.setLayout(new BorderLayout());
-        this.setPreferredSize(new Dimension(700, 600));
+	public EditView(User user) {
+		this.setLayout(new BorderLayout());
+		this.setPreferredSize(new Dimension(700, 600));
 
-        permission = user.getPermission();
-        //TODO: fix textBox = new JEditorPane(new HTMLEditorKit().getContentType(), "");
-        textBox = new JEditorPane();
-        textBox.setEditorKit(new HTMLEditorKit());
-        //textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
-        textBox.setMargin(new Insets(25, 25,25, 25));
-        //If user's permissions  is set to 3, can't edit.
-        //TODO: This stuff
-        //Change the StyleSheet of HTMLEditor to Bold ON when bold is clicked and others etc..
-        //http://docs.oracle.com/javase/7/docs/api/javax/swing/text/html/StyleSheet.html
-        //http://docs.oracle.com/javase/7/docs/api/javax/swing/text/html/HTMLEditorKit.html
-        //http://docs.oracle.com/javase/7/docs/api/javax/swing/JEditorPane.html
-        //http://docs.oracle.com/javase/7/docs/api/javax/swing/text/MutableAttributeSet.html //
-        //http://docs.oracle.com/javase/7/docs/api/javax/swing/text/StyleConstants.html#Bold //STYLES!!!
+		permission = user.getPermission();
+		// TODO: fix textBox = new JEditorPane(new
+		// HTMLEditorKit().getContentType(), "");
+		textBox = new JEditorPane();
+		textBox.setEditorKit(new HTMLEditorKit());
+		// textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
+		textBox.setMargin(new Insets(25, 25, 25, 25));
+		// If user's permissions is set to 3, can't edit.
+		// TODO: This stuff
+		// Change the StyleSheet of HTMLEditor to Bold ON when bold is clicked
+		// and others etc..
+		// http://docs.oracle.com/javase/7/docs/api/javax/swing/text/html/StyleSheet.html
+		// http://docs.oracle.com/javase/7/docs/api/javax/swing/text/html/HTMLEditorKit.html
+		// http://docs.oracle.com/javase/7/docs/api/javax/swing/JEditorPane.html
+		// http://docs.oracle.com/javase/7/docs/api/javax/swing/text/MutableAttributeSet.html
+		// //
+		// http://docs.oracle.com/javase/7/docs/api/javax/swing/text/StyleConstants.html#Bold
+		// //STYLES!!!
 
-        if (permission == 3)
-            textBox.setEditable(false);
-            //Otherwise, user can edit.
-        else
-            textBox.setEditable(true);
-        this.add(new JScrollPane(textBox), BorderLayout.CENTER);
+		if (permission == 3)
+			textBox.setEditable(false);
+		// Otherwise, user can edit.
+		else
+			textBox.setEditable(true);
+		this.add(new JScrollPane(textBox), BorderLayout.CENTER);
 
-        formatPanel = formatPanel();
-        this.add(formatPanel, BorderLayout.WEST);
+		formatPanel = formatPanel();
+		this.add(formatPanel, BorderLayout.WEST);
 
-        this.add(new JLabel("No Document Selected.", SwingConstants.CENTER), BorderLayout.NORTH);
-    }
+		this.add(new JLabel("No Document Selected.", SwingConstants.CENTER),
+				BorderLayout.NORTH);
 
-    public void changePermission(int arg) {
-        permission = arg;
-    }
+	}
 
-    private JPanel formatPanel() {
-        JPanel formats = new JPanel();
-        formats.setLayout(new GridLayout(12, 1));
+	public void changePermission(int arg) {
+		permission = arg;
+	}
 
-        ActionListener listener = new formatListener();
+	private JPanel formatPanel() {
+		JPanel formats = new JPanel();
+		formats.setLayout(new GridLayout(12, 1));
 
-        bold = new JButton("Bold");
-        bold.addActionListener(listener);
+		ActionListener listener = new formatListener();
 
-        ital = new JButton("Italics");
-        ital.addActionListener(listener);
+		bold = new JButton("Bold");
+		bold.addActionListener(listener);
 
-        underlined = new JButton("Underline");
-        underlined.addActionListener(listener);
+		ital = new JButton("Italics");
+		ital.addActionListener(listener);
 
-        colored = new JButton("Color Font");
-        colored.addActionListener(listener);
+		underlined = new JButton("Underline");
+		underlined.addActionListener(listener);
 
-        indentLeft = new JButton("Indent Left");
-        indentLeft.addActionListener(listener);
+		colored = new JButton("Color Font");
+		colored.addActionListener(listener);
 
-        indentCenter = new JButton("Indent Center");
-        indentCenter.addActionListener(listener);
+		indentLeft = new JButton("Indent Left");
+		indentLeft.addActionListener(listener);
 
-        indentRight = new JButton("Indent Right");
-        indentRight.addActionListener(listener);
+		indentCenter = new JButton("Indent Center");
+		indentCenter.addActionListener(listener);
 
-        bullets = new JButton("Bullet Points");
-        bullets.addActionListener(listener);
+		indentRight = new JButton("Indent Right");
+		indentRight.addActionListener(listener);
 
-        fontType = new JButton("Font Type");
-        fontType.addActionListener(listener);
+		bullets = new JButton("Bullet Points");
+		bullets.addActionListener(listener);
 
-        fontSize = new JButton("Font Size");
-        fontSize.addActionListener(listener);
+		fontType = new JButton("Font Type");
+		fontType.addActionListener(listener);
 
-        annotate = new JButton("Annotate");
-        annotate.addActionListener(listener);
+		fontSize = new JButton("Font Size");
+		fontSize.addActionListener(listener);
 
-        insertCode = new JButton("Insert Code");
-        insertCode.addActionListener(listener);
+		annotate = new JButton("Annotate");
+		annotate.addActionListener(listener);
 
+		insertCode = new JButton("Insert Code");
+		insertCode.addActionListener(listener);
 
+		formats.add(bold);
+		formats.add(ital);
+		formats.add(underlined);
+		formats.add(colored);
+		formats.add(indentLeft);
+		formats.add(indentCenter);
+		formats.add(indentRight);
+		formats.add(bullets);
+		formats.add(fontType);
+		formats.add(fontSize);
+		formats.add(annotate);
+		formats.add(insertCode);
 
-        formats.add(bold);
-        formats.add(ital);
-        formats.add(underlined);
-        formats.add(colored);
-        formats.add(indentLeft);
-        formats.add(indentCenter);
-        formats.add(indentRight);
-        formats.add(bullets);
-        formats.add(fontType);
-        formats.add(fontSize);
-        formats.add(annotate);
-        formats.add(insertCode);
-        return formats;
+		return formats;
 
-    }
+	}
 
-    //Have not written this yet.
-    /*@Override
-    public void update(Observable o, Object arg){
+	// Have not written this yet.
+	/*
+	 * @Override public void update(Observable o, Object arg){
+	 * 
+	 * // TODO Auto-generated method stub }
+	 */
+
+	// Do not need this method.
+	/*
+	 * public void setUpGUI(){
+	 * 
+	 * }
+	 */
+
+	public String getText() {
+		return textBox.getText();
+	}
+
+	public void setText(final String s) {
 		
-		// TODO Auto-generated method stub
-	}*/
-
-    //Do not need this method.
-    /*public void setUpGUI(){
 		
-	}*/
-
-    public String getText() {
-        return textBox.getText();
-    }
-
-    public void setText(String s) {
-
-        textBox.setText(s);
-       // textBox.setCaretPosition(s.length());
-    }
-
-    public class formatListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == bold) {
-
-            } else if (e.getSource() == ital) {
-
-            } else if (e.getSource() == underlined) {
-
-            } else if (e.getSource() == colored) {
-
-            } else if (e.getSource() == indentLeft) {
-
-            } else if (e.getSource() == indentCenter) {
-
-            } else if (e.getSource() == indentRight) {
-
-            } else if (e.getSource() == bullets) {
-
-            } else if (e.getSource() == fontType) {
-
-            } else if (e.getSource() == fontSize) {
-
-            } else if (e.getSource() == annotate) {
-
-            } else if (e.getSource() == insertCode) {
-
-            }
-
-        }
-
-    }
-
-	
-	/*private class documentSelect implements MouseListener{
+		//textBox.setText(s);
 		
-		public void actionPerformed(ActionEvent e){
-			
+		int caretPos = textBox.getCaretPosition();
+		try {
+			textBox.getDocument().insertString(caretPos, s, null);
+		} catch (BadLocationException ex) {
+			ex.printStackTrace();
 		}
+		
+		
+		
+		/*
+		  CaretListener cListener = new CaretListener() {
+		  
+		  @Override public void caretUpdate(CaretEvent caretEvent) {
+		  textBox.setCaretPosition(caretEvent.getDot()); textBox.setText(s); }
+		  };
+		  
+		  textBox.addCaretListener(cListener);
+		 */
 
+		// textBox.setCaretPosition(caretPosition);
+	}
+
+	public class formatListener implements ActionListener {
 		@Override
-		public void mouseClicked(MouseEvent e){
-			
-			// TODO Auto-generated method stub
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == bold) {
+
+			} else if (e.getSource() == ital) {
+
+			} else if (e.getSource() == underlined) {
+
+			} else if (e.getSource() == colored) {
+
+			} else if (e.getSource() == indentLeft) {
+
+			} else if (e.getSource() == indentCenter) {
+
+			} else if (e.getSource() == indentRight) {
+
+			} else if (e.getSource() == bullets) {
+
+			} else if (e.getSource() == fontType) {
+
+			} else if (e.getSource() == fontSize) {
+
+			} else if (e.getSource() == annotate) {
+
+			} else if (e.getSource() == insertCode) {
+
+			}
+
 		}
 
-		@Override
-		public void mousePressed(MouseEvent e){
-			
-			// TODO Auto-generated method stub
-		}
+	}
 
-		@Override
-		public void mouseReleased(MouseEvent e){
-			
-			// TODO Auto-generated method stub
-		}
+	/*
+	 * private class CaretEvent implements CaretListener {
+	 * 
+	 * @Override public void caretUpdate(javax.swing.event.CaretEvent
+	 * caretEvent) { // TODO Auto-generated method stub Object ce =
+	 * caretEvent.getSource(); if (ce == textBox) { dot.setText("" +
+	 * caretEvent.getDot()); mark.setText("" + caretEvent.getMark()); } } }
+	 */
 
-		@Override
-		public void mouseEntered(MouseEvent e){
-			
-			// TODO Auto-generated method stub
-		}
+	/*
+	 * private class documentSelect implements MouseListener{
+	 * 
+	 * public void actionPerformed(ActionEvent e){
+	 * 
+	 * }
+	 * 
+	 * @Override public void mouseClicked(MouseEvent e){
+	 * 
+	 * // TODO Auto-generated method stub }
+	 * 
+	 * @Override public void mousePressed(MouseEvent e){
+	 * 
+	 * // TODO Auto-generated method stub }
+	 * 
+	 * @Override public void mouseReleased(MouseEvent e){
+	 * 
+	 * // TODO Auto-generated method stub }
+	 * 
+	 * @Override public void mouseEntered(MouseEvent e){
+	 * 
+	 * // TODO Auto-generated method stub }
+	 * 
+	 * @Override public void mouseExited(MouseEvent e){
+	 * 
+	 * // TODO Auto-generated method stub } }
+	 */
 
-		@Override
-		public void mouseExited(MouseEvent e){
-			
-			// TODO Auto-generated method stub
-		}
-	}*/
-
-    //Main method to test its functionality.
-	/*public static void main(String[] args){
-		JFrame frame = new JFrame();
-		frame.setLayout(new BorderLayout());
-		ChatView chat = new ChatView("Blitzer");
-		chat.setVisible(true);
-		frame.add(chat, BorderLayout.EAST);
-		EditView edit = new EditView(null);
-		edit.setVisible(true);
-		frame.add(edit, BorderLayout.WEST);
-		frame.setVisible(true);
-		frame.setResizable(true);
-		frame.pack();
-		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-    }*/
+	// Main method to test its functionality.
+	/*
+	 * public static void main(String[] args){ JFrame frame = new JFrame();
+	 * frame.setLayout(new BorderLayout()); ChatView chat = new
+	 * ChatView("Blitzer"); chat.setVisible(true); frame.add(chat,
+	 * BorderLayout.EAST); EditView edit = new EditView(null);
+	 * edit.setVisible(true); frame.add(edit, BorderLayout.WEST);
+	 * frame.setVisible(true); frame.setResizable(true); frame.pack();
+	 * frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE ); }
+	 */
 }

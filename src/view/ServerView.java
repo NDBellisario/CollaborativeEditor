@@ -3,6 +3,7 @@ import model.UserAssistant;
 import server.CEServer;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.Serializable;
@@ -192,7 +193,7 @@ public class ServerView extends JFrame implements Serializable {
         @Override
         public void actionPerformed(ActionEvent arg0) {
             // TODO Auto-generated method stub
-            System.exit(0);
+        	ourServer.stopServer();
         }
 
     }
@@ -204,7 +205,12 @@ public class ServerView extends JFrame implements Serializable {
                 JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(mainStuff), "Unimplemented But Will Show User's Docs!");
             } else if (s.equals("Kick User(s) From Session")) {
                 JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(mainStuff), "Kicking " + currentUsersTemp.getSelectedValue());
-                ourServer.kickUser(currentUsersTemp.getSelectedValue());
+                try {
+					ourServer.kickUser(currentUsersTemp.getSelectedValue());
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             } else if (s.equals("Stop The Server")) {
                 JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(mainStuff), "Clicking 'OK' Will Close The Server");
                 //				for(ObjectOutputStream arg : CEServer.outputs.values())

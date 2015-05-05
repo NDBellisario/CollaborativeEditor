@@ -52,6 +52,7 @@ public class DocumentView extends JPanel{
 
 
 
+<<<<<<< HEAD
     public void updateList(ArrayList<Doc> theLists){
     	ArrayList<Doc> ourDocs = theLists;
     	listDocuments.clear();
@@ -61,6 +62,13 @@ public class DocumentView extends JPanel{
 
     	repaint();
 
+=======
+    //Haven't filled this in yet.
+    @Override
+    public void update(Observable o, Object arg) {
+    	
+        // TODO Auto-generated method stub
+>>>>>>> db5fe6deb9394a0815bb990515b3b7f45ce4da14
     }
     
 
@@ -75,6 +83,8 @@ public class DocumentView extends JPanel{
                 //enter (docformat)documentList.getSelectedValue();
             }
         }
+        
+       
 
     }
 }

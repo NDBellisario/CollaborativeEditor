@@ -5,6 +5,7 @@ import view.ChatView;
 import view.DocumentView;
 import view.EditView;
 
+import javax.print.attribute.standard.Severity;
 import javax.swing.*;
 
 import java.awt.*;
@@ -58,8 +59,13 @@ public class CEController extends JFrame implements Serializable {
 	private ObjectInputStream inputStrm;
 	private int currentSelectedDoc;
 	private ArrayList<Doc> ourDocs;
+<<<<<<< HEAD
 	private DocumentView clientDocumentView;
 	private CEController ourInstance;
+=======
+	private Thread servertread;
+	private Thread serverrevthread;
+>>>>>>> db5fe6deb9394a0815bb990515b3b7f45ce4da14
 
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
 		initUserModels();
@@ -175,8 +181,11 @@ public class CEController extends JFrame implements Serializable {
 			ChatPacket temp = (ChatPacket) inputStrm.readObject();
 			List<String> toSet = temp.getChats();
 			updateChat(toSet);
-			new Thread(new ServerRevisionWrite()).start();
-			new Thread(new ServerCommunicator()).start();
+			serverrevthread  = new Thread(new ServerRevisionWrite());
+			servertread =  new Thread (new ServerCommunicator());
+			serverrevthread.start();
+			servertread.start();
+			
 			// }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -255,7 +264,12 @@ public class CEController extends JFrame implements Serializable {
 		this.setLayout(new BorderLayout());
 		this.add(chatView, BorderLayout.EAST);
 		this.add(editView, BorderLayout.CENTER);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent evt){
+			CEController.this.selfExit();
+			}
+		});
 		// pack and create!
 		this.pack();
 		this.setVisible(true);
@@ -271,7 +285,7 @@ public class CEController extends JFrame implements Serializable {
 	private class ExitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.exit(0);
+			CEController.this.selfExit();
 		}
 	}
 
@@ -450,9 +464,34 @@ public class CEController extends JFrame implements Serializable {
 
 	public void logout() {
 		JOptionPane.showMessageDialog(this, "Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
-
 		System.exit(0);
 	}
+<<<<<<< HEAD
+=======
+	
+	public void selfExit(){
+		try {
+			LogoutPacket selfLog = new LogoutPacket();
+			selfLog.setUser(mainUser.getUserName());
+			outputStrm.writeObject(selfLog);
+			servertread.stop();
+			serverrevthread.stop();
+			System.exit(0);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	private void displayCurrentDocs(GetDocsPacket arg) {
+
+		ourDocs = arg.getList();
+		DefaultListModel<String> docList = new DefaultListModel<String>();
+		for (int i = 0; i < ourDocs.size(); i++) {
+			docList.addElement(ourDocs.get(i).getDocName());
+		}
+>>>>>>> db5fe6deb9394a0815bb990515b3b7f45ce4da14
 
 	public void NewDocument() {
 		String name = JOptionPane.showInputDialog("What would you like your document to be called?");

@@ -7,7 +7,10 @@ import model.User;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -16,6 +19,11 @@ import javax.swing.text.html.*;
 
 import java.awt.*;
 import java.awt.event.*;
+<<<<<<< HEAD
+=======
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 import java.util.ArrayList;
 
 public class EditView extends JPanel {
@@ -29,7 +37,6 @@ public class EditView extends JPanel {
 	private JButton ital;
 	private JButton underlined;
 	private JButton colored;
-	private JButton indentLeft;
 	private JButton indentCenter;
 	private JButton indentRight;
 	private JButton bullets;
@@ -37,6 +44,8 @@ public class EditView extends JPanel {
 	private JButton fontSize;
 	private JButton annotate;
 	private JButton insertCode;
+	private JButton showAnnotations;
+	private JPanel annoPopUp;
 	private int permission;
 	private Style bolder;
 	private Style italic;
@@ -44,9 +53,16 @@ public class EditView extends JPanel {
 	private Style indentL;
 	private Style indentR;
 	private Style indentC;
+<<<<<<< HEAD
 	private String currentDoc;
 	private User user;
 	private JLabel currentDocLabel;
+=======
+	private JOptionPane annotationBox;
+	private JList<Annotation> scrollAnnoList;
+	private DefaultListModel<Annotation> userList;
+	private ArrayList<Annotation> annotationList = new ArrayList<Annotation>();
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
 	public EditView(User userArg, ArrayList<Doc> theD) {
 		this.setLayout(new BorderLayout());
@@ -60,6 +76,7 @@ public class EditView extends JPanel {
 		textBox.setEditorKit(new HTMLEditorKit());
 		// textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
 		textBox.setMargin(new Insets(25, 25, 25, 25));
+
 		// If user's permissions is set to 3, can't edit.
 		// TODO: This stuff
 		// Change the StyleSheet of HTMLEditor to Bold ON when bold is clicked
@@ -92,12 +109,15 @@ public class EditView extends JPanel {
 		currentDocLabel = new JLabel("TEST",  SwingConstants.CENTER);
 		this.add(currentDocLabel, BorderLayout.NORTH);
 
+<<<<<<< HEAD
 	}
 	public void changeDoc(String argName) {
 		currentDocLabel.setText(argName);
 		repaint();
 		//this.add(new JLabel("Stuff", SwingConstants.CENTER), BorderLayout.NORTH);
 		//repaint();
+=======
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 	}
 
 	public void changePermission(int arg) {
@@ -131,11 +151,15 @@ public class EditView extends JPanel {
 		colored = new JButton("Color Font");
 		colored.addActionListener(listener);
 
+<<<<<<< HEAD
 		indentLeft = new JButton("Align Left");
 		indentLeft.addActionListener(listener);
 		// for Indent left
 		indentL = textBox.addStyle("indentLeft", null);
 		StyleConstants.setAlignment(indentL, StyleConstants.ALIGN_LEFT);
+=======
+		// for Indent left
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
 		indentCenter = new JButton("Indent Center");
 		indentCenter.addActionListener(listener);
@@ -144,7 +168,11 @@ public class EditView extends JPanel {
 		indentRight.addActionListener(listener);
 		// For indent right
 		indentR = textBox.addStyle("indentRight", null);
+<<<<<<< HEAD
 		StyleConstants.setAlignment(indentL, StyleConstants.ALIGN_RIGHT);
+=======
+		StyleConstants.setAlignment(indentR, StyleConstants.ALIGN_RIGHT);
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
 		bullets = new JButton("Bullet Points");
 		bullets.addActionListener(listener);
@@ -157,15 +185,18 @@ public class EditView extends JPanel {
 
 		annotate = new JButton("Annotate");
 		annotate.addActionListener(listener);
+		// for Annotation
 
 		insertCode = new JButton("Insert Code");
 		insertCode.addActionListener(listener);
+		
+		showAnnotations = new JButton("Show Annotations");
+		showAnnotations.addActionListener(listener);
 
 		formats.add(bold);
 		formats.add(ital);
 		formats.add(underlined);
 		formats.add(colored);
-		formats.add(indentLeft);
 		formats.add(indentCenter);
 		formats.add(indentRight);
 		formats.add(bullets);
@@ -173,6 +204,7 @@ public class EditView extends JPanel {
 		formats.add(fontSize);
 		formats.add(annotate);
 		formats.add(insertCode);
+		formats.add(showAnnotations);
 
 		return formats;
 
@@ -231,8 +263,11 @@ public class EditView extends JPanel {
 				makeUnderline();
 			} else if (e.getSource() == colored) {
 
+<<<<<<< HEAD
 			} else if (e.getSource() == indentLeft) {
 				makeIndentLeft();
+=======
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 			} else if (e.getSource() == indentCenter) {
 
 			} else if (e.getSource() == indentRight) {
@@ -244,19 +279,33 @@ public class EditView extends JPanel {
 			} else if (e.getSource() == fontSize) {
 
 			} else if (e.getSource() == annotate) {
-
+				createAnnotation();
 			} else if (e.getSource() == insertCode) {
 				System.out.println(textBox.getText());
+			} else if (e.getSource() == showAnnotations) {
+				userList = new DefaultListModel<Annotation>();
+				for (Annotation anno : annotationList) {
+					userList.addElement(anno);
+				}
+				scrollAnnoList = new JList<Annotation>(userList);
+		        scrollAnnoList.setFont(new Font("Arial", Font.BOLD, 20));
+		        JScrollPane currentAnnos = new JScrollPane(scrollAnnoList);	
+		        JOptionPane.showMessageDialog(null, currentAnnos);
 			}
-
 		}
-
 	}
+
 
 	public void makeBold() {
 
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+<<<<<<< HEAD
 			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), textBox.getSelectedText().length(), bolder, false);
+=======
+			textBox.getStyledDocument().setCharacterAttributes(
+					textBox.getSelectionStart(),
+					textBox.getSelectedText().length(), bolder, false);
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setBold(attrs, true);
@@ -266,7 +315,8 @@ public class EditView extends JPanel {
 	public void makeItal() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
-			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, italic, false);
+			textBox.getStyledDocument().setCharacterAttributes(
+					textBox.getSelectionStart(), len, italic, false);
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setItalic(attrs, true);
@@ -288,17 +338,31 @@ public class EditView extends JPanel {
 	public void makeIndentLeft() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
+<<<<<<< HEAD
 			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentL, false);
+=======
+			textBox.getStyledDocument().setCharacterAttributes(
+					textBox.getSelectionStart(), len, indentL, false);
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setAlignment(attrs, StyleConstants.ALIGN_LEFT);
 		}
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 	// Needs work
 	public void makeIndentRight() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
+<<<<<<< HEAD
 			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentR, false);
+=======
+			textBox.getStyledDocument().setCharacterAttributes(
+					textBox.getSelectionStart(), len, indentR, false);
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
 		} else {
 			StyleContext context = new StyleContext();
@@ -306,6 +370,84 @@ public class EditView extends JPanel {
 			StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT);
 		}
 	}
+<<<<<<< HEAD
+=======
+
+	public void createAnnotation() {
+
+		final int p0 = textBox.getSelectionStart();
+		final int p1 = textBox.getSelectionEnd();
+			
+		int len = textBox.getSelectedText().length();
+		
+		Highlighter h = textBox.getHighlighter();
+
+		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+			try {
+				String annoTitle = textBox.getText(p0, len);
+				h.addHighlight(p0, p1, DefaultHighlighter.DefaultPainter);
+				String comment = JOptionPane.showInputDialog("What is your annotation for: " + annoTitle);
+				Annotation annotation = new Annotation(annoTitle, comment);
+				annotationList.add(annotation);
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		/*
+		 * if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+		 * 
+		 * try { h.addHighlight(p0, p1, DefaultHighlighter.DefaultPainter);
+		 * MouseInputAdapter mouseHandler = new MouseInputAdapter() {
+		 * 
+		 * public void mouseEntered(MouseEvent event) { checkForHover(event); }
+		 * 
+		 * 
+		 * }; } catch (BadLocationException e) { // TODO Auto-generated catch
+		 * block e.printStackTrace(); } }
+		 */
+	}
+
+	public class Annotation {
+		private String annotation;
+		private String title;
+
+		public Annotation(String highlighted, String comment) {
+			annotation = comment;
+			title = highlighted;
+		}
+		public String toString() {
+			String toReturn = "Your annotation for " + title + " is ";
+			toReturn += annotation;
+			return toReturn;
+			
+			
+		}
+	}
+
+	/*
+	 * public void checkForHover(MouseEvent event) {
+	 * 
+	 * final int p0 = textBox.getSelectionStart(); final int p1 =
+	 * textBox.getSelectionEnd();
+	 * 
+	 * String text; try { text = textBox.getText(p0, p1-p0);
+	 * 
+	 * FontMetrics metrics = getFontMetrics(textBox.getFont());
+	 * 
+	 * Graphics g = getGraphics(); Rectangle textBounds =
+	 * metrics.getStringBounds(text, g).getBounds(); g.dispose();
+	 * 
+	 * if (textBounds.contains(event.getPoint())) { System.out.println("fuck");
+	 * } else { System.out.println("fuckme"); } repaint(textBounds);
+	 * 
+	 * } catch (BadLocationException e) { // TODO Auto-generated catch block
+	 * e.printStackTrace(); }
+	 * 
+	 * }
+	 */
+>>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
 	/*
 	 * private class CaretEvent implements CaretListener {

@@ -27,9 +27,7 @@ public class Doc implements Serializable {
 
 
     }
-    public Doc(){
 
-    }
     public String getDocName(){
         return docName;
     }

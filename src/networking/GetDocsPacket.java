@@ -1,11 +1,16 @@
 package networking;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.*;
 
-public class GetDocsPacket {
+public class GetDocsPacket implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Doc> myDocs;
 	private User myUser;
 

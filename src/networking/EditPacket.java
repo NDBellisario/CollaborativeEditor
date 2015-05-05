@@ -19,7 +19,12 @@ public class EditPacket implements Serializable {
     private int docID;
 
     public EditPacket(EditView editView, User arg, int argID) {
-        newText = editView.getText();
+        if(editView != null){
+    	newText = editView.getText();
+        }
+        else{
+        	newText = "The server is calling this line";
+        }
         theUser = arg;
         docID = argID;
 

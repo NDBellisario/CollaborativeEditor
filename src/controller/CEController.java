@@ -165,8 +165,8 @@ public class CEController extends JFrame implements Serializable {
             mainUser = (User) inputStrm.readObject();
             setupGui();
             // Sets text field with default values and starts thread
-            Doc doc2Set = (Doc) inputStrm.readObject();
-            editView.setText(doc2Set.getDocContents());//new Doc("Test Doc",12345, 1, null))
+            //Doc doc2Set = (Doc) inputStrm.readObject();
+            //editView.setText(doc2Set.getDocContents());//new Doc("Test Doc",12345, 1, null))
             ChatPacket temp = (ChatPacket) inputStrm.readObject();
             List<String> toSet = temp.getChats();
             updateChat(toSet);
@@ -273,7 +273,20 @@ public class CEController extends JFrame implements Serializable {
             //currentSelectedDoc = temp;
         }
     }
-
+    private class NewDocument implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	String name = JOptionPane.showInputDialog("What would you like your document to be called?");
+        	CreateNewDocument toSend = new CreateNewDocument(name, mainUser.getID());
+        	try {
+				outputStrm.writeObject(toSend);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        	
+        }
+    }
     private class SaveLocalListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -334,7 +347,7 @@ public class CEController extends JFrame implements Serializable {
     private class ServerRevisionWrite implements Runnable {
         public void run() {
             while (true) {
-/*
+
                 try {
                     // New edit packet and write it out!
                     if(mainUser.selectedDoc != 0) {
@@ -349,7 +362,7 @@ public class CEController extends JFrame implements Serializable {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-*/
+
             }
         }
     }
@@ -364,7 +377,7 @@ public class CEController extends JFrame implements Serializable {
                     
                     Object unknown = inputStrm.readObject();
 
-                    if ((unknown instanceof EditPacket)) {
+                    if ((unknown instanceof Doc)) {
                         EditPacket newPacket = (EditPacket) unknown;
                         if ((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() !=0) {
 
@@ -384,9 +397,18 @@ public class CEController extends JFrame implements Serializable {
                     	System.out.println("I was Called");
                     }
                     else if(unknown instanceof GetDocsPacket){
-                        GetDocsPacket newPacket = (GetDocsPacket)  unknown;
+                    	System.out.println("C");
+                        GetDocsPacket newPacket = (GetDocsPacket) unknown;
                         displayCurrentDocs(newPacket);
                     }
+                    else if(unknown instanceof CreateNewDocument){
+                    	CreateNewDocument thePacket = (CreateNewDocument) unknown;
+                    	currentSelectedDoc = thePacket.getDocID();
+                    }
+//                    else if(unknown instanceof UpdateUserPacket){
+//                    	UpdateUserPacket updateUser = (UpdateUserPacket) unknown;
+//                    	mainUser = updateUser.getUser();
+//                    }
                 } catch (ClassNotFoundException | IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -417,17 +439,19 @@ public class CEController extends JFrame implements Serializable {
     private void displayCurrentDocs(GetDocsPacket arg){
 
         ourDocs = arg.getList();
-        DefaultListModel docList = new DefaultListModel();
+        DefaultListModel<String> docList = new DefaultListModel<String>();
         for (int i = 0; i < ourDocs.size(); i++) {
             docList.addElement(ourDocs.get(i).getDocName());
         }
 
-        JList currentDocTemp = new JList<String>(docList);
+        JList<String> currentDocTemp = new JList<String>(docList);
         JScrollPane currentDocs= new JScrollPane(currentDocTemp);
 
         JFrame frame = new JFrame();
-
+        JButton createNewDoc = new JButton("Create New Document");
+        createNewDoc.addActionListener(new NewDocument());
         frame.add(currentDocs, BorderLayout.CENTER);
+        frame.add(createNewDoc, BorderLayout.SOUTH);
         frame.setVisible(true);
         frame.setResizable(true);
         frame.pack();

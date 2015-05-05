@@ -15,8 +15,10 @@ public class DocumentAssistant implements Serializable {
         documentList = new ArrayList<Doc>();
     }
 
-    public void addDocument(String docName, int docId, int ownerId, ArrayList<Integer> editors) {
-        documentList.add(new Doc(docName,docId,ownerId, editors));
+    public int addDocument(String docName, int ownerId, ArrayList<Integer> editors) {
+        int newID = documentList.size()+1;
+    	documentList.add(new Doc(docName,newID,ownerId, editors));
+        return newID;
     }
 
     public void removeDocument(Doc toRemove) {

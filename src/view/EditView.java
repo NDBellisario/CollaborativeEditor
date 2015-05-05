@@ -1,8 +1,6 @@
 package view;
 
-import model.Doc;
-import model.DocumentAssistant;
-import model.User;
+import model.*;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -19,11 +17,8 @@ import javax.swing.text.html.*;
 
 import java.awt.*;
 import java.awt.event.*;
-<<<<<<< HEAD
-=======
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 import java.util.ArrayList;
 
 public class EditView extends JPanel {
@@ -53,21 +48,19 @@ public class EditView extends JPanel {
 	private Style indentL;
 	private Style indentR;
 	private Style indentC;
-<<<<<<< HEAD
+	private JOptionPane annotationBox;
 	private String currentDoc;
 	private User user;
 	private JLabel currentDocLabel;
-=======
-	private JOptionPane annotationBox;
 	private JList<Annotation> scrollAnnoList;
 	private DefaultListModel<Annotation> userList;
 	private ArrayList<Annotation> annotationList = new ArrayList<Annotation>();
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
 	public EditView(User userArg, ArrayList<Doc> theD) {
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(700, 600));
 		user = userArg;
+
 		permission = user.getPermission();
 		// TODO: fix textBox = new JEditorPane(new
 		// HTMLEditorKit().getContentType(), "");
@@ -109,17 +102,16 @@ public class EditView extends JPanel {
 		currentDocLabel = new JLabel("TEST",  SwingConstants.CENTER);
 		this.add(currentDocLabel, BorderLayout.NORTH);
 
-<<<<<<< HEAD
-	}
-	public void changeDoc(String argName) {
-		currentDocLabel.setText(argName);
-		repaint();
-		//this.add(new JLabel("Stuff", SwingConstants.CENTER), BorderLayout.NORTH);
-		//repaint();
-=======
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 	}
 
+public void changeDoc(String argName) {
+	currentDocLabel.setText(argName);
+	repaint();
+	//this.add(new JLabel("Stuff", SwingConstants.CENTER), BorderLayout.NORTH);
+	//repaint();
+}
+
+	
 	public void changePermission(int arg) {
 		permission = arg;
 	}
@@ -151,15 +143,7 @@ public class EditView extends JPanel {
 		colored = new JButton("Color Font");
 		colored.addActionListener(listener);
 
-<<<<<<< HEAD
-		indentLeft = new JButton("Align Left");
-		indentLeft.addActionListener(listener);
 		// for Indent left
-		indentL = textBox.addStyle("indentLeft", null);
-		StyleConstants.setAlignment(indentL, StyleConstants.ALIGN_LEFT);
-=======
-		// for Indent left
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
 		indentCenter = new JButton("Indent Center");
 		indentCenter.addActionListener(listener);
@@ -168,11 +152,7 @@ public class EditView extends JPanel {
 		indentRight.addActionListener(listener);
 		// For indent right
 		indentR = textBox.addStyle("indentRight", null);
-<<<<<<< HEAD
-		StyleConstants.setAlignment(indentL, StyleConstants.ALIGN_RIGHT);
-=======
 		StyleConstants.setAlignment(indentR, StyleConstants.ALIGN_RIGHT);
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
 		bullets = new JButton("Bullet Points");
 		bullets.addActionListener(listener);
@@ -263,11 +243,6 @@ public class EditView extends JPanel {
 				makeUnderline();
 			} else if (e.getSource() == colored) {
 
-<<<<<<< HEAD
-			} else if (e.getSource() == indentLeft) {
-				makeIndentLeft();
-=======
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 			} else if (e.getSource() == indentCenter) {
 
 			} else if (e.getSource() == indentRight) {
@@ -299,13 +274,9 @@ public class EditView extends JPanel {
 	public void makeBold() {
 
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-<<<<<<< HEAD
-			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), textBox.getSelectedText().length(), bolder, false);
-=======
 			textBox.getStyledDocument().setCharacterAttributes(
 					textBox.getSelectionStart(),
 					textBox.getSelectedText().length(), bolder, false);
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setBold(attrs, true);
@@ -338,31 +309,20 @@ public class EditView extends JPanel {
 	public void makeIndentLeft() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
-<<<<<<< HEAD
-			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentL, false);
-=======
 			textBox.getStyledDocument().setCharacterAttributes(
 					textBox.getSelectionStart(), len, indentL, false);
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setAlignment(attrs, StyleConstants.ALIGN_LEFT);
 		}
 	}
-<<<<<<< HEAD
-=======
 
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 	// Needs work
 	public void makeIndentRight() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
-<<<<<<< HEAD
-			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentR, false);
-=======
 			textBox.getStyledDocument().setCharacterAttributes(
 					textBox.getSelectionStart(), len, indentR, false);
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
 		} else {
 			StyleContext context = new StyleContext();
@@ -370,8 +330,6 @@ public class EditView extends JPanel {
 			StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT);
 		}
 	}
-<<<<<<< HEAD
-=======
 
 	public void createAnnotation() {
 
@@ -426,74 +384,6 @@ public class EditView extends JPanel {
 		}
 	}
 
-	/*
-	 * public void checkForHover(MouseEvent event) {
-	 * 
-	 * final int p0 = textBox.getSelectionStart(); final int p1 =
-	 * textBox.getSelectionEnd();
-	 * 
-	 * String text; try { text = textBox.getText(p0, p1-p0);
-	 * 
-	 * FontMetrics metrics = getFontMetrics(textBox.getFont());
-	 * 
-	 * Graphics g = getGraphics(); Rectangle textBounds =
-	 * metrics.getStringBounds(text, g).getBounds(); g.dispose();
-	 * 
-	 * if (textBounds.contains(event.getPoint())) { System.out.println("fuck");
-	 * } else { System.out.println("fuckme"); } repaint(textBounds);
-	 * 
-	 * } catch (BadLocationException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); }
-	 * 
-	 * }
-	 */
->>>>>>> 12bc3c1d48e063913528493f76dfcb9943acd267
 
-	/*
-	 * private class CaretEvent implements CaretListener {
-	 * 
-	 * @Override public void caretUpdate(javax.swing.event.CaretEvent
-	 * caretEvent) { // TODO Auto-generated method stub Object ce =
-	 * caretEvent.getSource(); if (ce == textBox) { dot.setText("" +
-	 * caretEvent.getDot()); mark.setText("" + caretEvent.getMark()); } } }
-	 */
 
-	/*
-	 * private class documentSelect implements MouseListener{
-	 * 
-	 * public void actionPerformed(ActionEvent e){
-	 * 
-	 * }
-	 * 
-	 * @Override public void mouseClicked(MouseEvent e){
-	 * 
-	 * // TODO Auto-generated method stub }
-	 * 
-	 * @Override public void mousePressed(MouseEvent e){
-	 * 
-	 * // TODO Auto-generated method stub }
-	 * 
-	 * @Override public void mouseReleased(MouseEvent e){
-	 * 
-	 * // TODO Auto-generated method stub }
-	 * 
-	 * @Override public void mouseEntered(MouseEvent e){
-	 * 
-	 * // TODO Auto-generated method stub }
-	 * 
-	 * @Override public void mouseExited(MouseEvent e){
-	 * 
-	 * // TODO Auto-generated method stub } }
-	 */
-
-	// Main method to test its functionality.
-	/*
-	 * public static void main(String[] args){ JFrame frame = new JFrame();
-	 * frame.setLayout(new BorderLayout()); ChatView chat = new
-	 * ChatView("Blitzer"); chat.setVisible(true); frame.add(chat,
-	 * BorderLayout.EAST); EditView edit = new EditView(null);
-	 * edit.setVisible(true); frame.add(edit, BorderLayout.WEST);
-	 * frame.setVisible(true); frame.setResizable(true); frame.pack();
-	 * frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE ); }
-	 */
 }

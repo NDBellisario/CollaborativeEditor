@@ -194,7 +194,7 @@ public class ServerView extends JFrame implements Serializable {
         userList.clear();
         for (String temp : activeUsers)
             userList.addElement(temp);
-
+    }
  
 
     // quits Server connection

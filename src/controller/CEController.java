@@ -59,13 +59,13 @@ public class CEController extends JFrame implements Serializable {
 	private ObjectInputStream inputStrm;
 	private int currentSelectedDoc;
 	private ArrayList<Doc> ourDocs;
-<<<<<<< HEAD
+
 	private DocumentView clientDocumentView;
 	private CEController ourInstance;
-=======
+
 	private Thread servertread;
 	private Thread serverrevthread;
->>>>>>> db5fe6deb9394a0815bb990515b3b7f45ce4da14
+
 
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
 		initUserModels();
@@ -466,10 +466,7 @@ public class CEController extends JFrame implements Serializable {
 		JOptionPane.showMessageDialog(this, "Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
 		System.exit(0);
 	}
-<<<<<<< HEAD
-=======
-	
-	public void selfExit(){
+ void selfExit(){
 		try {
 			LogoutPacket selfLog = new LogoutPacket();
 			selfLog.setUser(mainUser.getUserName());
@@ -491,7 +488,7 @@ public class CEController extends JFrame implements Serializable {
 		for (int i = 0; i < ourDocs.size(); i++) {
 			docList.addElement(ourDocs.get(i).getDocName());
 		}
->>>>>>> db5fe6deb9394a0815bb990515b3b7f45ce4da14
+	}
 
 	public void NewDocument() {
 		String name = JOptionPane.showInputDialog("What would you like your document to be called?");

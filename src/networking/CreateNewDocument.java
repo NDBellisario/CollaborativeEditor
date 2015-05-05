@@ -20,14 +20,11 @@ private int docID;
 	}
 	public DocumentAssistant execute(DocumentAssistant arg){
 		DocumentAssistant newMaster = arg;
-<<<<<<< HEAD
+
 		ArrayList<Integer> deleteMe = new ArrayList<Integer>();
 		deleteMe.add((Integer) ownerID);
 		int docID = newMaster.addDocument(docName, ownerID, deleteMe);
 
-=======
-		this.docID = newMaster.addDocument(docName, ownerID, null);
->>>>>>> db5fe6deb9394a0815bb990515b3b7f45ce4da14
 		return newMaster;
 	}
 	public Integer getDocID() {

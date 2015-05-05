@@ -9,6 +9,7 @@ import view.DocumentView;
 import view.EditView;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -330,7 +331,7 @@ public class CEController extends JFrame implements Serializable {
     private class ServerRevisionWrite implements Runnable {
         public void run() {
             while (true) {
-
+/*
                 try {
                     // New edit packet and write it out!
                     EditPacket newTimedRevision = new EditPacket(editView, mainUser);
@@ -343,7 +344,7 @@ public class CEController extends JFrame implements Serializable {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-
+*/
             }
         }
     }
@@ -355,7 +356,7 @@ public class CEController extends JFrame implements Serializable {
             while (true) {
                 try {
                     // Sets text to the ReadIn
-                    // Object unknown = inputStrm.readObject();
+                    
                     Object unknown = inputStrm.readObject();
 
                     if (unknown instanceof String) {
@@ -368,6 +369,10 @@ public class CEController extends JFrame implements Serializable {
                         updateChat(toSet);
 
 
+                    }else if(unknown instanceof LogoutPacket ){
+                    	LogoutPacket log = (LogoutPacket)unknown;
+                    	log.execute(CEController.this);
+                    	System.out.println("I was Called");
                     }
 
                 } catch (ClassNotFoundException | IOException e) {
@@ -393,6 +398,11 @@ public class CEController extends JFrame implements Serializable {
             frame.pack();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
+    }
+    public void logout(){
+    	JOptionPane.showMessageDialog(this, "Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
+    	
+    	System.exit(0);
     }
 
 }

@@ -6,6 +6,7 @@ import networking.*;
 import view.ServerView;
 
 import javax.swing.*;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -137,6 +138,34 @@ public class CEServer extends JFrame implements Serializable {
             }
             ourView.roundTwo(); // Adds everything to view frame
         }
+    }
+    
+    public void stopServer(){
+    	LogoutPacket lGP = new LogoutPacket();
+    	
+    	for(String usr : activeUsers){
+    		ObjectOutputStream out = outputs.get(usr);
+    		try {
+				out.writeObject(lGP);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    	}
+    	
+    	
+    }
+    
+    public void kickUser(String user){
+    	LogoutPacket lGP = new LogoutPacket();
+    	ObjectOutputStream out = outputs.get(user);
+    	try {
+			out.writeObject(lGP);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     //    public void initVariables() {

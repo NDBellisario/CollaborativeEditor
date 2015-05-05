@@ -1,8 +1,12 @@
 package view;
 import model.UserAssistant;
 import server.CEServer;
+import sun.awt.WindowClosingListener;
 
 import javax.swing.*;
+
+import controller.CEController;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.Serializable;
@@ -79,11 +83,18 @@ public class ServerView extends JFrame implements Serializable {
         this.pack();
         this.setSize(600, 400);
         this.setVisible(true);// display this JFrame
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);// kill the application
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);// kill the application
+        this.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent evt){
+			ourServer.stopServer();
+			}
+		});
         // when the window is
         // closed
         getContentPane().setBackground(Color.BLACK);
     }
+    
+    
 
     /*
      * Menu settings TODO: Make more and make them work
@@ -184,8 +195,7 @@ public class ServerView extends JFrame implements Serializable {
         for (String temp : activeUsers)
             userList.addElement(temp);
 
-    }
-
+ 
 
     // quits Server connection
     private class QuitActionListener implements ActionListener {

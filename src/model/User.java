@@ -14,7 +14,7 @@ public class User implements Serializable {
     int identification;
     public int selectedDoc;
 
-    public User(String userName, String password, int id) {
+    public User(String userName, String password, int id, int argDoc) {
         setUserName(userName);
         try {
 			setPassword(password);
@@ -24,10 +24,10 @@ public class User implements Serializable {
 		}
         setPermission(permission);
         setIdentification(id);
-        selectedDoc = selectedDoc;
+        selectedDoc = argDoc;
     }
 
-    /**
+	/**
      * Sets the User Name to the given User Name if the length is greater than 4
      *
      * @param userName
@@ -43,6 +43,9 @@ public class User implements Serializable {
     public void setSelectedDoc(int arg)
     {
         selectedDoc = arg;
+    }
+    public int getSelectedDoc(){
+    	return selectedDoc;
     }
 
     //sketch

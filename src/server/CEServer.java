@@ -349,7 +349,7 @@ public class CEServer extends JFrame implements Serializable {
 						// if (readPacket.getNewText().equals("")) {
 						// Writes it out to ALL of the Client's
 						for (ObjectOutputStream OPtemp : outputs.values()) {
-							OPtemp.writeObject(masterList.getList().get(mainUser.selectedDoc - 1));
+							OPtemp.writeObject(readPacket);
 						}
 						// }
 					}
@@ -372,11 +372,12 @@ public class CEServer extends JFrame implements Serializable {
 						GetDocsPacket userDocs = (GetDocsPacket) temp;
 						userDocs.makeList(masterList, mainUser);
 						clientOutputStream.writeObject(userDocs);
-						System.out.println("3");
+						
 					} else if (temp instanceof CreateNewDocument) {
 						CreateNewDocument newPacket = (CreateNewDocument) temp;
 						masterList = newPacket.execute(masterList);
-						EditPacket newEdit = new EditPacket(null, mainUser, newPacket.getDocID());
+						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), masterList);
+						newEdit.setDocName(newPacket.getName());
 						clientOutputStream.writeObject(newPacket);
 						clientOutputStream.writeObject(newEdit);
 					} else if (temp instanceof LogoutPacket){

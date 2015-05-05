@@ -22,7 +22,7 @@ public class UserAssistant implements Serializable {
      */
     // This is the equivalent of adding to the arraylist?
     public User addUser(String userName, String password) {
-        User toReturn = new User(userName, password, userList.size() + 1); //creates new user sets their unique ID# to how many users we have plus 1
+        User toReturn = new User(userName, password, userList.size() + 1, 0); //creates new user sets their unique ID# to how many users we have plus 1
         userList.add(toReturn);
         return toReturn;
         //setChanged();

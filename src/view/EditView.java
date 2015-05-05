@@ -1,5 +1,7 @@
 package view;
 
+import model.Doc;
+import model.DocumentAssistant;
 import model.User;
 
 import javax.swing.*;
@@ -14,6 +16,7 @@ import javax.swing.text.html.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class EditView extends JPanel {
 	/**
@@ -41,12 +44,14 @@ public class EditView extends JPanel {
 	private Style indentL;
 	private Style indentR;
 	private Style indentC;
-	
+	private String currentDoc;
+	private User user;
+	private JLabel currentDocLabel;
 
-	public EditView(User user) {
+	public EditView(User userArg, ArrayList<Doc> theD) {
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(700, 600));
-
+		user = userArg;
 		permission = user.getPermission();
 		// TODO: fix textBox = new JEditorPane(new
 		// HTMLEditorKit().getContentType(), "");
@@ -77,10 +82,22 @@ public class EditView extends JPanel {
 		formatPanel = formatPanel();
 		this.add(formatPanel, BorderLayout.WEST);
 
-		this.add(new JLabel("No Document Selected.", SwingConstants.CENTER),
-				BorderLayout.NORTH);
+		int docIndex = user.getSelectedDoc();
 
-		
+		for (int i = 0; i < theD.size(); i++) {
+			if (theD.get(i).getDocIdentification() == docIndex) {
+				currentDoc = theD.get(i).getDocName();
+			}
+		}
+		currentDocLabel = new JLabel("TEST",  SwingConstants.CENTER);
+		this.add(currentDocLabel, BorderLayout.NORTH);
+
+	}
+	public void changeDoc(String argName) {
+		currentDocLabel.setText(argName);
+		repaint();
+		//this.add(new JLabel("Stuff", SwingConstants.CENTER), BorderLayout.NORTH);
+		//repaint();
 	}
 
 	public void changePermission(int arg) {
@@ -116,19 +133,19 @@ public class EditView extends JPanel {
 
 		indentLeft = new JButton("Align Left");
 		indentLeft.addActionListener(listener);
-		//for Indent left
+		// for Indent left
 		indentL = textBox.addStyle("indentLeft", null);
 		StyleConstants.setAlignment(indentL, StyleConstants.ALIGN_LEFT);
-		
+
 		indentCenter = new JButton("Indent Center");
 		indentCenter.addActionListener(listener);
 
 		indentRight = new JButton("Indent Right");
 		indentRight.addActionListener(listener);
-		//For indent right
+		// For indent right
 		indentR = textBox.addStyle("indentRight", null);
 		StyleConstants.setAlignment(indentL, StyleConstants.ALIGN_RIGHT);
-		
+
 		bullets = new JButton("Bullet Points");
 		bullets.addActionListener(listener);
 
@@ -213,7 +230,7 @@ public class EditView extends JPanel {
 			} else if (e.getSource() == underlined) {
 				makeUnderline();
 			} else if (e.getSource() == colored) {
-				
+
 			} else if (e.getSource() == indentLeft) {
 				makeIndentLeft();
 			} else if (e.getSource() == indentCenter) {
@@ -239,7 +256,7 @@ public class EditView extends JPanel {
 	public void makeBold() {
 
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(),textBox.getSelectedText().length(), bolder, false);
+			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), textBox.getSelectedText().length(), bolder, false);
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setBold(attrs, true);
@@ -259,38 +276,36 @@ public class EditView extends JPanel {
 
 	public void makeUnderline() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-		int len = textBox.getSelectedText().length(); 
-		textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, underline, false);
+			int len = textBox.getSelectedText().length();
+			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, underline, false);
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setUnderline(attrs, true);
 		}
 	}
-	
-	//Needs work
+
+	// Needs work
 	public void makeIndentLeft() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-		int len = textBox.getSelectedText().length(); 
-		textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentL, false);
+			int len = textBox.getSelectedText().length();
+			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentL, false);
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setAlignment(attrs, StyleConstants.ALIGN_LEFT);
 		}
 	}
-	//Needs work
+	// Needs work
 	public void makeIndentRight() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-		int len = textBox.getSelectedText().length(); 
-		textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentR, false);
-		
+			int len = textBox.getSelectedText().length();
+			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, indentR, false);
+
 		} else {
 			StyleContext context = new StyleContext();
 			Style style = textBox.getStyle(context.DEFAULT_STYLE);
 			StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT);
 		}
 	}
-	
-	
 
 	/*
 	 * private class CaretEvent implements CaretListener {

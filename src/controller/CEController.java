@@ -376,6 +376,10 @@ public class CEController extends JFrame implements Serializable {
                         updateChat(toSet);
 
                     }
+                    else if(unknown instanceof GetDocsPacket){
+                        GetDocsPacket newPacket = (GetDocsPacket)  unknown;
+                        displayCurrentDocs(newPacket);
+                    }
 
                 } catch (ClassNotFoundException | IOException e) {
                     // TODO Auto-generated catch block
@@ -387,22 +391,30 @@ public class CEController extends JFrame implements Serializable {
 
     private class showOptionsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            DefaultListModel docList = new DefaultListModel();
-            for (int i = 0; i < ourDocs.size(); i++) {
-                docList.addElement(ourDocs.get(i).getDocName());
-            }
 
-            JList currentDocTemp = new JList<String>(docList);
-            JScrollPane currentDocs= new JScrollPane(currentDocTemp);
+            GetDocsPacket toSend = new GetDocsPacket(mainUser);
+            outputStrm.writeObject(toSend);
 
-            JFrame frame = new JFrame();
-
-            frame.add(currentDocs, BorderLayout.CENTER);
-            frame.setVisible(true);
-            frame.setResizable(true);
-            frame.pack();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
+    }
+    private class displayCurrentDocs(GetDocsPacket arg){
+
+        ourDocs = arg.getList();
+        DefaultListModel docList = new DefaultListModel();
+        for (int i = 0; i < ourDocs.size(); i++) {
+            docList.addElement(ourDocs.get(i).getDocName());
+        }
+
+        JList currentDocTemp = new JList<String>(docList);
+        JScrollPane currentDocs= new JScrollPane(currentDocTemp);
+
+        JFrame frame = new JFrame();
+
+        frame.add(currentDocs, BorderLayout.CENTER);
+        frame.setVisible(true);
+        frame.setResizable(true);
+        frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 }

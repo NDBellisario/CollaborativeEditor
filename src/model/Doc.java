@@ -1,5 +1,6 @@
 package model;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Doc implements Serializable {
@@ -12,17 +13,18 @@ public class Doc implements Serializable {
     private String docName;
     private int docIdentification;
     private int ownerId;
-    private HashMap<Integer, User> editors;
+    private ArrayList<Integer> editors;
     private ArrayList<String> annotations;
     private String docContents;
 
-    public Doc(String docName, int docId, int ownerId, HashMap<Integer, User> editors) {
+    public Doc(String docName, int docId, int ownerId, ArrayList<Integer> editors) {
         this.docName = docName;
         this.docIdentification = docId;
         this.ownerId = ownerId;
         this.editors = editors;
         this.annotations = new ArrayList<String>();
         setDocContents("<html><font color = red>Doc: " + docName + "</font></html>");
+
 
     }
     public Doc(){
@@ -49,7 +51,7 @@ public class Doc implements Serializable {
     }
 
     public void addEditor(Integer permissionArg, User userArg) {
-        editors.put(permissionArg, userArg);
+        editors.add(userArg.getID());
     }
 
     public void removeEditor(User toRemove) {
@@ -62,6 +64,11 @@ public class Doc implements Serializable {
 
     public void removeAnnotations(String toRemove) {
         annotations.remove(toRemove);
+    }
+    public ArrayList<Integer> getDocEditors(){
+
+
+        return editors;
     }
 
     public ArrayList<String> getAnnotations() {

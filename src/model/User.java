@@ -109,5 +109,8 @@ public class User implements Serializable {
             return 1;
         }
     }
+    public Integer getID(){
+        return identification;
+    }
 }
 

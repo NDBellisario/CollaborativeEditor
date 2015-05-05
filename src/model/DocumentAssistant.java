@@ -15,7 +15,7 @@ public class DocumentAssistant implements Serializable {
         documentList = new ArrayList<Doc>();
     }
 
-    public void addDocument(String docName, int docId, int ownerId, HashMap<Integer,User> editors) {
+    public void addDocument(String docName, int docId, int ownerId, ArrayList<Integer> editors) {
         documentList.add(new Doc(docName,docId,ownerId, editors));
     }
 
@@ -27,5 +27,6 @@ public class DocumentAssistant implements Serializable {
     public ArrayList<Doc> getList() {
         return documentList;
     }
+
 
 }

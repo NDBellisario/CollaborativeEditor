@@ -307,7 +307,8 @@ public class CEServer extends JFrame implements Serializable {
 
             while (true) {
                 try {
-                    Object temp = clientInputStream.readObject();
+                    
+                	Object temp = clientInputStream.readObject();
                     // Reads packet from the controller
                     if (temp instanceof EditPacket) {
                         EditPacket readPacket = (EditPacket) temp;
@@ -339,7 +340,7 @@ public class CEServer extends JFrame implements Serializable {
                     }
                     else if( temp instanceof GetDocsPacket){
                         GetDocsPacket userDocs = (GetDocsPacket) temp;
-                        userDocs.makeList(masterList);
+                        userDocs.makeList(masterList, );
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();

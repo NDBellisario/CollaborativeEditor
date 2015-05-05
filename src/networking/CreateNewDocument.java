@@ -1,6 +1,7 @@
 package networking;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import model.Doc;
 import model.DocumentAssistant;
@@ -14,18 +15,22 @@ private String docName;
 private int ownerID;
 private int docID;
 	public CreateNewDocument(String name, Integer id) {
-		docName = name;
-		ownerID = id;
+		this.docName = name;
+		this.ownerID = id;
 	}
 	public DocumentAssistant execute(DocumentAssistant arg){
 		DocumentAssistant newMaster = arg;
-		int docID = newMaster.addDocument(docName, ownerID, null);
+
+		ArrayList<Integer> deleteMe = new ArrayList<Integer>();
+		deleteMe.add((Integer) ownerID);
+		int docID = newMaster.addDocument(docName, ownerID, deleteMe);
 
 		return newMaster;
 	}
 	public Integer getDocID() {
 		return docID;
 	}
+	
 
 
 

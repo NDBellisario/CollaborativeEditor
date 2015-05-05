@@ -18,10 +18,12 @@ public class GetDocsPacket implements Serializable{
 	public GetDocsPacket(User mainUser) {
 		myUser = mainUser;
 		myDocs = new ArrayList<Doc>();// TODO Auto-generated constructor stub
+
 	}
 
 	public void makeList(DocumentAssistant masterList, User mainUser) {
 		myUser = mainUser;
+
 		for (Doc i : masterList.getList()) {
 			if(i.getDocEditors().contains(myUser.getID())) {
 				myDocs.add(i);
@@ -30,6 +32,7 @@ public class GetDocsPacket implements Serializable{
 	}
 	
 	public ArrayList<Doc> getList() {
+
 		return myDocs;
 	}
 	

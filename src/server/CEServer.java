@@ -166,6 +166,13 @@ public class CEServer extends JFrame implements Serializable {
 		}
 
 	}
+	public void userLeft(String usr){
+		Thread threadtoKill = clients.get(usr);
+		threadtoKill.stop();
+		activeUsers.remove(usr);
+		ourView.updateClients(activeUsers);
+		
+	}
 
 
 	    public void kickUser(String user) throws InterruptedException{
@@ -368,11 +375,13 @@ public class CEServer extends JFrame implements Serializable {
 						System.out.println("3");
 					} else if (temp instanceof CreateNewDocument) {
 						CreateNewDocument newPacket = (CreateNewDocument) temp;
-
 						masterList = newPacket.execute(masterList);
 						EditPacket newEdit = new EditPacket(null, mainUser, newPacket.getDocID());
 						clientOutputStream.writeObject(newPacket);
 						clientOutputStream.writeObject(newEdit);
+					} else if (temp instanceof LogoutPacket){
+						LogoutPacket userQuitPacket = (LogoutPacket) temp;
+						userQuitPacket.quit(CEServer.this);
 					}
 				} catch (IOException e1) {
 					e1.printStackTrace();

@@ -22,6 +22,8 @@ public class Doc implements Serializable {
         this.docIdentification = docId;
         this.ownerId = ownerId;
         this.editors = editors;
+        //this.editors = new ArrayList<Integer>();
+        //editors.add((Integer) ownerId);
         this.annotations = new ArrayList<String>();
         setDocContents("<html><font color = red>Doc: " + docName + "</font></html>");
 

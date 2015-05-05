@@ -5,6 +5,7 @@ import view.ChatView;
 import view.DocumentView;
 import view.EditView;
 
+import javax.print.attribute.standard.Severity;
 import javax.swing.*;
 
 import java.awt.*;
@@ -19,7 +20,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.List;
 
-
 /* Author: Nick Bellisario
  * 
  * This class deals with the client connecting to the server via a 
@@ -33,6 +33,7 @@ public class CEController extends JFrame implements Serializable {
 	/**
      *
      */
+
 	private static final long serialVersionUID = 1L;
 	private JMenuBar menuBarCore;
 	private JMenu fileContainer;
@@ -59,8 +60,16 @@ public class CEController extends JFrame implements Serializable {
 	private int currentSelectedDoc;
 	private ArrayList<Doc> ourDocs;
 
+	private DocumentView clientDocumentView;
+	private CEController ourInstance;
+
+	private Thread servertread;
+	private Thread serverrevthread;
+
+
 	public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
 		initUserModels();
+		ourInstance = this;
 	}
 
 	public static void main(String[] args) {
@@ -72,6 +81,7 @@ public class CEController extends JFrame implements Serializable {
 		// Setting up hashing
 
 		// Setting up the main data entry fields, un/pw/server stuff
+		clientDocumentView = null;
 		ourDocs = new ArrayList<Doc>();
 		JTextField ipField = new JTextField();
 		JTextField portField = new JTextField();
@@ -171,8 +181,11 @@ public class CEController extends JFrame implements Serializable {
 			ChatPacket temp = (ChatPacket) inputStrm.readObject();
 			List<String> toSet = temp.getChats();
 			updateChat(toSet);
-			new Thread(new ServerRevisionWrite()).start();
-			new Thread(new ServerCommunicator()).start();
+			serverrevthread  = new Thread(new ServerRevisionWrite());
+			servertread =  new Thread (new ServerCommunicator());
+			serverrevthread.start();
+			servertread.start();
+			
 			// }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -223,7 +236,11 @@ public class CEController extends JFrame implements Serializable {
 		menuBarCore.add(userContainer);
 		menuBarCore.add(documentContainer);
 		// add document menu buttons
+		JMenuItem newDoc = new JMenuItem("Create New Document");
+		documentContainer.add(newDoc);
+		newDoc.addActionListener(new NewDocument());
 		documentContainer.add(showOptions);
+
 		// fileContainer sub menu buttons
 		fileContainer.add(save);
 		fileContainer.add(saveLocal);
@@ -247,7 +264,12 @@ public class CEController extends JFrame implements Serializable {
 		this.setLayout(new BorderLayout());
 		this.add(chatView, BorderLayout.EAST);
 		this.add(editView, BorderLayout.CENTER);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent evt){
+			CEController.this.selfExit();
+			}
+		});
 		// pack and create!
 		this.pack();
 		this.setVisible(true);
@@ -263,7 +285,7 @@ public class CEController extends JFrame implements Serializable {
 	private class ExitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.exit(0);
+			CEController.this.selfExit();
 		}
 	}
 
@@ -275,6 +297,7 @@ public class CEController extends JFrame implements Serializable {
 			// currentSelectedDoc = temp;
 		}
 	}
+
 	private class NewDocument implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -396,11 +419,19 @@ public class CEController extends JFrame implements Serializable {
 
 						LogoutPacket log = (LogoutPacket) unknown;
 						log.execute(CEController.this);
-						System.out.println("I was Called");
 					} else if (unknown instanceof GetDocsPacket) {
-						System.out.println("C");
+
 						GetDocsPacket newPacket = (GetDocsPacket) unknown;
-						displayCurrentDocs(newPacket);
+						if(clientDocumentView == null){
+							clientDocumentView = new DocumentView(ourInstance, newPacket.getList());
+							
+						}
+						else{
+							clientDocumentView.updateList(newPacket.getList());
+							
+						}
+						
+
 					} else if (unknown instanceof CreateNewDocument) {
 						CreateNewDocument thePacket = (CreateNewDocument) unknown;
 						currentSelectedDoc = thePacket.getDocID();
@@ -433,8 +464,22 @@ public class CEController extends JFrame implements Serializable {
 
 	public void logout() {
 		JOptionPane.showMessageDialog(this, "Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
-
 		System.exit(0);
+	}
+ void selfExit(){
+		try {
+			LogoutPacket selfLog = new LogoutPacket();
+			selfLog.setUser(mainUser.getUserName());
+			outputStrm.writeObject(selfLog);
+			servertread.stop();
+			serverrevthread.stop();
+			System.exit(0);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	private void displayCurrentDocs(GetDocsPacket arg) {
 
@@ -443,20 +488,18 @@ public class CEController extends JFrame implements Serializable {
 		for (int i = 0; i < ourDocs.size(); i++) {
 			docList.addElement(ourDocs.get(i).getDocName());
 		}
+	}
 
-		JList<String> currentDocTemp = new JList<String>(docList);
-		JScrollPane currentDocs = new JScrollPane(currentDocTemp);
+	public void NewDocument() {
+		String name = JOptionPane.showInputDialog("What would you like your document to be called?");
+		CreateNewDocument toSend = new CreateNewDocument(name, mainUser.getID());
+		try {
 
-		JFrame frame = new JFrame();
-		JButton createNewDoc = new JButton("Create New Document");
-		createNewDoc.addActionListener(new NewDocument());
-		frame.add(currentDocs, BorderLayout.CENTER);
-		frame.add(createNewDoc, BorderLayout.SOUTH);
-		frame.setVisible(true);
-		frame.setResizable(true);
-		frame.pack();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+			outputStrm.writeObject(toSend);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 }

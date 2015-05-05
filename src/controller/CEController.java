@@ -55,7 +55,7 @@ public class CEController extends JFrame implements Serializable {
     private Socket serversoc;
     private ObjectOutputStream outputStrm;
     private ObjectInputStream inputStrm;
-    private Doc currentSelectedDoc;
+    private int currentSelectedDoc;
     private ArrayList<Doc> ourDocs;
 
     public CEController(ChatAssistant theChat, EditAssistant editAs, UserAssistant theUser) {
@@ -269,7 +269,7 @@ public class CEController extends JFrame implements Serializable {
         public void actionPerformed(ActionEvent e) {
             Doc temp = new Doc("Test Doc",12345, 1, null);
             ourDocs.add(temp);
-            currentSelectedDoc = temp;
+            //currentSelectedDoc = temp;
         }
     }
 
@@ -336,9 +336,11 @@ public class CEController extends JFrame implements Serializable {
 
                 try {
                     // New edit packet and write it out!
-                    EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc.getDocIdentification());
-                    outputStrm.writeObject(newTimedRevision);
-                    Thread.sleep(777); // Only want to send every 2000 ms.
+                    if(mainUser.selectedDoc != 0) {
+                        EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc);
+                        outputStrm.writeObject(newTimedRevision);
+                        Thread.sleep(777); // Only want to send every 2000 ms.
+                    }
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -361,9 +363,9 @@ public class CEController extends JFrame implements Serializable {
                     // Object unknown = inputStrm.readObject();
                     Object unknown = inputStrm.readObject();
 
-                    if (unknown instanceof EditPacket) {
+                    if ((unknown instanceof EditPacket)) {
                         EditPacket newPacket = (EditPacket) unknown;
-                        if (newPacket.getDocID() == currentSelectedDoc.getDocIdentification()) {
+                        if ((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() !=0) {
 
                             editView.setText(newPacket.getNewText());
                         }

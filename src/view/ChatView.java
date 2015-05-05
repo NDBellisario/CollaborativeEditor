@@ -20,6 +20,9 @@ public class ChatView extends JPanel{
 
     private JPanel chatPanel;
     private JPanel typePanel;
+    private JPanel revisionPanel;
+    private JTextArea revisions;
+    private JButton loadRevision;
     private JButton sendButton;
     private JTextPane groupText, personalTest;
     private JTextArea textArea; // chat log displayed here
@@ -32,6 +35,24 @@ public class ChatView extends JPanel{
         this.username = user.getUserName();
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(280, 600));
+        
+        revisionPanel = new JPanel(new BorderLayout());
+        
+        revisions = new JTextArea();
+        revisions.setEditable(false);
+        revisions.setLineWrap(true);
+        revisionPanel.add(revisions,BorderLayout.CENTER);
+        
+        loadRevision = new JButton("Load Revision");
+        loadRevision.addActionListener(new loadRevisionListener());
+        revisionPanel.add(loadRevision,BorderLayout.SOUTH);
+        
+        revisionPanel.add(new JLabel("Revisions", SwingConstants.CENTER), BorderLayout.NORTH);
+        
+        revisionPanel.setPreferredSize(new Dimension(280,250));
+        
+        this.add(revisionPanel,BorderLayout.NORTH);
+        
 
         //Text area to carry the conversation text.
         textArea = new JTextArea();
@@ -44,7 +65,7 @@ public class ChatView extends JPanel{
         textField.setLineWrap(true);
         JButton enterButton = new JButton("Send");
 
-        // textField.setPreferredSize(new Dimension(600, 40));
+         textField.setPreferredSize(new Dimension(100, 250));
         // enterButton.setPreferredSize(new Dimension(100, 40));
 
         // create a listener for writing messages to server
@@ -75,7 +96,7 @@ public class ChatView extends JPanel{
         this.add(new JScrollPane(textArea), BorderLayout.CENTER);
         //this.add(textArea,BorderLayout.CENTER);
         this.add(typePanel, BorderLayout.SOUTH);
-        this.add(new JLabel("Chat", SwingConstants.CENTER), BorderLayout.NORTH);
+       // this.add(new JLabel("Chat", SwingConstants.CENTER), BorderLayout.NORTH);
     }
 
     public void ServerChatWrite(String text2Send) {
@@ -109,6 +130,14 @@ public class ChatView extends JPanel{
             //	textArea.append("\n\n");
             textField.setText("");
             ServerChatWrite(temp);
+
+        }
+    }
+    
+    private class loadRevisionListener implements ActionListener {
+        public void actionPerformed(ActionEvent arg0) {
+            //to do, if user selects a revision, and clicks this button,
+        	//revert the edit field back to this version.
 
         }
     }

@@ -52,7 +52,7 @@ public class DocumentView extends JPanel implements Observer {
     //Haven't filled this in yet.
     @Override
     public void update(Observable o, Object arg) {
-
+    	
         // TODO Auto-generated method stub
     }
 
@@ -62,6 +62,8 @@ public class DocumentView extends JPanel implements Observer {
                 //enter (docformat)documentList.getSelectedValue();
             }
         }
+        
+       
 
     }
 }

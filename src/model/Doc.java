@@ -25,7 +25,7 @@ public class Doc implements Serializable {
         //this.editors = new ArrayList<Integer>();
         //editors.add((Integer) ownerId);
         this.annotations = new ArrayList<String>();
-        setDocContents("<html><font color = red>Doc: " + docName + "</font></html>");
+        setDocContents("");
 
 
     }
@@ -35,7 +35,11 @@ public class Doc implements Serializable {
     }
 
     public String getDocContents() {
-        return docContents;
+        
+    	if(docContents == null){
+    		docContents = "It Was Null";
+    	}
+    	return docContents;
     }
 
     public void setDocContents(String toAdd) {

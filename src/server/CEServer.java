@@ -33,8 +33,8 @@ public class CEServer extends JFrame implements Serializable {
 	private transient static ServerSocket ourServer;
 	private List<String> allChatMessages;
 	public transient HashMap<String, ObjectOutputStream> outputs;
-    public transient HashMap<String, ObjectInputStream> inputs;
-    public transient HashMap<String, Thread> clients;
+	public transient HashMap<String, ObjectInputStream> inputs;
+	public transient HashMap<String, Thread> clients;
 	private UserAssistant theUsers;
 	private ArrayList<String> activeUsers;
 	private transient ServerView ourView;
@@ -98,9 +98,8 @@ public class CEServer extends JFrame implements Serializable {
 				this.theUsers = loadedController.theUsers;
 				this.allChatMessages = loadedController.allChatMessages;
 				this.masterList = loadedController.masterList;
-                this.inputs = new HashMap<String, ObjectInputStream>();
-                this.clients = new HashMap<String,Thread>();
-
+				this.inputs = new HashMap<String, ObjectInputStream>();
+				this.clients = new HashMap<String, Thread>();
 
 			}
 		} else {
@@ -114,8 +113,8 @@ public class CEServer extends JFrame implements Serializable {
 			this.allChatMessages = new ArrayList<String>();
 			this.masterList = new DocumentAssistant(); // List of text panel
 			this.theUsers.addUser("cat", "meow"); // A Default account to use.
-            this.inputs = new HashMap<String, ObjectInputStream>();
-            this.clients = new HashMap<String, Thread>();
+			this.inputs = new HashMap<String, ObjectInputStream>();
+			this.clients = new HashMap<String, Thread>();
 
 		}
 
@@ -166,24 +165,23 @@ public class CEServer extends JFrame implements Serializable {
 		}
 
 	}
-	public void userLeft(String usr){
+	public void userLeft(String usr) {
 		Thread threadtoKill = clients.get(usr);
 		threadtoKill.stop();
 		activeUsers.remove(usr);
 		ourView.updateClients(activeUsers);
-		
+
 	}
 
-
-	    public void kickUser(String user) throws InterruptedException{
-	    	LogoutPacket lGP = new LogoutPacket();
-	    	ObjectOutputStream out = outputs.get(user);
-	    	Thread threadtoKill = clients.get(user);
-	    	try {
-				out.writeObject(lGP);
-				threadtoKill.stop();
-				activeUsers.remove(user);
-				ourView.updateClients(activeUsers);
+	public void kickUser(String user) throws InterruptedException {
+		LogoutPacket lGP = new LogoutPacket();
+		ObjectOutputStream out = outputs.get(user);
+		Thread threadtoKill = clients.get(user);
+		try {
+			out.writeObject(lGP);
+			threadtoKill.stop();
+			activeUsers.remove(user);
+			ourView.updateClients(activeUsers);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -282,22 +280,23 @@ public class CEServer extends JFrame implements Serializable {
 				userName = userLogin.getName();
 				// Writes out the User Object
 				output.writeObject(toPass);
-				//output.writeObject(new Doc(userName, executeValue, executeValue, null)); // Writes
-																							// out
-																							// the
-																							// current
-																							// List
+				// output.writeObject(new Doc(userName, executeValue,
+				// executeValue, null)); // Writes
+				// out
+				// the
+				// current
+				// List
 				ChatPacket toWrite = new ChatPacket(allChatMessages);
 				output.writeObject(toWrite);
 				outputs.put(userLogin.getName(), output); // Puts on output map
-                inputs.put(userLogin.getName(),input); //Puts on Input Map
+				inputs.put(userLogin.getName(), input); // Puts on Input Map
 
 				clientInit(); // Adds user to session so server can keep track
 
 				// New thread to deal with user
 				Thread temp = new Thread(new ClientHandler(input, output, toPass));
 				temp.start();
-				clients.put(userName,temp);
+				clients.put(userName, temp);
 
 			} catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
@@ -349,6 +348,7 @@ public class CEServer extends JFrame implements Serializable {
 						// if (readPacket.getNewText().equals("")) {
 						// Writes it out to ALL of the Client's
 						for (ObjectOutputStream OPtemp : outputs.values()) {
+							OPtemp.reset();
 							OPtemp.writeObject(readPacket);
 						}
 						// }
@@ -371,16 +371,24 @@ public class CEServer extends JFrame implements Serializable {
 					} else if (temp instanceof GetDocsPacket) {
 						GetDocsPacket userDocs = (GetDocsPacket) temp;
 						userDocs.makeList(masterList, mainUser);
+						System.out.println("GetDocsServer: " + masterList.getList().size());
+						clientOutputStream.reset();
 						clientOutputStream.writeObject(userDocs);
-						
+
 					} else if (temp instanceof CreateNewDocument) {
 						CreateNewDocument newPacket = (CreateNewDocument) temp;
-						masterList = newPacket.execute(masterList);
+						DocumentAssistant tempV = masterList;
+						masterList = newPacket.execute(tempV);
+						//System.out.println("Server Size after CND: " +masterList.getList().size());
 						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), masterList);
+						//System.out.println("Server Size: " +masterList.getList().size());
+						//System.out.println("Packet Size: " +newEdit.getMaster().getList().size());
 						newEdit.setDocName(newPacket.getName());
+						
 						clientOutputStream.writeObject(newPacket);
 						clientOutputStream.writeObject(newEdit);
-					} else if (temp instanceof LogoutPacket){
+						//System.out.println("Packet Size After WriteOUT: " +newEdit.getMaster().getList().size());
+					} else if (temp instanceof LogoutPacket) {
 						LogoutPacket userQuitPacket = (LogoutPacket) temp;
 						userQuitPacket.quit(CEServer.this);
 					}

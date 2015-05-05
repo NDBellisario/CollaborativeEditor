@@ -66,7 +66,7 @@ public class EditView extends JPanel {
 		// HTMLEditorKit().getContentType(), "");
 		textBox = new JTextPane();
 		textBox.setContentType("text/html");
-		textBox.setEditorKit(new HTMLEditorKit());
+		//textBox.setEditorKit(new HTMLEditorKit());
 		// textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
 		textBox.setMargin(new Insets(25, 25, 25, 25));
 
@@ -99,7 +99,7 @@ public class EditView extends JPanel {
 				currentDoc = theD.get(i).getDocName();
 			}
 		}
-		currentDocLabel = new JLabel("TEST",  SwingConstants.CENTER);
+		currentDocLabel = new JLabel("New Unsaved Document",  SwingConstants.CENTER);
 		this.add(currentDocLabel, BorderLayout.NORTH);
 
 	}
@@ -109,6 +109,9 @@ public void changeDoc(String argName) {
 	repaint();
 	//this.add(new JLabel("Stuff", SwingConstants.CENTER), BorderLayout.NORTH);
 	//repaint();
+}
+public String getDocName(){
+	return currentDocLabel.getText();
 }
 
 	
@@ -210,14 +213,14 @@ public void changeDoc(String argName) {
 
 	public void setText(final String s) {
 
-		// textBox.setText(s);
-
-		int caretPos = textBox.getCaretPosition();
-		try {
-			textBox.getDocument().insertString(caretPos, s, null);
-		} catch (BadLocationException ex) {
-			ex.printStackTrace();
-		}
+		textBox.setText(s);
+//
+//		int caretPos = textBox.getCaretPosition();
+//		try {
+//			textBox.getDocument().insertString(caretPos, s, null);
+//		} catch (BadLocationException ex) {
+//			ex.printStackTrace();
+//		}
 
 		/*
 		 * CaretListener cListener = new CaretListener() {

@@ -5,6 +5,7 @@ import model.User;
 import view.EditView;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /*
  * Manages the changes made to the text editor
@@ -20,27 +21,30 @@ public class EditPacket implements Serializable {
 	private int docID;
 	private String docName;
 	private DocumentAssistant masterDA;
-
+	private boolean firstTime = false;
 	public EditPacket(EditView editView, User arg, int argID) {
 
+		if (editView == null) {
+			newText = "Hi";
+		} else {
 			newText = editView.getText();
-
+		}
 		theUser = arg;
 		docID = argID;
-		System.out.println("user cares about: " + arg.selectedDoc);
-		System.out.println("our doc is of value: " + argID);
 
 	}
-	public EditPacket(User arg, int argID, DocumentAssistant DAarg){
-		newText = "";
-		theUser = arg;
-		docID = argID;
-		masterDA = DAarg;
+
+	public EditPacket(User mainUser, Integer docID2, DocumentAssistant masterList) {
+		theUser = mainUser;
+		docID = docID2;
+		setMaster(masterList);
 	}
+
 	public void setDocName(String name) {
 		docName = name;
 
 	}
+
 	public String getNewText() {
 		return newText;
 	}
@@ -51,28 +55,29 @@ public class EditPacket implements Serializable {
 	public String getDocName() {
 		return docName;
 	}
-	public Doc getDocObject() {
-		//System.out.println(masterDA.getList().size());
-		return masterDA.getList().get(docID - 1);
-
-	}
-	public DocumentAssistant tempMe(){
-		return masterDA;
+	public void setMaster(DocumentAssistant arg) {
+		masterDA = arg;
 	}
 
 	public DocumentAssistant execute(DocumentAssistant temp) {
 		// If the document contents has something new, and the value of the new
 		// change is not null, we need to set the doc contents
 
-		if (!(newText.equals(temp.getList().get(docID - 1).getDocContents()) && !newText.equals("null"))) {
-			temp.getList().get(docID - 1).setDocContents(newText);
-
+		if ((newText.equals(temp.getList().get(docID - 1).getDocContents()) && !newText.equals("null"))) {
+			temp.getList().get(docID - 1).setDocContents((temp.getList().get(docID - 1).getDocContents()));
 			docName = temp.getList().get(docID - 1).getDocName();
-			masterDA = temp;
-			System.out.println("Execute: The server says this doc ID is: " + temp.getList().get(docID - 1).getDocIdentification());
-		}
-		return masterDA;
+			setMaster(temp);
 
+		} else {
+			temp.getList().get(docID - 1).setDocContents(newText);
+			docName = temp.getList().get(docID - 1).getDocName();
+			setMaster(temp);
+		}
+		return temp;
+
+	}
+	public DocumentAssistant getMaster() {
+		return masterDA;
 	}
 
 }

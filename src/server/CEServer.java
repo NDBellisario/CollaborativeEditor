@@ -1,4 +1,5 @@
 package server;
+import model.Doc;
 import model.DocumentAssistant;
 import model.User;
 import model.UserAssistant;
@@ -259,7 +260,7 @@ public class CEServer extends JFrame implements Serializable {
                 userName = userLogin.getName();
                 // Writes out the User Object
                 output.writeObject(toPass);
-                output.writeObject(masterList); // Writes out the current List
+                output.writeObject(new Doc()); // Writes out the current List
                 ChatPacket toWrite = new ChatPacket(allChatMessages);
                 output.writeObject(toWrite);
                 outputs.put(userLogin.getName(), output); // Puts on output map
@@ -291,13 +292,13 @@ public class CEServer extends JFrame implements Serializable {
          *
          */
         private static final long serialVersionUID = 1L;
-        private ObjectInputStream inputStream;
-        private ObjectOutputStream outputStream;
+        private ObjectInputStream clientInputStream;
+        private ObjectOutputStream clientOutputStream;
         private User mainUser;
 
         public ClientHandler(ObjectInputStream inputArg, ObjectOutputStream outputArg, User user) {
-            inputStream = inputArg;
-            outputStream = outputArg;
+            clientInputStream = inputArg;
+            clientOutputStream = outputArg;
             mainUser = user;
         }
 
@@ -306,19 +307,19 @@ public class CEServer extends JFrame implements Serializable {
 
             while (true) {
                 try {
-                    Object temp = inputStream.readObject();
+                    Object temp = clientInputStream.readObject();
                     // Reads packet from the controller
                     if (temp instanceof EditPacket) {
                         EditPacket readPacket = (EditPacket) temp;
                         // Executes the packet
                         readPacket.execute(masterList);
                         // Checks to see if we even have something aka not null.
-                        if (readPacket.getNewText().equals("")) {
+                        //if (readPacket.getNewText().equals("")) {
                             // Writes it out to ALL of the Client's
                             for (ObjectOutputStream OPtemp : outputs.values()) {
-                                OPtemp.writeObject(masterList);
+                                OPtemp.writeObject(masterList.getList().get(mainUser.selectedDoc));
                             }
-                        }
+                        //}
                     }
                     // If the packet is a chat packet
                     else if (temp instanceof ChatPacket) {
@@ -335,6 +336,10 @@ public class CEServer extends JFrame implements Serializable {
                             e.printStackTrace();
 
                         }
+                    }
+                    else if( temp instanceof GetDocsPacket){
+                        GetDocsPacket userDocs = (GetDocsPacket) temp;
+                        userDocs.makeList(masterList);
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();

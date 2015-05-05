@@ -1,5 +1,4 @@
 package networking;
-import model.Document;
 import model.DocumentAssistant;
 import model.User;
 import view.EditView;
@@ -17,34 +16,31 @@ public class EditPacket implements Serializable {
     private static final long serialVersionUID = 1L;
     private User theUser;
     private String newText;
-    private Document theDoc;
-    private DocumentAssistant theAsst;
+    private int docID;
 
-    public EditPacket(EditView editView, User arg, Document docArg) {
+    public EditPacket(EditView editView, User arg, int argID) {
         newText = editView.getText();
         theUser = arg;
-        theDoc = docArg;
-        ;
+        docID = argID;
+
     }
 
-    public Document getTheDoc() {
-        return theDoc;
-    }
-    public String getNewText(){
+    public String getNewText() {
         return newText;
     }
 
-    public void execute(DocumentAssistant masterArg) {
-
-        theAsst = masterArg;
-
-        int toSet = masterArg.getList().indexOf(theDoc);
-        if (newText.equals(theDoc.getDocContents()) && !newText.equals("null")) {
-            masterArg.getList().get(toSet).setDocContents("");
-        }
-
-        masterArg.getList().get(toSet).setDocContents(newText);
-
+    public int getDocID() {
+        return docID;
     }
 
+    public void execute(DocumentAssistant masterArg) {
+    // If the document contents has something new, and the value of the new change is not null, we need to set the doc contents
+        if (!(newText.equals(masterArg.getList().get(docID - 1).getDocContents()) && !newText.equals("null"))) {
+            masterArg.getList().get(docID-1).setDocContents(newText);
+        }
+
+    }
 }
+
+
+

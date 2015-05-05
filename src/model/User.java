@@ -12,6 +12,7 @@ public class User implements Serializable {
     String userName;
     int permission;
     int identification;
+    public int selectedDoc;
 
     public User(String userName, String password, int id) {
         setUserName(userName);
@@ -23,6 +24,7 @@ public class User implements Serializable {
 		}
         setPermission(permission);
         setIdentification(id);
+        selectedDoc = selectedDoc;
     }
 
     /**
@@ -37,6 +39,10 @@ public class User implements Serializable {
         return true;
         //}
         //return false;
+    }
+    public void setSelectedDoc(int arg)
+    {
+        selectedDoc = arg;
     }
 
     //sketch
@@ -102,6 +108,9 @@ public class User implements Serializable {
         } else {
             return 1;
         }
+    }
+    public Integer getID(){
+        return identification;
     }
 }
 

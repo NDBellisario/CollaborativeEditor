@@ -33,6 +33,8 @@ public class CEServer extends JFrame implements Serializable {
     private transient static ServerSocket ourServer;
     private List<String> allChatMessages;
     public transient HashMap<String, ObjectOutputStream> outputs;
+    public transient HashMap<String, ObjectInputStream> inputs;
+    public transient HashMap<String, Thread> clients;
     private UserAssistant theUsers;
     private ArrayList<String> activeUsers;
     private transient ServerView ourView;
@@ -93,6 +95,8 @@ public class CEServer extends JFrame implements Serializable {
                 this.activeUsers = loadedController.activeUsers;
                 this.ourView = new ServerView(this); // New Server View
                 this.outputs = new HashMap<String, ObjectOutputStream>();
+                this.inputs = new HashMap<String, ObjectInputStream>();
+                this.clients = new HashMap<String,Thread>();
                 this.theUsers = loadedController.theUsers;
                 this.allChatMessages = loadedController.allChatMessages;
                 this.masterList = loadedController.masterList;
@@ -106,6 +110,8 @@ public class CEServer extends JFrame implements Serializable {
             this.activeUsers = new ArrayList<String>();
             this.ourView = new ServerView(this); // New Server View
             this.outputs = new HashMap<String, ObjectOutputStream>();
+            this.inputs = new HashMap<String, ObjectInputStream>();
+            this.clients = new HashMap<String, Thread>();
             this.theUsers = new UserAssistant();
             this.allChatMessages = new ArrayList<String>();
             this.masterList = new DocumentAssistant(); // List of text panel
@@ -148,6 +154,8 @@ public class CEServer extends JFrame implements Serializable {
     		ObjectOutputStream out = outputs.get(usr);
     		try {
 				out.writeObject(lGP);
+				this.save();
+				System.exit(0);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -158,11 +166,15 @@ public class CEServer extends JFrame implements Serializable {
     	
     }
     
-    public void kickUser(String user){
+    public void kickUser(String user) throws InterruptedException{
     	LogoutPacket lGP = new LogoutPacket();
     	ObjectOutputStream out = outputs.get(user);
+    	Thread threadtoKill = clients.get(user);
     	try {
 			out.writeObject(lGP);
+			threadtoKill.stop();
+			activeUsers.remove(user);
+			ourView.updateClients(activeUsers);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -264,10 +276,14 @@ public class CEServer extends JFrame implements Serializable {
                 ChatPacket toWrite = new ChatPacket(allChatMessages);
                 output.writeObject(toWrite);
                 outputs.put(userLogin.getName(), output); // Puts on output map
+                inputs.put(userLogin.getName(),input); //Puts on Input Map
                 clientInit(); // Adds user to session so server can keep track
 
                 // New thread to deal with user
-                new Thread(new ClientHandler(input, output, toPass)).start();
+                Thread temp = new Thread(new ClientHandler(input, output, toPass));
+                temp.start();
+                clients.put(userName,temp);
+                
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -295,6 +311,7 @@ public class CEServer extends JFrame implements Serializable {
         private ObjectInputStream clientInputStream;
         private ObjectOutputStream clientOutputStream;
         private User mainUser;
+       
 
         public ClientHandler(ObjectInputStream inputArg, ObjectOutputStream outputArg, User user) {
             clientInputStream = inputArg;

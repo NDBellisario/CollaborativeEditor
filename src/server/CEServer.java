@@ -340,7 +340,7 @@ public class CEServer extends JFrame implements Serializable {
                     }
                     else if( temp instanceof GetDocsPacket){
                         GetDocsPacket userDocs = (GetDocsPacket) temp;
-                        userDocs.makeList(masterList, );
+                        userDocs.makeList(masterList, mainUser);
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();

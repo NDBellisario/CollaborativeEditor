@@ -4,27 +4,35 @@ import java.util.*;
 public class Revision implements Comparable<Revision> {
     //private int revisionCount;
     private User revisor;
-    private String revision;
+    private String revisionInfo;
     private long time;
-    private Date date;
+    private Date ourDate;
+    private Long exactT;
 
-    public Revision(User user, String text, Date date) {//, int count) {
+    public Revision(User userArg, Date dateArg, Long tArg) {//, int count) {
         //revisionCount = count;
-        this.revisor = user;
-        revision = text;
-        this.time = date.getTime();
-        this.date = date;
+        this.revisor = userArg;
+        this.ourDate = dateArg;
+        this.time = ourDate.getTime();
+        revisionInfo = "Created By: " + userArg.getUserName() + " at " + ourDate + " " + time;
+        exactT = tArg;
     }
 
     public String getText() {
-        return revision;
+        return revisionInfo;
+    }
+    public Long getET(){
+    	return exactT;
     }
 
-    public Date getTime() {
-        return date;
+    public Long getTime() {
+        return time;
+    }
+    public Date getDate(){
+    	return ourDate;
     }
 
-    public User getRevisor() {
+    public User getRevisorUser() {
         return revisor;
     }
 

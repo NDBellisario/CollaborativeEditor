@@ -53,21 +53,22 @@ public class CEController extends JFrame implements Serializable {
 	private JMenuItem showOptions;
 	private User mainUser;
 	private ChatView chatView;
+	private RevisionAssistant revAssist;  
 	private EditView editView;
 	private Socket serversoc;
 	private ObjectOutputStream outputStrm;
 	private ObjectInputStream inputStrm;
 	private int currentSelectedDoc;
 	private ArrayList<Doc> ourDocs;
-
 	private DocumentView clientDocumentView;
-
 	private Thread servertread;
 	private Thread serverrevthread;
 
 	public CEController() {
-		initUserModels();
 		currentSelectedDoc = 0;
+		revAssist = new RevisionAssistant();
+		initUserModels();
+		
 
 	}
 
@@ -113,7 +114,7 @@ public class CEController extends JFrame implements Serializable {
 			//
 			confirmedPW = new String(passwordField.getPassword());
 			if (!confirmedPW.equals("")) {
-				NewUserPacket newUSR = new NewUserPacket(userName, passWord);
+				//NewUserPacket newUSR = new NewUserPacket(userName, passWord);
 				// if(!confirmedPW.equals(passWord)){
 				//
 				// JOptionPane.showMessageDialog(this,
@@ -263,7 +264,8 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		chatView = new ChatView(mainUser, outputStrm);
+		chatView = new ChatView(mainUser, outputStrm, revAssist);
+
 		editView = new EditView(mainUser, ourDocs);
 		// editView.setText("<p style=\"color:red\">This is a paragraph.</p>");
 		this.setLayout(new BorderLayout());
@@ -285,6 +287,12 @@ public class CEController extends JFrame implements Serializable {
 
 		chatView.updateChatPanel(allMessages);
 	}
+	
+	public void updateRevisionsView(RevisionAssistant rev){
+		
+		chatView.UpdateRevisionPanel(rev);
+	}
+
 
 	// Listener Private Classes
 	private class ExitListener implements ActionListener {
@@ -372,131 +380,6 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
-
-	/* Once connection is set up, this deals writing out updates */
-	private class ServerRevisionWrite implements Runnable {
-		public void run() {
-			while (true) {
-
-				if (currentSelectedDoc != 0) {
-					try {
-						// New edit packet and write it out!
-						System.out.println(currentSelectedDoc);
-
-						EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc);
-
-						outputStrm.writeObject(newTimedRevision);
-						System.out.println("Wrote a Packet!");
-						// System.out.println("Writing some stuff to" +
-						// newTimedRevision.getDocID() + "While We Care About: "
-						// + currentSelectedDoc);
-						outputStrm.reset();
-						Thread.sleep(700); // Only want to send every 2000 ms.
-
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else {
-					try {
-						System.out.println("Didnt Write a Packet!");
-						Thread.sleep(700);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-			}
-		}
-	}
-
-	/* This class will get new revisions and update GUI */
-	private class ServerCommunicator implements Runnable {
-		@Override
-		public void run() {
-			while (true) {
-				try {
-					// Sets text to the ReadIn
-					System.out.println("Heyyyyyy");
-					Object unknown = inputStrm.readObject();
-					System.out.println("Read Something");
-					if ((unknown instanceof EditPacket)) {
-
-						EditPacket newPacket = (EditPacket) unknown;
-						System.out.println("Pre: Client: " + currentSelectedDoc + " Doc: " + newPacket.getDocID());
-
-						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
-//							System.out.println("Made it Here");
-							// System.out.println("Size is "+newPacket.getMaster().getList().size());
-							editView.setText(newPacket.getMaster().getList().get(currentSelectedDoc - 1).getDocContents());
-							editView.changeDoc(newPacket.getDocName());
-							// if(newPacket.getMaster().getList().get(currentSelectedDoc
-							// - 1).getDocContents() != null){
-							
-							//editView.setText(newPacket.getMaster().getList().get(currentSelectedDoc- 1).getDocContents());
-						}
-						if (!(editView.getDocName().equals(newPacket.getDocName()))) {
-							editView.changeDoc(newPacket.getDocName());
-							updateDocs();
-						}
-					}
-//					} else if (unknown instanceof Doc) {
-//						Doc newDoc = (Doc) unknown;
-//						editView.setText(newDoc.getDocContents());
-//						editView.changeDoc(newDoc.getDocName());
-//						System.out.println("meow");
-//						updateDocs();
-//
-//					}
-
-					else if (unknown instanceof ChatPacket)
-
-					{
-						@SuppressWarnings("unchecked")
-						List<String> toSet = (ArrayList<String>) ((ChatPacket) unknown).getChats();
-						updateChat(toSet);
-
-					} else if (unknown instanceof LogoutPacket) {
-
-						LogoutPacket log = (LogoutPacket) unknown;
-						log.execute(CEController.this);
-					} else if (unknown instanceof GetDocsPacket) {
-
-						GetDocsPacket newPacket = (GetDocsPacket) unknown;
-						clientDocumentView.updateList(newPacket.getList());
-
-					} else if (unknown instanceof CreateNewDocument) {
-						int old = currentSelectedDoc;
-						CreateNewDocument thePacket = (CreateNewDocument) unknown;
-
-						currentSelectedDoc = thePacket.getDocID();
-						System.out.println("New Doc Created! Our Value Was: " + old + " And Is Now : " + currentSelectedDoc + " Setting Int Value");
-						//mainUser.setSelectedDoc(currentSelectedDoc);
-						
-
-						// new Thread(new Runnable() {
-						// @Override
-						// public void run() {
-						// updateDocs();
-						// }
-						// }).start();
-
-					} else if (unknown instanceof UpdateUserPacket) {
-						UpdateUserPacket updateUser = (UpdateUserPacket) unknown;
-						mainUser = updateUser.getUser();
-					}
-				} catch (ClassNotFoundException | IOException e) {
-					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null, "Hey");
-				}
-			}
-		}
-	}
-
 	private class ShowDocumentListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 
@@ -510,11 +393,6 @@ public class CEController extends JFrame implements Serializable {
 
 				}
 			}).start();
-
-			// clientDocumentView = new DocumentView(CEController.this);
-			// updateDocs();
-
-			// enter (docformat)documentList.getSelectedValue();
 
 		}
 	}
@@ -539,7 +417,7 @@ public class CEController extends JFrame implements Serializable {
 		JOptionPane.showMessageDialog(this, "Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
 		System.exit(0);
 	}
-	void selfExit() {
+	public void selfExit() {
 		try {
 			LogoutPacket selfLog = new LogoutPacket();
 			selfLog.setUser(mainUser.getUserName());
@@ -586,5 +464,119 @@ public class CEController extends JFrame implements Serializable {
 			e1.printStackTrace();
 		}
 	}
+
+	/* Once connection is set up, this deals writing out updates */
+	private class ServerRevisionWrite implements Runnable {
+		public void run() {
+			while (true) {
+
+				if (currentSelectedDoc != 0) {
+					try {
+						// New edit packet and write it out!
+						System.out.println(currentSelectedDoc);
+
+						EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc);
+
+						outputStrm.writeObject(newTimedRevision);
+						System.out.println("Wrote a Packet!");
+						// System.out.println("Writing some stuff to" +
+						// newTimedRevision.getDocID() + "While We Care About: "
+						// + currentSelectedDoc);
+						outputStrm.reset();
+						Thread.sleep(700); // Only want to send every 2000 ms.
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						System.out.println("Didnt Write a Packet!");
+						Thread.sleep(700);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+		}
+	}
+
+
+
+	/* This class will get new revisions and update GUI */
+	private class ServerCommunicator implements Runnable {
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					// Sets text to the ReadIn
+
+					Object unknown = inputStrm.readObject();
+					System.out.println("Read Something");
+					if ((unknown instanceof EditPacket)) {
+
+						EditPacket newPacket = (EditPacket) unknown;
+						System.out.println("Pre: Client: " + currentSelectedDoc + " Doc: " + newPacket.getDocID());
+
+						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
+//							System.out.println("Made it Here");
+							// System.out.println("Size is "+newPacket.getMaster().getList().size());
+							editView.setText(newPacket.getMaster().getList().get(currentSelectedDoc - 1).getDocContents());
+							revAssist = newPacket.getRev();
+							//editView.changeDoc(newPacket.getDocName());
+							// if(newPacket.getMaster().getList().get(currentSelectedDoc
+							// - 1).getDocContents() != null){
+							
+							//editView.setText(newPacket.getMaster().getList().get(currentSelectedDoc- 1).getDocContents());
+						}
+						if (!(editView.getDocName().equals(newPacket.getDocName()))) {
+							editView.changeDoc(newPacket.getDocName());
+							updateDocs();
+						}
+						
+					}
+
+					else if (unknown instanceof ChatPacket)
+
+					{
+						@SuppressWarnings("unchecked")
+						List<String> toSet = (ArrayList<String>) ((ChatPacket) unknown).getChats();
+						updateChat(toSet);
+
+					} else if (unknown instanceof LogoutPacket) {
+
+						LogoutPacket log = (LogoutPacket) unknown;
+						log.execute(CEController.this);
+					} else if (unknown instanceof GetDocsPacket) {
+
+						GetDocsPacket newPacket = (GetDocsPacket) unknown;
+						clientDocumentView.updateList(newPacket.getList());
+
+					} else if (unknown instanceof CreateNewDocument) {
+						int old = currentSelectedDoc;
+						CreateNewDocument thePacket = (CreateNewDocument) unknown;
+						
+						currentSelectedDoc = thePacket.getDocID();
+						System.out.println("New Doc Created! Our Value Was: " + old + " And Is Now : " + currentSelectedDoc + " Setting Int Value");
+						//mainUser.setSelectedDoc(currentSelectedDoc);
+
+					} else if (unknown instanceof UpdateUserPacket) {
+						UpdateUserPacket updateUser = (UpdateUserPacket) unknown;
+						mainUser = updateUser.getUser();
+					}
+				} catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Hey");
+				}
+			}
+		}
+	}
+
+
 
 }

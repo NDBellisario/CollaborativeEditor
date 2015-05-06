@@ -1,11 +1,14 @@
 package networking;
 import model.Doc;
 import model.DocumentAssistant;
+import model.Revision;
+import model.RevisionAssistant;
 import model.User;
 import view.EditView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 /*
  * Manages the changes made to the text editor
@@ -21,23 +24,35 @@ public class EditPacket implements Serializable {
 	private int docID;
 	private String docName;
 	private DocumentAssistant masterDA;
-	private boolean firstTime = false;
+	private boolean revisionTime;
+	private RevisionAssistant revAssist;
+	private Date createdOn;
+	private Long mili;
 	public EditPacket(EditView editView, User arg, int argID) {
 
 		if (editView == null) {
-			newText = "Hi";
+			newText = "EDIT VIEW IS NULL WHENE WOULD THIS HAPPEN";
 		} else {
 			newText = editView.getText();
 		}
 		theUser = arg;
 		docID = argID;
+		createdOn  = new Date();
+		
+		
+
+
 
 	}
 
 	public EditPacket(User mainUser, Integer docID2, DocumentAssistant masterList) {
 		theUser = mainUser;
 		docID = docID2;
+		
+		setDocName(masterList.getList().get(docID2-1).getDocName());
 		setMaster(masterList);
+		revisionTime = true;
+		createdOn = new Date();
 	}
 
 	public void setDocName(String name) {
@@ -58,19 +73,30 @@ public class EditPacket implements Serializable {
 	public void setMaster(DocumentAssistant arg) {
 		masterDA = arg;
 	}
+	public User getUser(){
+		return theUser;
+	}
 
-	public DocumentAssistant execute(DocumentAssistant temp) {
+	public DocumentAssistant execute(DocumentAssistant temp, RevisionAssistant revArg) {
 		// If the document contents has something new, and the value of the new
 		// change is not null, we need to set the doc contents
-
+		mili = System.currentTimeMillis();
+		revAssist = revArg;
 		if ((newText.equals(temp.getList().get(docID - 1).getDocContents()) && !newText.equals("null"))) {
 			temp.getList().get(docID - 1).setDocContents((temp.getList().get(docID - 1).getDocContents()));
-			docName = temp.getList().get(docID - 1).getDocName();
+			setDocName(temp.getList().get(docID-1).getDocName());
 			setMaster(temp);
+
 
 		} else {
 			temp.getList().get(docID - 1).setDocContents(newText);
-			docName = temp.getList().get(docID - 1).getDocName();
+			setDocName(temp.getList().get(docID-1).getDocName());
+			
+			if(revAssist.getStack().peek())
+			if(revisionTime){
+			Revision newR = new Revision(theUser, toCheck, rev);
+			revAssist.addRevision(newR);
+			}
 			setMaster(temp);
 		}
 		return temp;
@@ -79,5 +105,10 @@ public class EditPacket implements Serializable {
 	public DocumentAssistant getMaster() {
 		return masterDA;
 	}
+	public RevisionAssistant getRev() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

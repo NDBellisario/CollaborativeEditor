@@ -1,6 +1,7 @@
 package server;
 import model.Doc;
 import model.DocumentAssistant;
+import model.RevisionAssistant;
 import model.User;
 import model.UserAssistant;
 import networking.*;
@@ -38,6 +39,8 @@ public class CEServer extends JFrame implements Serializable {
 	private UserAssistant theUsers;
 	private ArrayList<String> activeUsers;
 	private transient ServerView ourView;
+	private RevisionAssistant serverRevassist;
+
 
 	/*
 	 * Initializes the variables Gets a port, and jamborees with the view as
@@ -100,6 +103,8 @@ public class CEServer extends JFrame implements Serializable {
 				this.masterList = loadedController.masterList;
 				this.inputs = new HashMap<String, ObjectInputStream>();
 				this.clients = new HashMap<String, Thread>();
+                this.serverRevassist = loadedController.serverRevassist;
+
 
 			}
 		} else {
@@ -115,6 +120,9 @@ public class CEServer extends JFrame implements Serializable {
 			this.theUsers.addUser("cat", "meow"); // A Default account to use.
 			this.inputs = new HashMap<String, ObjectInputStream>();
 			this.clients = new HashMap<String, Thread>();
+            this.serverRevassist = new RevisionAssistant();
+
+			
 
 		}
 
@@ -167,10 +175,11 @@ public class CEServer extends JFrame implements Serializable {
 	}
 	public void userLeft(String usr) {
 		Thread threadtoKill = clients.get(usr);
-		threadtoKill.stop();
 		activeUsers.remove(usr);
 		ourView.updateClients(activeUsers);
 
+		threadtoKill.stop();
+		
 	}
 
 	public void kickUser(String user) throws InterruptedException {

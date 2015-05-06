@@ -235,14 +235,14 @@ public String getDocName(){
 	public void setText(final String s) {
 
 		textBox.setText(s);
-//
 //		int caretPos = textBox.getCaretPosition();
 //		try {
 //			textBox.getDocument().insertString(caretPos, s, null);
 //		} catch (BadLocationException ex) {
 //			ex.printStackTrace();
 //		}
-
+		int len = textBox.getDocument().getLength();
+		
 		/*
 		 * CaretListener cListener = new CaretListener() {
 		 * 
@@ -252,8 +252,9 @@ public String getDocName(){
 		 * 
 		 * textBox.addCaretListener(cListener);
 		 */
-
-		// textBox.setCaretPosition(caretPosition);
+			
+		//textBox.setCaretPosition(s.length());
+		textBox.setCaretPosition(len);
 	}
 
 	public class formatListener implements ActionListener {

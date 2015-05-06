@@ -3,6 +3,8 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import networking.EditPacket;
+
 public class Doc implements Serializable {
     /*
      * Author: Cameron Morrell
@@ -16,6 +18,7 @@ public class Doc implements Serializable {
     private ArrayList<Integer> editors;
     private ArrayList<String> annotations;
     private String docContents;
+    private RevisionAssistant theRevisions;
 
     public Doc(String docName, int docId, int ownerId, ArrayList<Integer> editors) {
         this.docName = docName;
@@ -26,10 +29,18 @@ public class Doc implements Serializable {
         //editors.add((Integer) ownerId);
         this.annotations = new ArrayList<String>();
         setDocContents("");
+        theRevisions = new RevisionAssistant();
 
 
     }
-
+	public RevisionAssistant updateRevision(EditPacket update){
+		Date curtime = new Date();
+		Revision rev = new Revision(update.getUser(), curtime);
+		theRevisions.addRevision(rev);
+		//updateRevisionsView(revAssist);
+		return theRevisions;
+	}
+    
     public String getDocName(){
         return docName;
     }
@@ -37,7 +48,7 @@ public class Doc implements Serializable {
     public String getDocContents() {
         
     	if(docContents == null){
-    		docContents = "It Was Null";
+    		docContents = "";
     	}
     	return docContents;
     }

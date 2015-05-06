@@ -1,5 +1,5 @@
 package view;
-import model.User;
+import model.*;
 import networking.ChatPacket;
 
 import javax.swing.*;
@@ -21,26 +21,43 @@ public class ChatView extends JPanel{
     private JPanel chatPanel;
     private JPanel typePanel;
     private JPanel revisionPanel;
-    private JTextArea revisions;
+    private JList revisions;
+
+
     private JButton loadRevision;
     private JButton sendButton;
+
     private JTextPane groupText, personalTest;
     private JTextArea textArea; // chat log displayed here
     private JTextArea textField; // field where user enters text
     private JTextArea whoIsTyping;
     private String username;
+    private RevisionAssistant revView;
+    private DefaultListModel<String> displayofRevisions;
+
     private ObjectOutputStream output;
 
-    public ChatView(User user, ObjectOutputStream outputSet) {
+    public ChatView(User user, ObjectOutputStream outputSet,RevisionAssistant newRev) {
+ 
         this.username = user.getUserName();
         this.setLayout(new BorderLayout());
-        this.setPreferredSize(new Dimension(280, 600));
+        this.setPreferredSize(new Dimension(400, 600));
+        this.displayofRevisions = new DefaultListModel<String>();
+
         
         revisionPanel = new JPanel(new BorderLayout());
         
-        revisions = new JTextArea();
-        revisions.setEditable(false);
-        revisions.setLineWrap(true);
+        revView = newRev;
+        displayofRevisions.clear();
+        if(!(revView == null)){
+        for(int i = 0;i < revView.revisionList.size(); i++){
+        	Revision tempRev = revView.revisionList.get(i);
+        	String temp = ("Revision by" + tempRev.getRevisor().getUserName() + "Edited at" + tempRev.getTime().toString());
+        	displayofRevisions.addElement(temp);
+        }
+        }
+        revisions = new JList<String>(displayofRevisions);
+
         revisionPanel.add(revisions,BorderLayout.CENTER);
         
         loadRevision = new JButton("Load Revision");
@@ -133,6 +150,19 @@ public class ChatView extends JPanel{
 
         }
     }
+    public void UpdateRevisionPanel(RevisionAssistant rev){
+    	revView = rev;
+    	displayofRevisions.clear();
+        for(int i = 0;i < revView.revisionList.size(); i++){
+        	Revision tempRev = revView.revisionList.get(i);
+        	String temp = ("Revision by" + tempRev.getRevisor().getUserName() + "Edited at" + tempRev.getTime().toString());
+        	displayofRevisions.addElement(temp);
+        }
+        repaint();
+    	
+    }
+    
+
     
     private class loadRevisionListener implements ActionListener {
         public void actionPerformed(ActionEvent arg0) {

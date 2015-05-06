@@ -37,7 +37,7 @@ public class ChatView extends JPanel{
 
     private ObjectOutputStream output;
 
-    public ChatView(User user, ObjectOutputStream outputSet,RevisionAssistant newRev) {
+    public ChatView(User user, ObjectOutputStream outputSet, RevisionAssistant newRev) {
  
         this.username = user.getUserName();
         this.setLayout(new BorderLayout());
@@ -51,8 +51,8 @@ public class ChatView extends JPanel{
         displayofRevisions.clear();
         if(!(revView == null)){
         for(int i = 0;i < revView.revisionList.size(); i++){
-        	Revision tempRev = revView.revisionList.get(i);
-        	String temp = ("Revision by" + tempRev.getRevisor().getUserName() + "Edited at" + tempRev.getTime().toString());
+        	Revision tempRev = revView.getStack().get(i);
+        	String temp = ("Revision by" + tempRev.getRevisorUser() + "Edited at" + tempRev.getTime().toString());
         	displayofRevisions.addElement(temp);
         }
         }
@@ -155,7 +155,7 @@ public class ChatView extends JPanel{
     	displayofRevisions.clear();
         for(int i = 0;i < revView.revisionList.size(); i++){
         	Revision tempRev = revView.revisionList.get(i);
-        	String temp = ("Revision by" + tempRev.getRevisor().getUserName() + "Edited at" + tempRev.getTime().toString());
+        	String temp = ("Revision by" + tempRev.getRevisorUser() + "Edited at" + tempRev.getTime().toString());
         	displayofRevisions.addElement(temp);
         }
         repaint();

@@ -45,7 +45,7 @@ public class EditPacket implements Serializable {
 
 	}
 
-	public EditPacket(User mainUser, Integer docID2, DocumentAssistant masterList) {
+	public EditPacket(User mainUser, Integer docID2, DocumentAssistant masterList, RevisionAssistant arg) {
 		theUser = mainUser;
 		docID = docID2;
 		
@@ -53,6 +53,9 @@ public class EditPacket implements Serializable {
 		setMaster(masterList);
 		revisionTime = true;
 		createdOn = new Date();
+		revAssist = arg;
+		Revision newR = new Revision(theUser, createdOn, mili);
+		revAssist.addRevision(newR);
 	}
 
 	public void setDocName(String name) {
@@ -77,11 +80,11 @@ public class EditPacket implements Serializable {
 		return theUser;
 	}
 
-	public DocumentAssistant execute(DocumentAssistant temp, RevisionAssistant revArg) {
+	public DocumentAssistant execute(DocumentAssistant temp) {
 		// If the document contents has something new, and the value of the new
 		// change is not null, we need to set the doc contents
 		mili = System.currentTimeMillis();
-		revAssist = revArg;
+		revAssist  = temp.getList().get(docID - 1).getRevisions();
 		if ((newText.equals(temp.getList().get(docID - 1).getDocContents()) && !newText.equals("null"))) {
 			temp.getList().get(docID - 1).setDocContents((temp.getList().get(docID - 1).getDocContents()));
 			setDocName(temp.getList().get(docID-1).getDocName());
@@ -92,9 +95,8 @@ public class EditPacket implements Serializable {
 			temp.getList().get(docID - 1).setDocContents(newText);
 			setDocName(temp.getList().get(docID-1).getDocName());
 			
-			if(revAssist.getStack().peek())
-			if(revisionTime){
-			Revision newR = new Revision(theUser, toCheck, rev);
+			if(revAssist.getStack().peek().getET() > (mili+60000)){
+			Revision newR = new Revision(theUser, createdOn, mili);
 			revAssist.addRevision(newR);
 			}
 			setMaster(temp);
@@ -107,7 +109,10 @@ public class EditPacket implements Serializable {
 	}
 	public RevisionAssistant getRev() {
 		// TODO Auto-generated method stub
-		return null;
+		return revAssist;
+	}
+	public Doc getDoc(){
+		return masterDA.getList().get(docID-1);
 	}
 
 

@@ -353,6 +353,8 @@ public class CEServer extends JFrame implements Serializable {
 						EditPacket readPacket = (EditPacket) temp;
 						// Executes the packet
 						readPacket.execute(masterList);
+						masterList.getList().get(readPacket.getDocID()).setRevision(readPacket.getRev());
+						readPacket.setMaster(masterList);
 						// Checks to see if we even have something aka not null.
 						// if (readPacket.getNewText().equals("")) {
 						// Writes it out to ALL of the Client's
@@ -389,7 +391,10 @@ public class CEServer extends JFrame implements Serializable {
 						DocumentAssistant tempV = masterList;
 						masterList = newPacket.execute(tempV);
 						//System.out.println("Server Size after CND: " +masterList.getList().size());
-						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), masterList);
+						RevisionAssistant newDocRev = new RevisionAssistant();
+						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), masterList, newDocRev);
+						masterList.getList().get(newEdit.getDocID()).setRevision(newEdit.getRev());
+						newEdit.setMaster(masterList);
 						//System.out.println("Server Size: " +masterList.getList().size());
 						//System.out.println("Packet Size: " +newEdit.getMaster().getList().size());
 						newEdit.setDocName(newPacket.getName());

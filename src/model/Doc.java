@@ -33,14 +33,13 @@ public class Doc implements Serializable {
 
 
     }
-	public RevisionAssistant updateRevision(EditPacket update){
-		Date curtime = new Date();
-		Revision rev = new Revision(update.getUser(), curtime);
-		theRevisions.addRevision(rev);
-		//updateRevisionsView(revAssist);
-		return theRevisions;
+	public void setRevision(RevisionAssistant arg){
+		theRevisions = arg;
 	}
-    
+    public RevisionAssistant getRevisions()
+    {
+    	return theRevisions;
+    }
     public String getDocName(){
         return docName;
     }

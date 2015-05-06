@@ -37,20 +37,15 @@ public class EditPacket implements Serializable {
 		}
 		theUser = arg;
 		docID = argID;
-		createdOn  = new Date();
-		
-		
-
-
+		createdOn = new Date();
 
 	}
 
-	public EditPacket(User mainUser, Integer docID2, DocumentAssistant masterList, RevisionAssistant arg) {
+	public EditPacket(User mainUser, Integer docID2, String docName, RevisionAssistant arg) {
 		theUser = mainUser;
 		docID = docID2;
-		
-		setDocName(masterList.getList().get(docID2-1).getDocName());
-		setMaster(masterList);
+
+		setDocName(docName);
 		revisionTime = true;
 		createdOn = new Date();
 		revAssist = arg;
@@ -76,7 +71,7 @@ public class EditPacket implements Serializable {
 	public void setMaster(DocumentAssistant arg) {
 		masterDA = arg;
 	}
-	public User getUser(){
+	public User getUser() {
 		return theUser;
 	}
 
@@ -84,21 +79,25 @@ public class EditPacket implements Serializable {
 		// If the document contents has something new, and the value of the new
 		// change is not null, we need to set the doc contents
 		mili = System.currentTimeMillis();
-		revAssist  = temp.getList().get(docID - 1).getRevisions();
+		revAssist = temp.getList().get(docID - 1).getRevisions();
 		if ((newText.equals(temp.getList().get(docID - 1).getDocContents()) && !newText.equals("null"))) {
 			temp.getList().get(docID - 1).setDocContents((temp.getList().get(docID - 1).getDocContents()));
-			setDocName(temp.getList().get(docID-1).getDocName());
+			setDocName(temp.getList().get(docID - 1).getDocName());
 			setMaster(temp);
-
 
 		} else {
 			temp.getList().get(docID - 1).setDocContents(newText);
-			setDocName(temp.getList().get(docID-1).getDocName());
-			
-			if(revAssist.getStack().peek().getET() > (mili+60000)){
-			Revision newR = new Revision(theUser, createdOn, mili);
-			revAssist.addRevision(newR);
-			}
+			setDocName(temp.getList().get(docID - 1).getDocName());
+
+//			if (revAssist.getStack().peek() != null) {
+//
+//				if (revAssist.getStack().peek().getET() > (mili + 60000)) {
+//					Revision newR = new Revision(theUser, createdOn, mili);
+//					revAssist.addRevision(newR);
+//					setMaster(temp);
+//				}
+//
+//			}
 			setMaster(temp);
 		}
 		return temp;
@@ -111,9 +110,8 @@ public class EditPacket implements Serializable {
 		// TODO Auto-generated method stub
 		return revAssist;
 	}
-	public Doc getDoc(){
-		return masterDA.getList().get(docID-1);
+	public Doc getDoc() {
+		return masterDA.getList().get(docID - 1);
 	}
-
 
 }

@@ -344,7 +344,7 @@ public class CEServer extends JFrame implements Serializable {
 						EditPacket readPacket = (EditPacket) temp;
 						// Executes the packet
 						readPacket.execute(masterList);
-						masterList.getList().get(readPacket.getDocID()).setRevision(readPacket.getRev());
+						masterList.getList().get(readPacket.getDocID()-1).setRevision(readPacket.getRev());
 						readPacket.setMaster(masterList);
 						// Checks to see if we even have something aka not null.
 						// if (readPacket.getNewText().equals("")) {
@@ -375,11 +375,12 @@ public class CEServer extends JFrame implements Serializable {
 						DocumentAssistant tempV = masterList;
 						masterList = newPacket.execute(tempV);
 						RevisionAssistant newDocRev = new RevisionAssistant();
-						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), masterList, newDocRev);
+						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), newPacket.getName(), newDocRev);
 						masterList.getList().get(newEdit.getDocID() - 1).setRevision(newEdit.getRev());
-						newEdit.setMaster(masterList);
-						newEdit.setDocName(newPacket.getName());
 
+						newEdit.setDocName(newPacket.getName());
+						newEdit.setMaster(masterList);
+						clientOutputStream.reset();
 						clientOutputStream.writeObject(newPacket);
 						clientOutputStream.writeObject(newEdit);
 					} else if (temp instanceof LogoutPacket) {

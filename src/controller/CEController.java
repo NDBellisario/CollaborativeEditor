@@ -4,7 +4,9 @@ import networking.*;
 import view.ChatView;
 import view.DocumentView;
 import view.EditView;
+
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -398,7 +400,6 @@ public class CEController extends JFrame implements Serializable {
 		EditPacket needUpdates = new EditPacket(null, mainUser, currentSelectedDoc);
 		try {
 			outputStrm.writeObject(needUpdates);
-			System.out.println("Wrote out " + needUpdates.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -416,16 +417,30 @@ public class CEController extends JFrame implements Serializable {
 
 		@Override
 		public void run() {
+			while (true) {
+				if (currentSelectedDoc != 0) {
+					ArrayList<Doc> temp = ourDocs;
+					for (int i = 0; i < clientAllMaster.getList().size(); i++) {
+						if (clientAllMaster.getList().get(i).getDocEditors().contains(mainUser.getID())) {
+							temp.add(clientAllMaster.getList().get(i));
+							clientDocumentView.updateList(temp);
+							ourDocs.clear();
+							ourDocs = temp;
 
-			for (int i = 0; i < clientAllMaster.getList().size(); i++) {
-				if (clientAllMaster.getList().get(i).getDocEditors().contains(mainUser.getID())) {
-					ourDocs.add(clientAllMaster.getList().get(i));
+						}
+
+					}
+					editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 				}
 			}
-
-			clientDocumentView.updateList(ourDocs);
 		}
-
 	}
 	/* Once connection is set up, this deals writing out updates */
 	private class ServerRevisionWrite implements Runnable {
@@ -435,15 +450,10 @@ public class CEController extends JFrame implements Serializable {
 				if (currentSelectedDoc != 0) {
 					try {
 						// New edit packet and write it out!
-						System.out.println(currentSelectedDoc);
 
 						EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc);
-
 						outputStrm.writeObject(newTimedRevision);
-						System.out.println("Wrote a Packet!");
-						// System.out.println("Writing some stuff to" +
-						// newTimedRevision.getDocID() + "While We Care About: "
-						// + currentSelectedDoc);
+						System.out.println("Wrote a Packet! of Doc Type " + currentSelectedDoc);
 						outputStrm.reset();
 						Thread.sleep(700); // Only want to send every 2000 ms.
 
@@ -475,7 +485,6 @@ public class CEController extends JFrame implements Serializable {
 			while (true) {
 				try {
 					// Sets text to the ReadIn
-
 					Object unknown = inputStrm.readObject();
 					System.out.println("Read Something");
 					if ((unknown instanceof EditPacket)) {
@@ -486,15 +495,14 @@ public class CEController extends JFrame implements Serializable {
 
 						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
 
-							editView.setText(newPacket.getMaster().getList().get(currentSelectedDoc - 1).getDocContents());
+							editView.setText(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents());
 							revAssist = newPacket.getRev();
 
 						}
-						if (!(editView.getDocName().equals(newPacket.getDocName()))) {
-							editView.changeDoc(newPacket.getDocName());
-							
-						}
-					} else if (unknown instanceof ChatPacket)
+
+					}
+
+					else if (unknown instanceof ChatPacket)
 
 					{
 						@SuppressWarnings("unchecked")
@@ -505,7 +513,7 @@ public class CEController extends JFrame implements Serializable {
 
 						LogoutPacket log = (LogoutPacket) unknown;
 						log.execute(CEController.this);
-					}  else if (unknown instanceof CreateNewDocument) {
+					} else if (unknown instanceof CreateNewDocument) {
 						int old = currentSelectedDoc;
 						CreateNewDocument thePacket = (CreateNewDocument) unknown;
 						currentSelectedDoc = thePacket.getDocID();

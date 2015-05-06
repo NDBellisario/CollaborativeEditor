@@ -40,14 +40,21 @@ public class EditView extends JPanel {
 	private JButton annotate;
 	private JButton insertCode;
 	private JButton showAnnotations;
+	private JComboBox fonts;
+	private JComboBox fSize;
+	private JComboBox colors;
+	private String[] fontList;
+	private Color[] col;
+	private String[] colList;
+	private String[] fSizes;
 	private JPanel annoPopUp;
 	private int permission;
 	private Style bolder;
 	private Style italic;
 	private Style underline;
-	private Style indentL;
-	private Style indentR;
-	private Style indentC;
+	private Style colorStyle;
+	private Style fontStyle;
+	private Style sizeStyle;
 	private JOptionPane annotationBox;
 	private String currentDoc;
 	private User user;
@@ -61,6 +68,13 @@ public class EditView extends JPanel {
 		this.setPreferredSize(new Dimension(700, 600));
 		user = userArg;
 
+		// JCOMBO BOX DATA FOR STYLES!!
+		fontList = new String[]{"Arial","Century","Sans","Serif","Luxi","Lucida","Typewriter","Webdings"};
+		fSizes = new String[]{"Small","Medium","Large"};
+		colList = new String[]{"Black","Red","Blue","Yellow","Green","Magenta","Orange","Pink"};
+		col = new Color[]{Color.BLACK,Color.RED,Color.BLUE,Color.YELLOW,Color.GREEN,Color.MAGENTA,Color.ORANGE,Color.PINK};
+		//WHEN COLOR IS BEING CALLED TO UPDATE COLLIST GETS COLOR FROM COL, THEY MUST BE THE SAME
+		
 		permission = user.getPermission();
 		// TODO: fix textBox = new JEditorPane(new
 		// HTMLEditorKit().getContentType(), "");
@@ -146,16 +160,25 @@ public String getDocName(){
 		colored = new JButton("Color Font");
 		colored.addActionListener(listener);
 
+		fonts = new JComboBox(fontList);
+		fonts.addActionListener(listener);
+		
+		fSize = new JComboBox(fSizes);
+		fSize.addActionListener(listener);
+		
+		colors = new JComboBox(colList);
+		colors.addActionListener(listener);
+		
 		// for Indent left
 
-		indentCenter = new JButton("Indent Center");
-		indentCenter.addActionListener(listener);
+		//indentCenter = new JButton("Indent Center");
+		//indentCenter.addActionListener(listener);
 
-		indentRight = new JButton("Indent Right");
-		indentRight.addActionListener(listener);
+		//indentRight = new JButton("Indent Right");
+		//indentRight.addActionListener(listener);
 		// For indent right
-		indentR = textBox.addStyle("indentRight", null);
-		StyleConstants.setAlignment(indentR, StyleConstants.ALIGN_RIGHT);
+		//indentR = textBox.addStyle("indentRight", null);
+		//StyleConstants.setAlignment(indentR, StyleConstants.ALIGN_RIGHT);
 
 		bullets = new JButton("Bullet Points");
 		bullets.addActionListener(listener);
@@ -179,12 +202,10 @@ public String getDocName(){
 		formats.add(bold);
 		formats.add(ital);
 		formats.add(underlined);
-		formats.add(colored);
-		formats.add(indentCenter);
-		formats.add(indentRight);
+		formats.add(colors);
+		formats.add(fonts);
+		formats.add(fSize);
 		formats.add(bullets);
-		formats.add(fontType);
-		formats.add(fontSize);
 		formats.add(annotate);
 		formats.add(insertCode);
 		formats.add(showAnnotations);
@@ -244,22 +265,20 @@ public String getDocName(){
 				makeItal();
 			} else if (e.getSource() == underlined) {
 				makeUnderline();
-			} else if (e.getSource() == colored) {
-
-			} else if (e.getSource() == indentCenter) {
-
-			} else if (e.getSource() == indentRight) {
-				makeIndentRight();
+			} else if (e.getSource() == colors) {
+				changeColor();
+			} else if (e.getSource() == fonts) {
+				updateFont();
+			} else if (e.getSource() == fSize) {
+				updateFontSize();
 			} else if (e.getSource() == bullets) {
 
 			} else if (e.getSource() == fontType) {
 
-			} else if (e.getSource() == fontSize) {
-
 			} else if (e.getSource() == annotate) {
 				createAnnotation();
 			} else if (e.getSource() == insertCode) {
-				System.out.println(textBox.getText());
+				
 			} else if (e.getSource() == showAnnotations) {
 				userList = new DefaultListModel<Annotation>();
 				for (Annotation anno : annotationList) {
@@ -298,6 +317,47 @@ public String getDocName(){
 
 	}
 
+	public void changeColor() {
+		colorStyle = textBox.addStyle("color", null);
+		StyleConstants.setForeground(colorStyle, col[colors.getSelectedIndex()]);
+		
+		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+			int len = textBox.getSelectedText().length();
+			textBox.getStyledDocument().setCharacterAttributes(
+					textBox.getSelectionStart(), len, colorStyle, false);
+		} else {
+			MutableAttributeSet attrs = textBox.getInputAttributes();
+			StyleConstants.setForeground(attrs, col[colors.getSelectedIndex()]);
+			
+		}
+	}
+	
+	public void updateFont() {
+		fontStyle = textBox.addStyle("font", null);
+		StyleConstants.setFontFamily(fontStyle, fonts.getSelectedItem().toString());
+		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+			int len = textBox.getSelectedText().length();
+			textBox.getStyledDocument().setCharacterAttributes(
+					textBox.getSelectionStart(), len, fontStyle, false);
+		} else {
+			MutableAttributeSet attrs = textBox.getInputAttributes();
+			StyleConstants.setFontFamily(attrs, fonts.getSelectedItem().toString());
+		}
+	}
+	
+	public void updateFontSize() {
+		sizeStyle = textBox.addStyle("size", null);
+		StyleConstants.setFontSize(sizeStyle, (fSize.getSelectedIndex()+2)*7);
+		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+			int len = textBox.getSelectedText().length();
+			textBox.getStyledDocument().setCharacterAttributes(
+					textBox.getSelectionStart(), len, sizeStyle, false);
+		} else {
+			MutableAttributeSet attrs = textBox.getInputAttributes();
+			StyleConstants.setFontSize(attrs, (fSize.getSelectedIndex()+2)*7);
+		}
+	}
+	
 	public void makeUnderline() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
@@ -308,7 +368,7 @@ public String getDocName(){
 		}
 	}
 
-	// Needs work
+	/*
 	public void makeIndentLeft() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
@@ -319,8 +379,8 @@ public String getDocName(){
 			StyleConstants.setAlignment(attrs, StyleConstants.ALIGN_LEFT);
 		}
 	}
-
-	// Needs work
+	*/
+	/*
 	public void makeIndentRight() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
@@ -333,7 +393,7 @@ public String getDocName(){
 			StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT);
 		}
 	}
-
+	*/
 	public void createAnnotation() {
 
 		final int p0 = textBox.getSelectionStart();

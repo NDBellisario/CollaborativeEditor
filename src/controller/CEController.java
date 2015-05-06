@@ -433,7 +433,7 @@ public class CEController extends JFrame implements Serializable {
 						System.out.println(currentSelectedDoc);
 
 						EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc);
-
+						                
 						outputStrm.writeObject(newTimedRevision);
 						System.out.println("Wrote a Packet!");
 						// System.out.println("Writing some stuff to" +

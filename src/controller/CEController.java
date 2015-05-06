@@ -166,10 +166,13 @@ public class CEController extends JFrame implements Serializable {
 			ChatPacket temp = (ChatPacket) inputStrm.readObject();
 			UpdateUserPacket usrPacket = (UpdateUserPacket) inputStrm.readObject();
 			clientAllMaster = usrPacket.getML();
-			if (clientAllMaster.getList().size() == 0)
+			if (clientAllMaster.getList().size() == 0) {
 				updateDocs = false;
-			else
+				System.out.println("Initial value was false");
+			} else {
 				updateDocs = true;
+				System.out.println("Initial value was true");
+			}
 
 			List<String> toSet = temp.getChats();
 			updateChat(toSet);
@@ -428,28 +431,34 @@ public class CEController extends JFrame implements Serializable {
 		public void run() {
 			while (true) {
 				if (updateDocs) {
-					// System.out.println(updateDocs);
+					System.out.println("Inside update docs " + updateDocs);
 
 					ArrayList<Doc> toPass = new ArrayList<Doc>();
 					ArrayList<Doc> cheapLock = clientAllMaster.getList();
 					// System.out.println(clientAllMaster.getList().size() +
 					// "  "+ currentSelectedDoc);
 					for (int i = 0; i < cheapLock.size(); i++) {
-						if (cheapLock.get(i).canView((mainUser)))
+						System.out.println("Running update on " + cheapLock.size());
+						if (cheapLock.get(i).canView((mainUser))) {
 							toPass.add(cheapLock.get(i));
+							System.out.println("topass size " + toPass.size());
+						}
 					}
-					if (currentSelectedDoc != 0) {
-						clientDocumentView.updateList(toPass);
-						editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
 
-					} else {
+					if (toPass.size() != 0) {
 						clientDocumentView.updateList(toPass);
+					}
+
+					if (currentSelectedDoc != 0) {
+
+						editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
 
 					}
 
 				}
+				updateDocs = false;
 				try {
-					updateDocs = false;
+
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -467,9 +476,11 @@ public class CEController extends JFrame implements Serializable {
 				if (currentSelectedDoc != 0) {
 					try {
 						// New edit packet and write it out!
-
-						EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc);
-						outputStrm.writeObject(newTimedRevision);
+						String toCompare = clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents();
+						if (!(editView.getText().equals(toCompare))) {
+							EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc);
+							outputStrm.writeObject(newTimedRevision);
+						}
 						// System.out.println("Wrote a Packet! of Doc Type " +
 						// currentSelectedDoc);
 						outputStrm.reset();
@@ -510,10 +521,6 @@ public class CEController extends JFrame implements Serializable {
 						EditPacket newPacket = (EditPacket) unknown;
 						clientAllMaster = newPacket.getMaster();
 
-						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
-							editView.setText(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents());
-						}
-
 						if (newPacket.getDoc().canView(mainUser)) {
 							for (Doc curr : clientDocumentView.getDocs()) {
 
@@ -522,9 +529,17 @@ public class CEController extends JFrame implements Serializable {
 
 								}
 							}
+							if (clientDocumentView.getDocs().size() == 0) {
+								updateDocs = true;
+							}
 
 						}
-						System.out.println(updateDocs);
+
+						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
+							editView.setText(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents());
+						}
+
+						System.out.println("The packet we just got " + updateDocs);
 
 					} else if (unknown instanceof ChatPacket) {
 						@SuppressWarnings("unchecked")

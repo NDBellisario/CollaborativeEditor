@@ -24,7 +24,9 @@ public class CreateNewDocument implements Serializable {
 	public DocumentAssistant execute(DocumentAssistant arg) {
 		// TODO: read from option list of users
 		ArrayList<Integer> tempEditors = new ArrayList<Integer>();
-		tempEditors.add((Integer) ownerID);
+		tempEditors.add((Integer) 0);
+		tempEditors.add((Integer) 1);
+
 		docID = arg.addDocument(docName, ownerID, tempEditors);
 		theDoc = arg.getList().get(docID-1);		
 		ourList = arg;

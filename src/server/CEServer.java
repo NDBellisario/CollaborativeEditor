@@ -54,8 +54,9 @@ public class CEServer extends JFrame implements Serializable {
 	public void readFromFile() {
 		boolean noPreviousConfig = false;
 
-		String loadFileName = JOptionPane.showInputDialog("Enter The Name Of The Previous Saved Server State\nLeave Blank For a New Server");
-
+		// TODO: String loadFileName =
+		// JOptionPane.showInputDialog("Enter The Name Of The Previous Saved Server State\nLeave Blank For a New Server");
+		String loadFileName = "";
 		if (loadFileName != null && !loadFileName.equals("")) {
 			ObjectInputStream loadStream = null;
 
@@ -346,7 +347,7 @@ public class CEServer extends JFrame implements Serializable {
 						EditPacket readPacket = (EditPacket) temp;
 						// Executes the packet
 						readPacket.execute(masterList);
-						masterList.getList().get(readPacket.getDocID()-1).setRevision(readPacket.getRev());
+						masterList.getList().get(readPacket.getDocID() - 1).setRevision(readPacket.getRev());
 						readPacket.setMaster(masterList);
 						for (ObjectOutputStream OPtemp : outputs.values()) {
 							OPtemp.reset();

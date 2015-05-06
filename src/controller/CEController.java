@@ -59,7 +59,7 @@ public class CEController extends JFrame implements Serializable {
 	private ObjectInputStream inputStrm;
 	private int currentSelectedDoc;
 	private ArrayList<Doc> ourDocs;
-
+	private RevisionAssistant revAssist;  
 	private DocumentView clientDocumentView;
 
 	private Thread servertread;
@@ -263,7 +263,7 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		chatView = new ChatView(mainUser, outputStrm);
+		chatView = new ChatView(mainUser, outputStrm, revAssist);
 		editView = new EditView(mainUser, ourDocs);
 		// editView.setText("<p style=\"color:red\">This is a paragraph.</p>");
 		this.setLayout(new BorderLayout());
@@ -284,6 +284,11 @@ public class CEController extends JFrame implements Serializable {
 	public void updateChat(List<String> allMessages) {
 
 		chatView.updateChatPanel(allMessages);
+	}
+	
+	public void updateRevisionsView(RevisionAssistant rev){
+		
+		chatView.UpdateRevisionPanel(rev);
 	}
 
 	// Listener Private Classes
@@ -386,6 +391,7 @@ public class CEController extends JFrame implements Serializable {
 						EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc);
 
 						outputStrm.writeObject(newTimedRevision);
+
 						System.out.println("Wrote a Packet!");
 						// System.out.println("Writing some stuff to" +
 						// newTimedRevision.getDocID() + "While We Care About: "
@@ -407,13 +413,25 @@ public class CEController extends JFrame implements Serializable {
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+
+						System.out.println("Writing some stuff to" + currentSelectedDoc);
+						
+						Thread.sleep(777); // Only want to send every 2000 ms.
+					}
 					}
 				}
 
 			}
 		}
 	}
+	
 
+	public void updateRevision(EditPacket update){
+		Date curtime = new Date();
+		Revision rev = new Revision(mainUser, update.getDocName().toString(), curtime);
+		revAssist.addRevision(rev);
+		updateRevisionsView(revAssist);
+	}
 	/* This class will get new revisions and update GUI */
 	private class ServerCommunicator implements Runnable {
 		@Override
@@ -427,6 +445,7 @@ public class CEController extends JFrame implements Serializable {
 					if ((unknown instanceof EditPacket)) {
 
 						EditPacket newPacket = (EditPacket) unknown;
+
 						System.out.println("Pre: Client: " + currentSelectedDoc + " Doc: " + newPacket.getDocID());
 
 						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
@@ -438,11 +457,18 @@ public class CEController extends JFrame implements Serializable {
 							// - 1).getDocContents() != null){
 							
 							//editView.setText(newPacket.getMaster().getList().get(currentSelectedDoc- 1).getDocContents());
+
+						
+						if ((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0) {
+							editView.setText(newPacket.getDocObject().getDocContents());
+							updateRevision(newPacket);
+							
 						}
 						if (!(editView.getDocName().equals(newPacket.getDocName()))) {
 							editView.changeDoc(newPacket.getDocName());
 							updateDocs();
 						}
+					}
 					}
 //					} else if (unknown instanceof Doc) {
 //						Doc newDoc = (Doc) unknown;
@@ -467,7 +493,18 @@ public class CEController extends JFrame implements Serializable {
 					} else if (unknown instanceof GetDocsPacket) {
 
 						GetDocsPacket newPacket = (GetDocsPacket) unknown;
+
 						clientDocumentView.updateList(newPacket.getList());
+						
+						if(clientDocumentView == null){
+
+							clientDocumentView = new DocumentView(ourInstance, newPacket.getList());
+							
+						}
+						else{
+							clientDocumentView.updateList(newPacket.getList());	
+						}
+
 
 					} else if (unknown instanceof CreateNewDocument) {
 						int old = currentSelectedDoc;
@@ -488,14 +525,17 @@ public class CEController extends JFrame implements Serializable {
 					} else if (unknown instanceof UpdateUserPacket) {
 						UpdateUserPacket updateUser = (UpdateUserPacket) unknown;
 						mainUser = updateUser.getUser();
-					}
-				} catch (ClassNotFoundException | IOException e) {
+					}catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "Hey");
 				}
 			}
+			}
 		}
 	}
+			
+		
+	
 
 	private class ShowDocumentListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -503,11 +543,8 @@ public class CEController extends JFrame implements Serializable {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-
 					updateDocs();
-
 					// enter (docformat)documentList.getSelectedValue();
-
 				}
 			}).start();
 
@@ -515,9 +552,8 @@ public class CEController extends JFrame implements Serializable {
 			// updateDocs();
 
 			// enter (docformat)documentList.getSelectedValue();
-
-		}
-	}
+		}}
+		
 
 	public void updateDocs() {
 
@@ -536,10 +572,11 @@ public class CEController extends JFrame implements Serializable {
 	}
 
 	public void logout() {
-		JOptionPane.showMessageDialog(this, "Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this,"Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
 		System.exit(0);
 	}
-	void selfExit() {
+	
+	public void selfExit() {
 		try {
 			LogoutPacket selfLog = new LogoutPacket();
 			selfLog.setUser(mainUser.getUserName());
@@ -547,6 +584,7 @@ public class CEController extends JFrame implements Serializable {
 			servertread.stop();
 			serverrevthread.stop();
 			System.exit(0);
+		
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -561,6 +599,7 @@ public class CEController extends JFrame implements Serializable {
 		EditPacket needUpdates = new EditPacket(null, mainUser, currentSelectedDoc);
 		try {
 			outputStrm.writeObject(needUpdates);
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

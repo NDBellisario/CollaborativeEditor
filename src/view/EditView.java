@@ -73,7 +73,7 @@ public class EditView extends JPanel {
 		user = userArg;
 
 		// JCOMBO BOX DATA FOR STYLES!!
-		fontList = new String[] { "Arial", "Century", "Sans", "Serif", "Luxi",
+		fontList = new String[] { Font.SERIF, "Century", "Font.SANS_SERIF", "Serif", "Luxi",
 				"Lucida", "Typewriter", "Webdings" };
 		fSizes = new String[] { "Small", "Medium", "Large" };
 		colList = new String[] { "Black", "Red", "Blue", "Yellow", "Green",
@@ -171,9 +171,9 @@ public class EditView extends JPanel {
 		colored.addActionListener(listener);
 
 		fonts = new JComboBox(fontList);
-		fonts.addActionListener(new StyledEditorKit.FontFamilyAction(fonts
-				.getActionCommand(), fonts.getActionCommand()));
+		fonts.addActionListener(listener);
 
+		
 		fSize = new JComboBox(fSizes);
 		fSize.addActionListener(listener);
 
@@ -195,8 +195,7 @@ public class EditView extends JPanel {
 		bullets.addActionListener(listener);
 
 		fontType = new JButton("Font Type");
-		fontType.addActionListener(new StyledEditorKit.FontFamilyAction(fonts
-				.getActionCommand(), Font.SANS_SERIF));
+		fontType.addActionListener(listener);
 
 		fontSize = new JButton("Font Size");
 		fontSize.addActionListener(listener);
@@ -279,11 +278,15 @@ public class EditView extends JPanel {
 			} else if (e.getSource() == underlined) {
 				// makeUnderline();
 			} else if (e.getSource() == colors) {
-				changeColor();
+				Action a =	new StyledEditorKit.ForegroundAction(col[colors.getSelectedIndex()].toString(), col[colors.getSelectedIndex()]);
+				a.actionPerformed(e);
 			} else if (e.getSource() == fonts) {
-				// updateFont();
+				Action a = new StyledEditorKit.FontFamilyAction(null, fontList[fonts.getSelectedIndex()]);
+				a.actionPerformed(e);
 			} else if (e.getSource() == fSize) {
-				updateFontSize();
+				Action a = new StyledEditorKit.FontSizeAction(null, (fSize.getSelectedIndex() + 2) * 7);
+				a.actionPerformed(e);
+				//updateFontSize();
 			} else if (e.getSource() == bullets) {
 
 			} else if (e.getSource() == fontType) {

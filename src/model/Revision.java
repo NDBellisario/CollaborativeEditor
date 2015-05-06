@@ -1,7 +1,8 @@
 package model;
+import java.io.Serializable;
 import java.util.*;
 
-public class Revision implements Comparable<Revision> {
+public class Revision implements Comparable<Revision>, Serializable {
     //private int revisionCount;
     private User revisor;
     private String revisionInfo;

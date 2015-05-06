@@ -35,25 +35,10 @@ public class CEController extends JFrame implements Serializable {
      */
 
 	private static final long serialVersionUID = 1L;
-	private JMenuBar menuBarCore;
-	private JMenu fileContainer;
-	private JMenu editContainer;
-	private JMenu userContainer;
-	private JMenu documentContainer;
-	private JMenuItem save;
-	private JMenuItem saveLocal;
-	private JMenuItem quitOption;
-	private JMenuItem undo;
-	private JMenuItem redo;
-	private JMenuItem version;
-	private JMenuItem addUser;
-	private JMenuItem changePW;
-	private JMenuItem removeUser;
-	private JMenuItem changePermission;
-	private JMenuItem showOptions;
+
 	private User mainUser;
 	private ChatView chatView;
-	private RevisionAssistant revAssist;  
+	private RevisionAssistant revAssist;
 	private EditView editView;
 	private Socket serversoc;
 	private ObjectOutputStream outputStrm;
@@ -68,7 +53,6 @@ public class CEController extends JFrame implements Serializable {
 		currentSelectedDoc = 0;
 		revAssist = new RevisionAssistant();
 		initUserModels();
-		
 
 	}
 
@@ -114,7 +98,7 @@ public class CEController extends JFrame implements Serializable {
 			//
 			confirmedPW = new String(passwordField.getPassword());
 			if (!confirmedPW.equals("")) {
-				//NewUserPacket newUSR = new NewUserPacket(userName, passWord);
+				// NewUserPacket newUSR = new NewUserPacket(userName, passWord);
 				// if(!confirmedPW.equals(passWord)){
 				//
 				// JOptionPane.showMessageDialog(this,
@@ -183,7 +167,8 @@ public class CEController extends JFrame implements Serializable {
 			ChatPacket temp = (ChatPacket) inputStrm.readObject();
 			List<String> toSet = temp.getChats();
 			updateChat(toSet);
-			clientDocumentView = new DocumentView(this);
+			new Thread(new DocSelectView(this)).start();
+
 			serverrevthread = new Thread(new ServerRevisionWrite());
 			servertread = new Thread(new ServerCommunicator());
 			serverrevthread.start();
@@ -204,22 +189,21 @@ public class CEController extends JFrame implements Serializable {
 	private void setupGui() {
 		// Permissions Pop up
 		// Initializing graphic user interface variables
-		menuBarCore = new JMenuBar();
-		fileContainer = new JMenu("File");
-		editContainer = new JMenu("Edit");
-		userContainer = new JMenu("User");
-		documentContainer = new JMenu("Doc Editor");
-		save = new JMenuItem("Save");
-		saveLocal = new JMenuItem("Save Local");
-		quitOption = new JMenuItem("Quit");
-		undo = new JMenuItem("Undo");
-		redo = new JMenuItem("Redo");
-		version = new JMenuItem("Version");
-		addUser = new JMenuItem("Add User");
-		changePW = new JMenuItem("Change Password");
-		removeUser = new JMenuItem("Remove User");
-		changePermission = new JMenuItem("Permissions Options");
-		showOptions = new JMenuItem("Show Documents");
+		JMenuBar menuBarCore = new JMenuBar();
+		JMenu fileContainer = new JMenu("File");
+		JMenu editContainer = new JMenu("Edit");
+		JMenu userContainer = new JMenu("User");
+		JMenu documentContainer = new JMenu("Doc Editor");
+		JMenuItem save = new JMenuItem("Save");
+		JMenuItem saveLocal = new JMenuItem("Save Local");
+		JMenuItem quitOption = new JMenuItem("Quit");
+		JMenuItem undo = new JMenuItem("Undo");
+		JMenuItem redo = new JMenuItem("Redo");
+		JMenuItem version = new JMenuItem("Version");
+		JMenuItem addUser = new JMenuItem("Add User");
+		JMenuItem changePW = new JMenuItem("Change Password");
+		JMenuItem removeUser = new JMenuItem("Remove User");
+		JMenuItem changePermission = new JMenuItem("Permissions Options");
 		this.setTitle("Collaborative Editor");
 		// Adding action listeners for File
 		quitOption.addActionListener(new ExitListener());
@@ -235,7 +219,6 @@ public class CEController extends JFrame implements Serializable {
 		removeUser.addActionListener(new RemoveUserListener());
 		changePermission.addActionListener(new PermissionListener());
 		// Adding Action Listener for Doc Editor
-		showOptions.addActionListener(new ShowDocumentListener());
 		// add main menu buttons to bar
 		menuBarCore.add(fileContainer);
 		menuBarCore.add(editContainer);
@@ -245,7 +228,6 @@ public class CEController extends JFrame implements Serializable {
 		JMenuItem newDoc = new JMenuItem("Create New Document");
 		documentContainer.add(newDoc);
 		newDoc.addActionListener(new NewDocumentListener());
-		documentContainer.add(showOptions);
 
 		// fileContainer sub menu buttons
 		fileContainer.add(save);
@@ -287,12 +269,11 @@ public class CEController extends JFrame implements Serializable {
 
 		chatView.updateChatPanel(allMessages);
 	}
-	
-	public void updateRevisionsView(RevisionAssistant rev){
-		
+
+	public void updateRevisionsView(RevisionAssistant rev) {
+
 		chatView.UpdateRevisionPanel(rev);
 	}
-
 
 	// Listener Private Classes
 	private class ExitListener implements ActionListener {
@@ -305,16 +286,17 @@ public class CEController extends JFrame implements Serializable {
 	private class SaveListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Doc temp = new Doc("Test Doc", 12345, 1, null);
-			ourDocs.add(temp);
-			// currentSelectedDoc = temp;
+			
 		}
 	}
 
 	private class NewDocumentListener implements ActionListener {
-		@Override
+
+		private String name;
+
 		public void actionPerformed(ActionEvent e) {
-			String name = JOptionPane.showInputDialog("What would you like your document to be called?");
+			name = JOptionPane.showInputDialog("What would you like your document to be called?");
+
 			CreateNewDocument toSend = new CreateNewDocument(name, mainUser.getID());
 			try {
 				outputStrm.writeObject(toSend);
@@ -380,37 +362,16 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
-	private class ShowDocumentListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-
-					updateDocs();
-
-					// enter (docformat)documentList.getSelectedValue();
-
-				}
-			}).start();
-
-		}
-	}
 
 	public void updateDocs() {
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				GetDocsPacket toSend = new GetDocsPacket(mainUser);
-				try {
-					outputStrm.writeObject(toSend);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}).start();
+		GetDocsPacket toSend = new GetDocsPacket(mainUser);
+		try {
+			outputStrm.writeObject(toSend);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	public void logout() {
@@ -439,32 +400,28 @@ public class CEController extends JFrame implements Serializable {
 		EditPacket needUpdates = new EditPacket(null, mainUser, currentSelectedDoc);
 		try {
 			outputStrm.writeObject(needUpdates);
+			System.out.println("Wrote out " + needUpdates.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	private void displayCurrentDocs(GetDocsPacket arg) {
 
-		ourDocs = arg.getList();
-		DefaultListModel<String> docList = new DefaultListModel<String>();
-		for (int i = 0; i < ourDocs.size(); i++) {
-			docList.addElement(ourDocs.get(i).getDocName());
+	/* This Deals With Updating Out Docs! */
+	private class DocSelectView implements Runnable {
+
+		public DocSelectView(CEController arg) {
+			clientDocumentView = new DocumentView(arg);
+
 		}
-	}
 
-	public void NewDocument() {
-		String name = JOptionPane.showInputDialog("What would you like your document to be called?");
-		CreateNewDocument toSend = new CreateNewDocument(name, mainUser.getID());
-		try {
+		@Override
+		public void run() {
 
-			outputStrm.writeObject(toSend);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			updateDocs();
 		}
-	}
 
+	}
 	/* Once connection is set up, this deals writing out updates */
 	private class ServerRevisionWrite implements Runnable {
 		public void run() {
@@ -506,8 +463,6 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 
-
-
 	/* This class will get new revisions and update GUI */
 	private class ServerCommunicator implements Runnable {
 		@Override
@@ -524,24 +479,16 @@ public class CEController extends JFrame implements Serializable {
 						System.out.println("Pre: Client: " + currentSelectedDoc + " Doc: " + newPacket.getDocID());
 
 						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
-//							System.out.println("Made it Here");
-							// System.out.println("Size is "+newPacket.getMaster().getList().size());
+
 							editView.setText(newPacket.getMaster().getList().get(currentSelectedDoc - 1).getDocContents());
 							revAssist = newPacket.getRev();
-							//editView.changeDoc(newPacket.getDocName());
-							// if(newPacket.getMaster().getList().get(currentSelectedDoc
-							// - 1).getDocContents() != null){
-							
-							//editView.setText(newPacket.getMaster().getList().get(currentSelectedDoc- 1).getDocContents());
+
 						}
 						if (!(editView.getDocName().equals(newPacket.getDocName()))) {
 							editView.changeDoc(newPacket.getDocName());
 							updateDocs();
 						}
-						
-					}
-
-					else if (unknown instanceof ChatPacket)
+					} else if (unknown instanceof ChatPacket)
 
 					{
 						@SuppressWarnings("unchecked")
@@ -555,15 +502,15 @@ public class CEController extends JFrame implements Serializable {
 					} else if (unknown instanceof GetDocsPacket) {
 
 						GetDocsPacket newPacket = (GetDocsPacket) unknown;
-						clientDocumentView.updateList(newPacket.getList());
+						ourDocs = newPacket.getList();
 
 					} else if (unknown instanceof CreateNewDocument) {
 						int old = currentSelectedDoc;
 						CreateNewDocument thePacket = (CreateNewDocument) unknown;
-						
 						currentSelectedDoc = thePacket.getDocID();
+						ourDocs.add(thePacket.getDoc());
 						System.out.println("New Doc Created! Our Value Was: " + old + " And Is Now : " + currentSelectedDoc + " Setting Int Value");
-						//mainUser.setSelectedDoc(currentSelectedDoc);
+						// mainUser.setSelectedDoc(currentSelectedDoc);
 
 					} else if (unknown instanceof UpdateUserPacket) {
 						UpdateUserPacket updateUser = (UpdateUserPacket) unknown;
@@ -576,7 +523,5 @@ public class CEController extends JFrame implements Serializable {
 			}
 		}
 	}
-
-
 
 }

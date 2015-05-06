@@ -41,7 +41,6 @@ public class CEServer extends JFrame implements Serializable {
 	private transient ServerView ourView;
 	private RevisionAssistant serverRevassist;
 
-
 	/*
 	 * Initializes the variables Gets a port, and jamborees with the view as
 	 * needed If a failed attempt to setup, uses a default port.
@@ -103,8 +102,7 @@ public class CEServer extends JFrame implements Serializable {
 				this.masterList = loadedController.masterList;
 				this.inputs = new HashMap<String, ObjectInputStream>();
 				this.clients = new HashMap<String, Thread>();
-                this.serverRevassist = loadedController.serverRevassist;
-
+				this.serverRevassist = loadedController.serverRevassist;
 
 			}
 		} else {
@@ -120,19 +118,12 @@ public class CEServer extends JFrame implements Serializable {
 			this.theUsers.addUser("cat", "meow"); // A Default account to use.
 			this.inputs = new HashMap<String, ObjectInputStream>();
 			this.clients = new HashMap<String, Thread>();
-            this.serverRevassist = new RevisionAssistant();
-
-			
+			this.serverRevassist = new RevisionAssistant();
 
 		}
 
 	}
 
-	/**
-     *
-     *
-     *
-     */
 	public void startServer() {
 		// Setting up the Server.
 		int portNumber = ourView.getPortNumber();
@@ -179,7 +170,7 @@ public class CEServer extends JFrame implements Serializable {
 		ourView.updateClients(activeUsers);
 
 		threadtoKill.stop();
-		
+
 	}
 
 	public void kickUser(String user) throws InterruptedException {
@@ -390,18 +381,14 @@ public class CEServer extends JFrame implements Serializable {
 						CreateNewDocument newPacket = (CreateNewDocument) temp;
 						DocumentAssistant tempV = masterList;
 						masterList = newPacket.execute(tempV);
-						//System.out.println("Server Size after CND: " +masterList.getList().size());
 						RevisionAssistant newDocRev = new RevisionAssistant();
 						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), masterList, newDocRev);
-						masterList.getList().get(newEdit.getDocID()).setRevision(newEdit.getRev());
+						masterList.getList().get(newEdit.getDocID() - 1).setRevision(newEdit.getRev());
 						newEdit.setMaster(masterList);
-						//System.out.println("Server Size: " +masterList.getList().size());
-						//System.out.println("Packet Size: " +newEdit.getMaster().getList().size());
 						newEdit.setDocName(newPacket.getName());
-						
+
 						clientOutputStream.writeObject(newPacket);
 						clientOutputStream.writeObject(newEdit);
-						//System.out.println("Packet Size After WriteOUT: " +newEdit.getMaster().getList().size());
 					} else if (temp instanceof LogoutPacket) {
 						LogoutPacket userQuitPacket = (LogoutPacket) temp;
 						userQuitPacket.quit(CEServer.this);

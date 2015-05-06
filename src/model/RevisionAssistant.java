@@ -1,7 +1,8 @@
 package model;
+import java.io.Serializable;
 import java.util.*;
 
-public class RevisionAssistant extends EditAssistant {
+public class RevisionAssistant implements Serializable {
     public Stack<Revision> revisionList;
 
     public RevisionAssistant() {

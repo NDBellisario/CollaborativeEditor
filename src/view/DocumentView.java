@@ -31,7 +31,10 @@ public class DocumentView extends JPanel {
 		JButton docSelect = new JButton("Open Document");
 		frame.add(docSelect, BorderLayout.SOUTH);
 		docSelect.addActionListener(new SelectDocumentListener());
-		
+		Dimension curdim = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation((int) (theCaller.getWidth()),
+                (int) 0); 
+
 		frame.setVisible(true);
 		frame.setResizable(true);
 		frame.pack();
@@ -39,19 +42,16 @@ public class DocumentView extends JPanel {
 
 	public void updateList(ArrayList<Doc> theLists) {
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
+
 				ourDocs = theLists;
 
 				listDocuments.clear();
 				for (int i = 0; i < ourDocs.size(); i++) {
 					listDocuments.addElement(ourDocs.get(i).getDocName());
 				}
-
 				repaint();
-			}
-		}).start();
+
+
 
 	}
 
@@ -71,7 +71,7 @@ public class DocumentView extends JPanel {
 						JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(frame), "Please Select A Document!");
 					}
 				}
-;
+
 
 		}
 	

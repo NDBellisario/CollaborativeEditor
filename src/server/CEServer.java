@@ -1,6 +1,7 @@
 package server;
 import model.Doc;
 import model.DocumentAssistant;
+import model.RevisionAssistant;
 import model.User;
 import model.UserAssistant;
 import networking.*;
@@ -37,6 +38,7 @@ public class CEServer extends JFrame implements Serializable {
 	public transient HashMap<String, Thread> clients;
 	private UserAssistant theUsers;
 	private ArrayList<String> activeUsers;
+	private RevisionAssistant serverRevassist;
 	private transient ServerView ourView;
 
 	/*
@@ -98,8 +100,13 @@ public class CEServer extends JFrame implements Serializable {
 				this.theUsers = loadedController.theUsers;
 				this.allChatMessages = loadedController.allChatMessages;
 				this.masterList = loadedController.masterList;
+
 				this.inputs = new HashMap<String, ObjectInputStream>();
 				this.clients = new HashMap<String, Thread>();
+
+                this.inputs = new HashMap<String, ObjectInputStream>();
+                this.clients = new HashMap<String,Thread>();
+                this.serverRevassist = loadedController.serverRevassist;
 
 			}
 		} else {
@@ -115,6 +122,9 @@ public class CEServer extends JFrame implements Serializable {
 			this.theUsers.addUser("cat", "meow"); // A Default account to use.
 			this.inputs = new HashMap<String, ObjectInputStream>();
 			this.clients = new HashMap<String, Thread>();
+            this.inputs = new HashMap<String, ObjectInputStream>();
+            this.clients = new HashMap<String, Thread>();
+            this.serverRevassist = new RevisionAssistant();
 
 		}
 
@@ -167,11 +177,15 @@ public class CEServer extends JFrame implements Serializable {
 	}
 	public void userLeft(String usr) {
 		Thread threadtoKill = clients.get(usr);
-		threadtoKill.stop();
 		activeUsers.remove(usr);
 		ourView.updateClients(activeUsers);
 
+		threadtoKill.stop();
+		
 	}
+
+
+	
 
 	public void kickUser(String user) throws InterruptedException {
 		LogoutPacket lGP = new LogoutPacket();

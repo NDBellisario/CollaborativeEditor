@@ -80,4 +80,9 @@ public class EditPacket implements Serializable {
 		return masterDA;
 	}
 
+	public Doc getDocObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

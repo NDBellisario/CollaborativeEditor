@@ -51,6 +51,7 @@ public class CEController extends JFrame implements Serializable {
 	public CEController() {
 		currentSelectedDoc = 0;
 		revAssist = new RevisionAssistant();
+		clientAllMaster = new DocumentAssistant();
 		initUserModels();
 
 	}
@@ -298,6 +299,7 @@ public class CEController extends JFrame implements Serializable {
 			CreateNewDocument toSend = new CreateNewDocument(name, mainUser.getID());
 			try {
 				outputStrm.writeObject(toSend);
+				System.out.println("WroooooooteOut");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -394,7 +396,7 @@ public class CEController extends JFrame implements Serializable {
 	public void setCurrentSelectedDoc(int toSet) {
 		currentSelectedDoc = toSet;
 		mainUser.setSelectedDoc(currentSelectedDoc);
-		System.out.println("Client says now we should care about" + currentSelectedDoc);
+		//System.out.println("Client says now we should care about" + currentSelectedDoc);
 		EditPacket needUpdates = new EditPacket(null, mainUser, currentSelectedDoc);
 		try {
 			outputStrm.writeObject(needUpdates);
@@ -403,40 +405,84 @@ public class CEController extends JFrame implements Serializable {
 			e.printStackTrace();
 		}
 	}
-public void updateDocName(){
-	editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
-}
+	public void updateDocName() {
+		editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
+	}
 	/* This Deals With Updating Out Docs! */
 	private class DocSelectView implements Runnable {
-		private ArrayList<Doc> prevCall;
 		public DocSelectView(CEController arg) {
 			clientDocumentView = new DocumentView(arg);
-			
-			prevCall = new ArrayList<Doc>();
+
 		}
 
 		@Override
 		public void run() {
 			while (true) {
-				ArrayList<Doc> toPass = new ArrayList<Doc>();
-				if (currentSelectedDoc != 0 && clientAllMaster != null) {
-					
+				//System.out.println("Inside Infinite Loop");
+				// ArrayList<Doc> temp = clientAllMaster.getList();
+				// clientDocumentView.updateList(temp);
+				// System.out.println("Sleep");
+				// try {
+				// Thread.sleep(2000);
+				// } catch (InterruptedException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
+				// }
+
+				// System.out.println(currentSelectedDoc);
+				if (currentSelectedDoc != 0) {
+					//System.out.println("If #1");
+					ArrayList<Doc> toPass = new ArrayList<Doc>();
+					//System.out.println(clientAllMaster.getList().size() + "  "+ currentSelectedDoc);
 					for (int i = 0; i < clientAllMaster.getList().size(); i++) {
-
-						if (clientAllMaster.getList().get(i).getDocEditors().contains(mainUser.getID()))
+						if (clientAllMaster.getList().get(i).canView((mainUser)))
 							toPass.add(clientAllMaster.getList().get(i));
-					}
-					if (!(prevCall.equals(toPass)))
-						clientDocumentView.updateList(toPass);
-					
-				
-					//editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
 
+						// System.out.print("Inside size loop");
+						// clientDocumentView.updateList(toPass);
+
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						// editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc
+						// - 1).getDocName());
+
+					}
+					//System.out.println("End of Fod");
+					ArrayList<Doc> clientSide = clientDocumentView.getDocs();
+					boolean isChanged = true;
+					for(Doc newDoc : toPass ){
+					for (Doc oldDoc : clientSide) {
+						if(oldDoc.getDocName().equals(newDoc.getDocName())){
+							isChanged = false;
+							//System.out.println("FLAG SETTER");
+						}
+						else{
+							isChanged = true;
+							//System.out.println("They are not equal!");
+						}
+					}
+					}
+
+					if (isChanged) {
+						//System.out.println("Should Change");
+						clientDocumentView.updateList(toPass);
+						editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
+
+					}
 				}
-				prevCall = toPass;
+
+				System.out.print("");
+
 			}
 		}
 	}
+
 	/* Once connection is set up, this deals writing out updates */
 	private class ServerRevisionWrite implements Runnable {
 		public void run() {
@@ -448,7 +494,8 @@ public void updateDocName(){
 
 						EditPacket newTimedRevision = new EditPacket(editView, mainUser, currentSelectedDoc);
 						outputStrm.writeObject(newTimedRevision);
-						System.out.println("Wrote a Packet! of Doc Type " + currentSelectedDoc);
+						// System.out.println("Wrote a Packet! of Doc Type " +
+						// currentSelectedDoc);
 						outputStrm.reset();
 						Thread.sleep(700); // Only want to send every 2000 ms.
 
@@ -461,7 +508,7 @@ public void updateDocName(){
 					}
 				} else {
 					try {
-						System.out.println("Didnt Write a Packet!");
+						// System.out.println("Didnt Write a Packet!");
 						Thread.sleep(700);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -481,17 +528,18 @@ public void updateDocName(){
 				try {
 					// Sets text to the ReadIn
 					Object unknown = inputStrm.readObject();
-					System.out.println("Read Something");
+					// System.out.println("Read Something");
 					if ((unknown instanceof EditPacket)) {
 
 						EditPacket newPacket = (EditPacket) unknown;
 						clientAllMaster = newPacket.getMaster();
-						System.out.println("Pre: Client: " + currentSelectedDoc + " Doc: " + newPacket.getDocID());
+						// System.out.println("Got A EditPacket: Client: " +
+						// currentSelectedDoc + " Doc: " +
+						// newPacket.getDocID());
 
 						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
-
+							// System.out.println("Setting tet of Edit View Now!");
 							editView.setText(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents());
-							revAssist = newPacket.getRev();
 
 						}
 
@@ -513,16 +561,16 @@ public void updateDocName(){
 						CreateNewDocument thePacket = (CreateNewDocument) unknown;
 						clientAllMaster = thePacket.getDocAs();
 						currentSelectedDoc = thePacket.getDocID();
-						System.out.println("New Doc Created! Our Value Was: " + old + " And Is Now : " + currentSelectedDoc + " Setting Int Value");
+						// System.out.println("New Doc Created! Our Value Was: "
+						// + old + " And Is Now : " + currentSelectedDoc +
+						// " Setting Int Value");
 						// mainUser.setSelectedDoc(currentSelectedDoc);
 
-					} else if (unknown instanceof UpdateUserPacket) {
-						UpdateUserPacket updateUser = (UpdateUserPacket) unknown;
-						mainUser = updateUser.getUser();
 					}
 				} catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null, "Hey");
+					System.out.println("Through An Exception");
+
 				}
 			}
 		}

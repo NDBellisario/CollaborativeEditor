@@ -45,16 +45,26 @@ public class DocumentView extends JPanel {
 
 
 				ourDocs = theLists;
+//				System.out.println("Update List In DocView.  Contents Are:");
+//				for(Doc temp : theLists)
+//				{
+//					System.out.println( temp.getDocName()+ " ");
+//				}
 
 				listDocuments.clear();
 				for (int i = 0; i < ourDocs.size(); i++) {
 					listDocuments.addElement(ourDocs.get(i).getDocName());
 				}
-				System.out.println("REPAINT");
-				repaint();
+
+			
+				//repaint();
+				System.out.println("REPAINT CALLLED!");
 
 
 
+	}
+	public ArrayList<Doc> getDocs(){
+		return ourDocs;
 	}
 
 	private class SelectDocumentListener implements ActionListener {

@@ -26,12 +26,7 @@ public class CreateNewDocument implements Serializable {
 		ArrayList<Integer> tempEditors = new ArrayList<Integer>();
 		tempEditors.add((Integer) ownerID);
 		docID = arg.addDocument(docName, ownerID, tempEditors);
-		for(int i = 0; i < arg.getList().size(); i++){
-			if (arg.getList().get(i).getDocIdentification() == docID){
-				theDoc = arg.getList().get(i);
-			}
-		}
-		theDoc = null;
+		theDoc = arg.getList().get(docID-1);		
 		ourList = arg;
 		return arg;
 	}

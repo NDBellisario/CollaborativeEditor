@@ -377,7 +377,6 @@ public class CEServer extends JFrame implements Serializable {
 						RevisionAssistant newDocRev = new RevisionAssistant();
 						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), newPacket.getName(), newDocRev);
 						masterList.getList().get(newEdit.getDocID() - 1).setRevision(newEdit.getRev());
-
 						newEdit.setDocName(newPacket.getName());
 						newEdit.setMaster(masterList);
 						clientOutputStream.reset();

@@ -47,11 +47,11 @@ public class CEController extends JFrame implements Serializable {
 	private Thread servertread;
 	private Thread serverrevthread;
 	private DocumentAssistant clientAllMaster;
+	private boolean updateDocs;
 
 	public CEController() {
 		currentSelectedDoc = 0;
 		revAssist = new RevisionAssistant();
-		clientAllMaster = new DocumentAssistant();
 		initUserModels();
 
 	}
@@ -164,6 +164,13 @@ public class CEController extends JFrame implements Serializable {
 			// editView.setText(doc2Set.getDocContents());//new
 			// Doc("Test Doc",12345, 1, null))
 			ChatPacket temp = (ChatPacket) inputStrm.readObject();
+			UpdateUserPacket usrPacket = (UpdateUserPacket) inputStrm.readObject();
+			clientAllMaster = usrPacket.getML();
+			if (clientAllMaster.getList().size() == 0)
+				updateDocs = false;
+			else
+				updateDocs = true;
+
 			List<String> toSet = temp.getChats();
 			updateChat(toSet);
 			new Thread(new DocSelectView(this)).start();
@@ -299,7 +306,7 @@ public class CEController extends JFrame implements Serializable {
 			CreateNewDocument toSend = new CreateNewDocument(name, mainUser.getID());
 			try {
 				outputStrm.writeObject(toSend);
-				System.out.println("WroooooooteOut");
+				// System.out.println("WroooooooteOut");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -396,7 +403,8 @@ public class CEController extends JFrame implements Serializable {
 	public void setCurrentSelectedDoc(int toSet) {
 		currentSelectedDoc = toSet;
 		mainUser.setSelectedDoc(currentSelectedDoc);
-		//System.out.println("Client says now we should care about" + currentSelectedDoc);
+		// System.out.println("Client says now we should care about" +
+		// currentSelectedDoc);
 		EditPacket needUpdates = new EditPacket(null, mainUser, currentSelectedDoc);
 		try {
 			outputStrm.writeObject(needUpdates);
@@ -408,6 +416,7 @@ public class CEController extends JFrame implements Serializable {
 	public void updateDocName() {
 		editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
 	}
+
 	/* This Deals With Updating Out Docs! */
 	private class DocSelectView implements Runnable {
 		public DocSelectView(CEController arg) {
@@ -418,67 +427,34 @@ public class CEController extends JFrame implements Serializable {
 		@Override
 		public void run() {
 			while (true) {
-				//System.out.println("Inside Infinite Loop");
-				// ArrayList<Doc> temp = clientAllMaster.getList();
-				// clientDocumentView.updateList(temp);
-				// System.out.println("Sleep");
-				// try {
-				// Thread.sleep(2000);
-				// } catch (InterruptedException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-				// }
+				if (updateDocs) {
+					// System.out.println(updateDocs);
 
-				// System.out.println(currentSelectedDoc);
-				if (currentSelectedDoc != 0) {
-					//System.out.println("If #1");
 					ArrayList<Doc> toPass = new ArrayList<Doc>();
-					//System.out.println(clientAllMaster.getList().size() + "  "+ currentSelectedDoc);
-					for (int i = 0; i < clientAllMaster.getList().size(); i++) {
-						if (clientAllMaster.getList().get(i).canView((mainUser)))
-							toPass.add(clientAllMaster.getList().get(i));
-
-						// System.out.print("Inside size loop");
-						// clientDocumentView.updateList(toPass);
-
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-						// editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc
-						// - 1).getDocName());
-
+					ArrayList<Doc> cheapLock = clientAllMaster.getList();
+					// System.out.println(clientAllMaster.getList().size() +
+					// "  "+ currentSelectedDoc);
+					for (int i = 0; i < cheapLock.size(); i++) {
+						if (cheapLock.get(i).canView((mainUser)))
+							toPass.add(cheapLock.get(i));
 					}
-					//System.out.println("End of Fod");
-					ArrayList<Doc> clientSide = clientDocumentView.getDocs();
-					boolean isChanged = true;
-					for(Doc newDoc : toPass ){
-					for (Doc oldDoc : clientSide) {
-						if(oldDoc.getDocName().equals(newDoc.getDocName())){
-							isChanged = false;
-							//System.out.println("FLAG SETTER");
-						}
-						else{
-							isChanged = true;
-							//System.out.println("They are not equal!");
-						}
-					}
-					}
-
-					if (isChanged) {
-						//System.out.println("Should Change");
+					if (currentSelectedDoc != 0) {
 						clientDocumentView.updateList(toPass);
 						editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
 
+					} else {
+						clientDocumentView.updateList(toPass);
+
 					}
+
 				}
-
-				System.out.print("");
-
+				try {
+					updateDocs = false;
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -533,21 +509,24 @@ public class CEController extends JFrame implements Serializable {
 
 						EditPacket newPacket = (EditPacket) unknown;
 						clientAllMaster = newPacket.getMaster();
-						// System.out.println("Got A EditPacket: Client: " +
-						// currentSelectedDoc + " Doc: " +
-						// newPacket.getDocID());
 
 						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
-							// System.out.println("Setting tet of Edit View Now!");
 							editView.setText(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents());
-
 						}
 
-					}
+						if (newPacket.getDoc().canView(mainUser)) {
+							for (Doc curr : clientDocumentView.getDocs()) {
 
-					else if (unknown instanceof ChatPacket)
+								if (newPacket.getDocID() != curr.getDocIdentification()) {
+									updateDocs = true;
 
-					{
+								}
+							}
+
+						}
+						System.out.println(updateDocs);
+
+					} else if (unknown instanceof ChatPacket) {
 						@SuppressWarnings("unchecked")
 						List<String> toSet = (ArrayList<String>) ((ChatPacket) unknown).getChats();
 						updateChat(toSet);
@@ -557,15 +536,18 @@ public class CEController extends JFrame implements Serializable {
 						LogoutPacket log = (LogoutPacket) unknown;
 						log.execute(CEController.this);
 					} else if (unknown instanceof CreateNewDocument) {
-						int old = currentSelectedDoc;
 						CreateNewDocument thePacket = (CreateNewDocument) unknown;
 						clientAllMaster = thePacket.getDocAs();
 						currentSelectedDoc = thePacket.getDocID();
-						// System.out.println("New Doc Created! Our Value Was: "
-						// + old + " And Is Now : " + currentSelectedDoc +
-						// " Setting Int Value");
-						// mainUser.setSelectedDoc(currentSelectedDoc);
+						updateDocs = true;
 
+					} else if (unknown instanceof UpdateUserPacket) {
+						UpdateUserPacket usrPacket = (UpdateUserPacket) unknown;
+						clientAllMaster = usrPacket.getML();
+						if (clientAllMaster.getList().size() == 0)
+							updateDocs = false;
+						else
+							updateDocs = true;
 					}
 				} catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block

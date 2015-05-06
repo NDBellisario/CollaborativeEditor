@@ -58,7 +58,7 @@ public class DocumentView extends JPanel {
 
 			
 				//repaint();
-				System.out.println("REPAINT CALLLED!");
+				//System.out.println("REPAINT CALLLED!");
 
 
 

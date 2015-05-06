@@ -81,6 +81,8 @@ public class EditView extends JPanel {
 		col = new Color[] { Color.BLACK, Color.RED, Color.BLUE, Color.YELLOW,
 				Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK };
 		// WHEN COLOR IS BEING CALLED TO UPDATE COLLIST GETS COLOR FROM COL,
+
+		
 		// THEY MUST BE THE SAME
 
 		permission = user.getPermission();
@@ -266,7 +268,7 @@ public class EditView extends JPanel {
 		 */
 
 		// textBox.setCaretPosition(s.length());
-		textBox.setCaretPosition(len);
+		//textBox.setCaretPosition(len);
 	}
 
 	public class formatListener implements ActionListener {

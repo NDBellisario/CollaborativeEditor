@@ -31,7 +31,7 @@ public class EditPacket implements Serializable {
 	public EditPacket(EditView editView, User arg, int argID) {
 
 		if (editView == null) {
-			newText = "EDIT VIEW IS NULL WHENE WOULD THIS HAPPEN";
+			newText = "";
 		} else {
 			newText = editView.getText();
 		}
@@ -44,7 +44,6 @@ public class EditPacket implements Serializable {
 	public EditPacket(User mainUser, Integer docID2, String docName, RevisionAssistant arg) {
 		theUser = mainUser;
 		docID = docID2;
-
 		setDocName(docName);
 		revisionTime = true;
 		createdOn = new Date();

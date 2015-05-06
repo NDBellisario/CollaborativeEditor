@@ -21,6 +21,9 @@ public class DocumentAssistant implements Serializable {
         editors.add(1);
         editors.add(2);
         editors.add(3);
+        editors.add(4);
+        editors.add(5);
+        editors.add(6);
         Doc temp = new Doc(docName,newID,ownerId, editors);
         temp.setDocContents("");
     	documentList.add(temp);

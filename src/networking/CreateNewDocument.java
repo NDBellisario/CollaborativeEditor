@@ -21,6 +21,11 @@ public class CreateNewDocument implements Serializable {
 		this.docName = name;
 		this.ownerID = id;
 	}
+	/**
+	 * 
+	 * @param arg : Document Assistant 
+	 * @return
+	 */
 	public DocumentAssistant execute(DocumentAssistant arg) {
 		// TODO: read from option list of users
 		ArrayList<Integer> tempEditors = new ArrayList<Integer>();

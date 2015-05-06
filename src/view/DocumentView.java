@@ -24,7 +24,8 @@ public class DocumentView extends JPanel {
 		this.setLayout(new BorderLayout());
 		selectDoc = new JButton("Current Documents");
 		listDocuments = new DefaultListModel<String>();
-		updateList(new ArrayList<Doc>());
+		ArrayList<Doc> temp = new ArrayList<Doc>();
+		updateList(temp);
 		documentList = new JList<String>(listDocuments);
 		frame.add(new JScrollPane(documentList), BorderLayout.CENTER);
 		frame.add(new JLabel("Your Documents"), BorderLayout.NORTH);
@@ -49,6 +50,7 @@ public class DocumentView extends JPanel {
 				for (int i = 0; i < ourDocs.size(); i++) {
 					listDocuments.addElement(ourDocs.get(i).getDocName());
 				}
+				System.out.println("REPAINT");
 				repaint();
 
 
@@ -64,6 +66,7 @@ public class DocumentView extends JPanel {
 							if (ourDocs.get(i).getDocName().equals(fileName)) {
 								int careID = documentList.getSelectedIndex() + 1;
 								theCaller.setCurrentSelectedDoc(careID);
+								theCaller.updateDocName();
 								
 							}
 						}

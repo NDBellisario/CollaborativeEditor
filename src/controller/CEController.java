@@ -43,7 +43,6 @@ public class CEController extends JFrame implements Serializable {
 	private ObjectOutputStream outputStrm;
 	private ObjectInputStream inputStrm;
 	private int currentSelectedDoc;
-	private ArrayList<Doc> ourDocs;
 	private DocumentView clientDocumentView;
 	private Thread servertread;
 	private Thread serverrevthread;
@@ -68,7 +67,6 @@ public class CEController extends JFrame implements Serializable {
 
 		// Setting up the main data entry fields, un/pw/server stuff
 
-		ourDocs = new ArrayList<Doc>();
 		JTextField ipField = new JTextField();
 		JTextField portField = new JTextField();
 		JTextField nameField = new JTextField();
@@ -248,7 +246,7 @@ public class CEController extends JFrame implements Serializable {
 		// Add ChatView
 		chatView = new ChatView(mainUser, outputStrm, revAssist);
 
-		editView = new EditView(mainUser, ourDocs);
+		editView = new EditView(mainUser, new ArrayList<Doc>());
 		// editView.setText("<p style=\"color:red\">This is a paragraph.</p>");
 		this.setLayout(new BorderLayout());
 		this.add(chatView, BorderLayout.EAST);
@@ -405,40 +403,37 @@ public class CEController extends JFrame implements Serializable {
 			e.printStackTrace();
 		}
 	}
-
+public void updateDocName(){
+	editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
+}
 	/* This Deals With Updating Out Docs! */
 	private class DocSelectView implements Runnable {
-
+		private ArrayList<Doc> prevCall;
 		public DocSelectView(CEController arg) {
 			clientDocumentView = new DocumentView(arg);
-			clientAllMaster = new DocumentAssistant();
-
+			
+			prevCall = new ArrayList<Doc>();
 		}
 
 		@Override
 		public void run() {
 			while (true) {
-				if (currentSelectedDoc != 0) {
-					ArrayList<Doc> temp = ourDocs;
+				ArrayList<Doc> toPass = new ArrayList<Doc>();
+				if (currentSelectedDoc != 0 && clientAllMaster != null) {
+					
 					for (int i = 0; i < clientAllMaster.getList().size(); i++) {
-						if (clientAllMaster.getList().get(i).getDocEditors().contains(mainUser.getID())) {
-							temp.add(clientAllMaster.getList().get(i));
-							clientDocumentView.updateList(temp);
-							ourDocs.clear();
-							ourDocs = temp;
 
-						}
-
+						if (clientAllMaster.getList().get(i).getDocEditors().contains(mainUser.getID()))
+							toPass.add(clientAllMaster.getList().get(i));
 					}
-					editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					if (!(prevCall.equals(toPass)))
+						clientDocumentView.updateList(toPass);
+					
+				
+					//editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
 
 				}
+				prevCall = toPass;
 			}
 		}
 	}
@@ -516,6 +511,7 @@ public class CEController extends JFrame implements Serializable {
 					} else if (unknown instanceof CreateNewDocument) {
 						int old = currentSelectedDoc;
 						CreateNewDocument thePacket = (CreateNewDocument) unknown;
+						clientAllMaster = thePacket.getDocAs();
 						currentSelectedDoc = thePacket.getDocID();
 						System.out.println("New Doc Created! Our Value Was: " + old + " And Is Now : " + currentSelectedDoc + " Setting Int Value");
 						// mainUser.setSelectedDoc(currentSelectedDoc);

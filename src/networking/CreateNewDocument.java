@@ -15,6 +15,7 @@ public class CreateNewDocument implements Serializable {
 	private int ownerID;
 	private int docID;
 	private Doc theDoc;
+	private DocumentAssistant ourList;
 	
 	public CreateNewDocument(String name, Integer id) {
 		this.docName = name;
@@ -31,7 +32,7 @@ public class CreateNewDocument implements Serializable {
 			}
 		}
 		theDoc = null;
-		
+		ourList = arg;
 		return arg;
 	}
 	public Integer getDocID() {
@@ -42,6 +43,9 @@ public class CreateNewDocument implements Serializable {
 	}
 	public String getName(){
 		return docName;
+	}
+	public DocumentAssistant getDocAs(){
+		return ourList;
 	}
 
 }

@@ -38,6 +38,7 @@ public class EditPacket implements Serializable {
 		theUser = arg;
 		docID = argID;
 		createdOn = new Date();
+		revisionTime = false;
 
 	}
 

@@ -380,6 +380,12 @@ public class CEServer extends JFrame implements Serializable {
 						newEdit.setMaster(masterList);
 						clientOutputStream.reset();
 						clientOutputStream.writeObject(newPacket);
+						try {
+							Thread.sleep(80);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						clientOutputStream.writeObject(newEdit);
 					} else if (temp instanceof LogoutPacket) {
 						LogoutPacket userQuitPacket = (LogoutPacket) temp;

@@ -51,7 +51,6 @@ public class CEController extends JFrame implements Serializable {
 
 	public CEController() {
 		currentSelectedDoc = 0;
-		revAssist = new RevisionAssistant();
 		initUserModels();
 
 	}
@@ -255,7 +254,8 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		chatView = new ChatView(mainUser, outputStrm, revAssist);
+		//RevisionAssistant 
+		chatView = new ChatView(mainUser, outputStrm, new RevisionAssistant());
 
 		editView = new EditView(mainUser, new ArrayList<Doc>());
 		// editView.setText("<p style=\"color:red\">This is a paragraph.</p>");

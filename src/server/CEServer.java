@@ -54,8 +54,9 @@ public class CEServer extends JFrame implements Serializable {
 	public void readFromFile() {
 		boolean noPreviousConfig = false;
 
-		String loadFileName = JOptionPane.showInputDialog("Enter The Name Of The Previous Saved Server State\nLeave Blank For a New Server");
-
+		// TODO: String loadFileName =
+		// JOptionPane.showInputDialog("Enter The Name Of The Previous Saved Server State\nLeave Blank For a New Server");
+		String loadFileName = "";
 		if (loadFileName != null && !loadFileName.equals("")) {
 			ObjectInputStream loadStream = null;
 
@@ -286,8 +287,10 @@ public class CEServer extends JFrame implements Serializable {
 				// the
 				// current
 				// List
+				UpdateUserPacket usrPacket = new UpdateUserPacket(masterList);
 				ChatPacket toWrite = new ChatPacket(allChatMessages);
 				output.writeObject(toWrite);
+				output.writeObject(usrPacket);;
 				outputs.put(userLogin.getName(), output); // Puts on output map
 				inputs.put(userLogin.getName(), input); // Puts on Input Map
 
@@ -344,16 +347,12 @@ public class CEServer extends JFrame implements Serializable {
 						EditPacket readPacket = (EditPacket) temp;
 						// Executes the packet
 						readPacket.execute(masterList);
-						masterList.getList().get(readPacket.getDocID()-1).setRevision(readPacket.getRev());
+						masterList.getList().get(readPacket.getDocID() - 1).setRevision(readPacket.getRev());
 						readPacket.setMaster(masterList);
-						// Checks to see if we even have something aka not null.
-						// if (readPacket.getNewText().equals("")) {
-						// Writes it out to ALL of the Client's
 						for (ObjectOutputStream OPtemp : outputs.values()) {
 							OPtemp.reset();
 							OPtemp.writeObject(readPacket);
 						}
-						// }
 					}
 					// If the packet is a chat packet
 					else if (temp instanceof ChatPacket) {
@@ -377,7 +376,6 @@ public class CEServer extends JFrame implements Serializable {
 						RevisionAssistant newDocRev = new RevisionAssistant();
 						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), newPacket.getName(), newDocRev);
 						masterList.getList().get(newEdit.getDocID() - 1).setRevision(newEdit.getRev());
-
 						newEdit.setDocName(newPacket.getName());
 						newEdit.setMaster(masterList);
 						clientOutputStream.reset();

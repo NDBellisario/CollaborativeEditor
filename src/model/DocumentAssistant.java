@@ -17,11 +17,15 @@ public class DocumentAssistant implements Serializable {
 
     public int addDocument(String docName, int ownerId, ArrayList<Integer> editors) {
         int newID = documentList.size()+1;
+        //editors.add(ownerId);
         editors.add(1);
         editors.add(2);
         editors.add(3);
+        editors.add(4);
+        editors.add(5);
+        editors.add(6);
         Doc temp = new Doc(docName,newID,ownerId, editors);
-        temp.setDocContents("Test String");
+        temp.setDocContents("");
     	documentList.add(temp);
         return newID;
     }

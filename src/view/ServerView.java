@@ -39,7 +39,8 @@ public class ServerView extends JFrame implements Serializable {
         //passedUserAssistant = arg;
         setUpMenu();
         setPref();
-        portNumber = JOptionPane.showInputDialog(this, "Please Enter A Port To Host On");
+        //TODO: portNumber = JOptionPane.showInputDialog(this, "Please Enter A Port To Host On");
+        portNumber = "9001";
         ourServer = serverArg;
 
     }

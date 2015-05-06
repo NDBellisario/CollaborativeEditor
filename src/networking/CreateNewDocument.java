@@ -21,17 +21,19 @@ public class CreateNewDocument implements Serializable {
 		this.docName = name;
 		this.ownerID = id;
 	}
+	/**
+	 * 
+	 * @param arg : Document Assistant 
+	 * @return
+	 */
 	public DocumentAssistant execute(DocumentAssistant arg) {
 		// TODO: read from option list of users
 		ArrayList<Integer> tempEditors = new ArrayList<Integer>();
-		tempEditors.add((Integer) ownerID);
+		tempEditors.add((Integer) 0);
+		tempEditors.add((Integer) 1);
+
 		docID = arg.addDocument(docName, ownerID, tempEditors);
-		for(int i = 0; i < arg.getList().size(); i++){
-			if (arg.getList().get(i).getDocIdentification() == docID){
-				theDoc = arg.getList().get(i);
-			}
-		}
-		theDoc = null;
+		theDoc = arg.getList().get(docID-1);		
 		ourList = arg;
 		return arg;
 	}

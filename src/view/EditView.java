@@ -81,13 +81,15 @@ public class EditView extends JPanel {
 		col = new Color[] { Color.BLACK, Color.RED, Color.BLUE, Color.YELLOW,
 				Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK };
 		// WHEN COLOR IS BEING CALLED TO UPDATE COLLIST GETS COLOR FROM COL,
+
+		
 		// THEY MUST BE THE SAME
 
 		permission = user.getPermission();
 		// TODO: fix textBox = new JEditorPane(new
 		// HTMLEditorKit().getContentType(), "");
 		textBox = new JTextPane();
-		textBox.setContentType("text/html");
+		//textBox.setContentType("text/html");
 		// textBox.setEditorKit(new HTMLEditorKit());
 		// textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
 		textBox.setMargin(new Insets(25, 25, 25, 25));
@@ -244,7 +246,7 @@ public class EditView extends JPanel {
 	}
 
 	public void setText(final String s) {
-
+		int oldLen = textBox.getDocument().getLength();
 		textBox.setText(s);
 		// int caretPos = textBox.getCaretPosition();
 		// try {
@@ -252,7 +254,7 @@ public class EditView extends JPanel {
 		// } catch (BadLocationException ex) {
 		// ex.printStackTrace();
 		// }
-		int len = textBox.getDocument().getLength();
+		//int len = textBox.getDocument().getLength();
 
 		/*
 		 * CaretListener cListener = new CaretListener() {
@@ -264,8 +266,8 @@ public class EditView extends JPanel {
 		 * textBox.addCaretListener(cListener);
 		 */
 
-		// textBox.setCaretPosition(s.length());
-		textBox.setCaretPosition(len);
+		//textBox.setCaretPosition(s.length());
+		textBox.setCaretPosition(oldLen);
 	}
 
 	public class formatListener implements ActionListener {

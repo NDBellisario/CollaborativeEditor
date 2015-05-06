@@ -6,13 +6,17 @@ import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.*;
 
 import java.awt.*;
@@ -69,18 +73,22 @@ public class EditView extends JPanel {
 		user = userArg;
 
 		// JCOMBO BOX DATA FOR STYLES!!
-		fontList = new String[]{"Arial","Century","Sans","Serif","Luxi","Lucida","Typewriter","Webdings"};
-		fSizes = new String[]{"Small","Medium","Large"};
-		colList = new String[]{"Black","Red","Blue","Yellow","Green","Magenta","Orange","Pink"};
-		col = new Color[]{Color.BLACK,Color.RED,Color.BLUE,Color.YELLOW,Color.GREEN,Color.MAGENTA,Color.ORANGE,Color.PINK};
-		//WHEN COLOR IS BEING CALLED TO UPDATE COLLIST GETS COLOR FROM COL, THEY MUST BE THE SAME
-		
+		fontList = new String[] { "Arial", "Century", "Sans", "Serif", "Luxi",
+				"Lucida", "Typewriter", "Webdings" };
+		fSizes = new String[] { "Small", "Medium", "Large" };
+		colList = new String[] { "Black", "Red", "Blue", "Yellow", "Green",
+				"Magenta", "Orange", "Pink" };
+		col = new Color[] { Color.BLACK, Color.RED, Color.BLUE, Color.YELLOW,
+				Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK };
+		// WHEN COLOR IS BEING CALLED TO UPDATE COLLIST GETS COLOR FROM COL,
+		// THEY MUST BE THE SAME
+
 		permission = user.getPermission();
 		// TODO: fix textBox = new JEditorPane(new
 		// HTMLEditorKit().getContentType(), "");
 		textBox = new JTextPane();
 		textBox.setContentType("text/html");
-		//textBox.setEditorKit(new HTMLEditorKit());
+		// textBox.setEditorKit(new HTMLEditorKit());
 		// textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
 		textBox.setMargin(new Insets(25, 25, 25, 25));
 
@@ -113,22 +121,24 @@ public class EditView extends JPanel {
 				currentDoc = theD.get(i).getDocName();
 			}
 		}
-		currentDocLabel = new JLabel("New Unsaved Document",  SwingConstants.CENTER);
+		currentDocLabel = new JLabel("New Unsaved Document",
+				SwingConstants.CENTER);
 		this.add(currentDocLabel, BorderLayout.NORTH);
 
 	}
 
-public void changeDoc(String argName) {
-	currentDocLabel.setText(argName);
-	repaint();
-	//this.add(new JLabel("Stuff", SwingConstants.CENTER), BorderLayout.NORTH);
-	//repaint();
-}
-public String getDocName(){
-	return currentDocLabel.getText();
-}
+	public void changeDoc(String argName) {
+		currentDocLabel.setText(argName);
+		repaint();
+		// this.add(new JLabel("Stuff", SwingConstants.CENTER),
+		// BorderLayout.NORTH);
+		// repaint();
+	}
 
-	
+	public String getDocName() {
+		return currentDocLabel.getText();
+	}
+
 	public void changePermission(int arg) {
 		permission = arg;
 	}
@@ -140,19 +150,19 @@ public String getDocName(){
 		ActionListener listener = new formatListener();
 
 		bold = new JButton("Bold");
-		bold.addActionListener(listener);
+		bold.addActionListener(new StyledEditorKit.BoldAction());
 		// For bold
 		bolder = textBox.addStyle("bold", null);
 		StyleConstants.setBold(bolder, true);
 
 		ital = new JButton("Italics");
-		ital.addActionListener(listener);
+		ital.addActionListener(new StyledEditorKit.ItalicAction());
 		// For italics
 		italic = textBox.addStyle("ital", null);
 		StyleConstants.setItalic(italic, true);
 
 		underlined = new JButton("Underline");
-		underlined.addActionListener(listener);
+		underlined.addActionListener(new StyledEditorKit.UnderlineAction());
 		// For underline
 		underline = textBox.addStyle("underlined", null);
 		StyleConstants.setUnderline(underline, true);
@@ -161,30 +171,32 @@ public String getDocName(){
 		colored.addActionListener(listener);
 
 		fonts = new JComboBox(fontList);
-		fonts.addActionListener(listener);
-		
+		fonts.addActionListener(new StyledEditorKit.FontFamilyAction(fonts
+				.getActionCommand(), fonts.getActionCommand()));
+
 		fSize = new JComboBox(fSizes);
 		fSize.addActionListener(listener);
-		
+
 		colors = new JComboBox(colList);
 		colors.addActionListener(listener);
-		
+
 		// for Indent left
 
-		//indentCenter = new JButton("Indent Center");
-		//indentCenter.addActionListener(listener);
+		// indentCenter = new JButton("Indent Center");
+		// indentCenter.addActionListener(listener);
 
-		//indentRight = new JButton("Indent Right");
-		//indentRight.addActionListener(listener);
+		// indentRight = new JButton("Indent Right");
+		// indentRight.addActionListener(listener);
 		// For indent right
-		//indentR = textBox.addStyle("indentRight", null);
-		//StyleConstants.setAlignment(indentR, StyleConstants.ALIGN_RIGHT);
+		// indentR = textBox.addStyle("indentRight", null);
+		// StyleConstants.setAlignment(indentR, StyleConstants.ALIGN_RIGHT);
 
 		bullets = new JButton("Bullet Points");
 		bullets.addActionListener(listener);
 
 		fontType = new JButton("Font Type");
-		fontType.addActionListener(listener);
+		fontType.addActionListener(new StyledEditorKit.FontFamilyAction(fonts
+				.getActionCommand(), Font.SANS_SERIF));
 
 		fontSize = new JButton("Font Size");
 		fontSize.addActionListener(listener);
@@ -195,7 +207,7 @@ public String getDocName(){
 
 		insertCode = new JButton("Insert Code");
 		insertCode.addActionListener(listener);
-		
+
 		showAnnotations = new JButton("Show Annotations");
 		showAnnotations.addActionListener(listener);
 
@@ -235,14 +247,14 @@ public String getDocName(){
 	public void setText(final String s) {
 
 		textBox.setText(s);
-//		int caretPos = textBox.getCaretPosition();
-//		try {
-//			textBox.getDocument().insertString(caretPos, s, null);
-//		} catch (BadLocationException ex) {
-//			ex.printStackTrace();
-//		}
+		// int caretPos = textBox.getCaretPosition();
+		// try {
+		// textBox.getDocument().insertString(caretPos, s, null);
+		// } catch (BadLocationException ex) {
+		// ex.printStackTrace();
+		// }
 		int len = textBox.getDocument().getLength();
-		
+
 		/*
 		 * CaretListener cListener = new CaretListener() {
 		 * 
@@ -252,8 +264,8 @@ public String getDocName(){
 		 * 
 		 * textBox.addCaretListener(cListener);
 		 */
-			
-		//textBox.setCaretPosition(s.length());
+
+		// textBox.setCaretPosition(s.length());
 		textBox.setCaretPosition(len);
 	}
 
@@ -261,15 +273,15 @@ public String getDocName(){
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == bold) {
-				makeBold();
+
 			} else if (e.getSource() == ital) {
-				makeItal();
+				// makeItal();
 			} else if (e.getSource() == underlined) {
-				makeUnderline();
+				// makeUnderline();
 			} else if (e.getSource() == colors) {
 				changeColor();
 			} else if (e.getSource() == fonts) {
-				updateFont();
+				// updateFont();
 			} else if (e.getSource() == fSize) {
 				updateFontSize();
 			} else if (e.getSource() == bullets) {
@@ -277,35 +289,42 @@ public String getDocName(){
 			} else if (e.getSource() == fontType) {
 
 			} else if (e.getSource() == annotate) {
-				createAnnotation();
+			Action a =	new StyledEditorKit.ForegroundAction("Red", Color.RED);
+			a.actionPerformed(e);
+			createAnnotation();
 			} else if (e.getSource() == insertCode) {
-				
+
 			} else if (e.getSource() == showAnnotations) {
 				userList = new DefaultListModel<Annotation>();
 				for (Annotation anno : annotationList) {
 					userList.addElement(anno);
 				}
 				scrollAnnoList = new JList<Annotation>(userList);
-		        scrollAnnoList.setFont(new Font("Arial", Font.BOLD, 20));
-		        JScrollPane currentAnnos = new JScrollPane(scrollAnnoList);	
-		        JOptionPane.showMessageDialog(null, currentAnnos);
+				scrollAnnoList.setFont(new Font("Arial", Font.BOLD, 20));
+				JScrollPane currentAnnos = new JScrollPane(scrollAnnoList);
+				JOptionPane.showMessageDialog(null, currentAnnos);
 			}
 		}
 	}
 
-
-	public void makeBold() {
-
-		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-			textBox.getStyledDocument().setCharacterAttributes(
-					textBox.getSelectionStart(),
-					textBox.getSelectedText().length(), bolder, false);
-		} else {
-			MutableAttributeSet attrs = textBox.getInputAttributes();
-			StyleConstants.setBold(attrs, true);
-		}
-	}
-
+	/*
+	 * public void makeBold() {
+	 * 
+	 * if (textBox.getSelectionEnd() != textBox.getCaretPosition()) { int len =
+	 * textBox.getSelectedText().length(); AttributeSet select =
+	 * textBox.getCharacterAttributes(); boolean ifBold = false; if
+	 * (select.getAttribute(StyleConstants.Bold) != null) { ifBold =
+	 * (select.getAttribute(StyleConstants.Bold).toString()=="true") ? true :
+	 * false; } if (ifBold != true) {
+	 * textBox.getStyledDocument().setCharacterAttributes
+	 * (textBox.getSelectionStart(), len, bolder, true); } else {
+	 * textBox.getStyledDocument
+	 * ().setCharacterAttributes(textBox.getSelectionStart(), len, bolder,
+	 * false); }
+	 * 
+	 * } else { MutableAttributeSet attrs = textBox.getInputAttributes();
+	 * StyleConstants.setBold(attrs, true); } }
+	 */
 	public void makeItal() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
@@ -320,49 +339,69 @@ public String getDocName(){
 
 	public void changeColor() {
 		colorStyle = textBox.addStyle("color", null);
-		StyleConstants.setForeground(colorStyle, col[colors.getSelectedIndex()]);
-		
+		StyleConstants
+				.setForeground(colorStyle, col[colors.getSelectedIndex()]);
+
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
-			textBox.getStyledDocument().setCharacterAttributes(
-					textBox.getSelectionStart(), len, colorStyle, false);
+			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, colorStyle, false);
+			/*
+			boolean flag = true;
+			for (int i = textBox.getCaretPosition(); i < textBox.getSelectionEnd(); i++) {
+				if(!textBox.getStyledDocument().getCharacterElement(i).getAttributes().containsAttribute(colorStyle, Color.RED)) {
+					flag = false;
+				}
+			}
+			if (flag == true) {
+				int len = textBox.getSelectedText().length();
+				textBox.getStyledDocument().setCharacterAttributes(
+						textBox.getSelectionStart(), len, colorStyle, false);
+			} else {
+				JOptionPane.showMessageDialog(null, "You can't color over an annotation!");
+			}
+			*/
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setForeground(attrs, col[colors.getSelectedIndex()]);
-			
+
 		}
 	}
-	
+
 	public void updateFont() {
 		fontStyle = textBox.addStyle("font", null);
-		StyleConstants.setFontFamily(fontStyle, fonts.getSelectedItem().toString());
+		StyleConstants.setFontFamily(fontStyle, fonts.getSelectedItem()
+				.toString());
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
 			textBox.getStyledDocument().setCharacterAttributes(
 					textBox.getSelectionStart(), len, fontStyle, false);
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
-			StyleConstants.setFontFamily(attrs, fonts.getSelectedItem().toString());
+			StyleConstants.setFontFamily(attrs, fonts.getSelectedItem()
+					.toString());
 		}
 	}
-	
+
 	public void updateFontSize() {
 		sizeStyle = textBox.addStyle("size", null);
-		StyleConstants.setFontSize(sizeStyle, (fSize.getSelectedIndex()+2)*7);
+		StyleConstants.setFontSize(sizeStyle,
+				(fSize.getSelectedIndex() + 2) * 7);
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
 			textBox.getStyledDocument().setCharacterAttributes(
 					textBox.getSelectionStart(), len, sizeStyle, false);
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
-			StyleConstants.setFontSize(attrs, (fSize.getSelectedIndex()+2)*7);
+			StyleConstants.setFontSize(attrs,
+					(fSize.getSelectedIndex() + 2) * 7);
 		}
 	}
-	
+
 	public void makeUnderline() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
-			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, underline, false);
+			textBox.getStyledDocument().setCharacterAttributes(
+					textBox.getSelectionStart(), len, underline, false);
 		} else {
 			MutableAttributeSet attrs = textBox.getInputAttributes();
 			StyleConstants.setUnderline(attrs, true);
@@ -370,51 +409,83 @@ public String getDocName(){
 	}
 
 	/*
-	public void makeIndentLeft() {
-		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-			int len = textBox.getSelectedText().length();
-			textBox.getStyledDocument().setCharacterAttributes(
-					textBox.getSelectionStart(), len, indentL, false);
-		} else {
-			MutableAttributeSet attrs = textBox.getInputAttributes();
-			StyleConstants.setAlignment(attrs, StyleConstants.ALIGN_LEFT);
-		}
-	}
-	*/
+	 * public void makeIndentLeft() { if (textBox.getSelectionEnd() !=
+	 * textBox.getCaretPosition()) { int len =
+	 * textBox.getSelectedText().length();
+	 * textBox.getStyledDocument().setCharacterAttributes(
+	 * textBox.getSelectionStart(), len, indentL, false); } else {
+	 * MutableAttributeSet attrs = textBox.getInputAttributes();
+	 * StyleConstants.setAlignment(attrs, StyleConstants.ALIGN_LEFT); } }
+	 */
 	/*
-	public void makeIndentRight() {
-		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-			int len = textBox.getSelectedText().length();
-			textBox.getStyledDocument().setCharacterAttributes(
-					textBox.getSelectionStart(), len, indentR, false);
-
-		} else {
-			StyleContext context = new StyleContext();
-			Style style = textBox.getStyle(context.DEFAULT_STYLE);
-			StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT);
-		}
-	}
-	*/
+	 * public void makeIndentRight() { if (textBox.getSelectionEnd() !=
+	 * textBox.getCaretPosition()) { int len =
+	 * textBox.getSelectedText().length();
+	 * textBox.getStyledDocument().setCharacterAttributes(
+	 * textBox.getSelectionStart(), len, indentR, false);
+	 * 
+	 * } else { StyleContext context = new StyleContext(); Style style =
+	 * textBox.getStyle(context.DEFAULT_STYLE);
+	 * StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT); } }
+	 */
 	public void createAnnotation() {
 
 		final int p0 = textBox.getSelectionStart();
 		final int p1 = textBox.getSelectionEnd();
-			
+
 		int len = textBox.getSelectedText().length();
 		
-		Highlighter h = textBox.getHighlighter();
-
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
+			/*
+			SimpleAttributeSet as = new SimpleAttributeSet();
+			StyleConstants.setBackground(as, Color.yellow);
+			StyledDocument doc = (StyledDocument)textBox.getDocument();
+			doc.setCharacterAttributes(p0, p1-p0, as, false);
+			
+			MutableAttributeSet attrs = textBox.getInputAttributes();
+			StyleConstants.setForeground(attrs, col[0]);*/
+			
 			try {
-				String annoTitle = textBox.getText(p0, len);
-				h.addHighlight(p0, p1, DefaultHighlighter.DefaultPainter);
-				String comment = JOptionPane.showInputDialog("What is your annotation for: " + annoTitle);
+				String annoTitle;
+				annoTitle = textBox.getText(p0, len);
+				String comment = JOptionPane
+						.showInputDialog("What is your annotation for: "
+								+ annoTitle);
 				Annotation annotation = new Annotation(annoTitle, comment);
 				annotationList.add(annotation);
 			} catch (BadLocationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			// h.addHighlight(p0, p1, DefaultHighlighter.DefaultPainter);
+			
+/*
+			int cp = textBox.getCaretPosition();
+			try {
+				while (cp <= len) {
+					try {
+						h.addHighlight(cp, textBox.getSelectionEnd(),
+								DefaultHighlighter.DefaultPainter);
+						cp++;
+					} catch (BadLocationException ex) {
+						ex.printStackTrace();
+					}
+				}
+				
+				String annoTitle = textBox.getText(p0, len);
+				// h.addHighlight(p0, p1, DefaultHighlighter.DefaultPainter);
+				String comment = JOptionPane
+						.showInputDialog("What is your annotation for: "
+								+ annoTitle);
+				Annotation annotation = new Annotation(annoTitle, comment);
+				annotationList.add(annotation);
+
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
+			
 		}
 
 		/*
@@ -439,15 +510,12 @@ public String getDocName(){
 			annotation = comment;
 			title = highlighted;
 		}
+
 		public String toString() {
 			String toReturn = "Your annotation for " + title + " is ";
 			toReturn += annotation;
 			return toReturn;
-			
-			
 		}
 	}
-
-
 
 }

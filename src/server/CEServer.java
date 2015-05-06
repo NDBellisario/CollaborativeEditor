@@ -370,13 +370,6 @@ public class CEServer extends JFrame implements Serializable {
 							e.printStackTrace();
 
 						}
-					} else if (temp instanceof GetDocsPacket) {
-						GetDocsPacket userDocs = (GetDocsPacket) temp;
-						userDocs.makeList(masterList, mainUser);
-						System.out.println("GetDocsServer: " + masterList.getList().size());
-						clientOutputStream.reset();
-						clientOutputStream.writeObject(userDocs);
-
 					} else if (temp instanceof CreateNewDocument) {
 						CreateNewDocument newPacket = (CreateNewDocument) temp;
 						DocumentAssistant tempV = masterList;

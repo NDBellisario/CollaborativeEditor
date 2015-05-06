@@ -31,13 +31,16 @@ public class DocumentView extends JPanel {
 		JButton docSelect = new JButton("Open Document");
 		frame.add(docSelect, BorderLayout.SOUTH);
 		docSelect.addActionListener(new SelectDocumentListener());
-		
+		Dimension curdim = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation((int) (theCaller.getWidth()),
+                (int) 0); 
 		frame.setVisible(true);
 		frame.setResizable(true);
 		frame.pack();
+	
 	}
 
-	public void updateList(ArrayList<Doc> theLists) {
+	public void updateList(final ArrayList<Doc> theLists) {
 
 		new Thread(new Runnable() {
 			@Override

@@ -64,6 +64,7 @@ public class CEController extends JFrame implements Serializable {
 	 * Constructor for CEController builds and calls all initializing methods
 	 */
 	public CEController() {
+		revAssist = null;
 		currentSelectedDoc = 0;
 		initUserModels();
 
@@ -753,6 +754,14 @@ public class CEController extends JFrame implements Serializable {
 
 						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
 							editView.setText(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents(), newPacket.getStyle());
+							if(newPacket.getMili()+5000 > (System.currentTimeMillis())){
+								revAssist = clientAllMaster.getList().get(currentSelectedDoc - 1).getRevisions();
+								chatView.UpdateRevisionPanel(revAssist);
+							}
+							else{
+							revAssist = clientAllMaster.getList().get(currentSelectedDoc - 1).getRevisions();
+							}
+							System.out.println("AA");
 						}
 
 						// System.out.println("The packet we just got " +

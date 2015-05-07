@@ -30,7 +30,7 @@ import java.util.ArrayList;
 /**
  * @class EditView
  * @author Nicholas,Omri,Cameron,Taylor,Eric
- * Controls and contains all infromation on EditView
+ * Controls and contains all information on EditView
  */
 public class EditView extends JPanel implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -269,9 +269,6 @@ public class EditView extends JPanel implements Serializable {
 	/*
 	 * @Override public void update(Observable o, Object arg){
 	 * 
-	 * // TODO Auto-generated method stub }
-	 */
-
 	// Do not need this method.
 	/*
 	 * public void setUpGUI(){

@@ -632,14 +632,7 @@ public class CEController extends JFrame implements Serializable {
 			clientDocumentView = new DocumentView(arg);
 
 		}
-		private class ExportListener implements ActionListener {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-
-		}
 
 		@Override
 		/**

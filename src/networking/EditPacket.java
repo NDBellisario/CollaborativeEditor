@@ -14,12 +14,10 @@ import java.util.Date;
 import javax.swing.text.StyledDocument;
 
 
-/*
-=======
+
 /**
  * @class Editpacket
  * @author Nicholas,Omri,Cameron,Taylor,Eric
->>>>>>> Stashed changes
  * Manages the changes made to the text editor
  *
  * Takes in a char to add to the editor
@@ -45,7 +43,9 @@ public class EditPacket implements Serializable {
 	 * @param editView current Edit view
 	 * @param arg current User 
 	 * @param argID document ID
+
 */
+
 	public EditPacket(EditView editView, User arg, int argID) {
 		packetStyle = null;
 		if (editView == null) {

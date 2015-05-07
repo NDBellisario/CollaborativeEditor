@@ -94,8 +94,8 @@ public class EditView extends JPanel implements Serializable {
 		// TODO: fix textBox = new JEditorPane(new
 		// HTMLEditorKit().getContentType(), "");
 		textBox = new JTextPane();
-		//textBox.setContentType("text/html");
-		// textBox.setEditorKit(new HTMLEditorKit());
+		textBox.setContentType("text/html");
+		//textBox.setEditorKit(new HTMLEditorKit());
 		// textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
 		textBox.setMargin(new Insets(25, 25, 25, 25));
 
@@ -264,9 +264,9 @@ public class EditView extends JPanel implements Serializable {
 	public void setText(final String s, StyledDocument style) {
 		int oldLen = textBox.getCaretPosition();
 		textBox.setText(s);
-		if(style != null){
-		textBox.setStyledDocument(style);
-		}
+//		if(style != null){
+//		textBox.setStyledDocument(style);
+//		}
 		if(oldLen <= textBox.getDocument().getLength()){
 		textBox.setCaretPosition(oldLen);
 		}
@@ -450,49 +450,8 @@ public class EditView extends JPanel implements Serializable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// h.addHighlight(p0, p1, DefaultHighlighter.DefaultPainter);
-			
-/*
-			int cp = textBox.getCaretPosition();
-			try {
-				while (cp <= len) {
-					try {
-						h.addHighlight(cp, textBox.getSelectionEnd(),
-								DefaultHighlighter.DefaultPainter);
-						cp++;
-					} catch (BadLocationException ex) {
-						ex.printStackTrace();
-					}
-				}
-				
-				String annoTitle = textBox.getText(p0, len);
-				// h.addHighlight(p0, p1, DefaultHighlighter.DefaultPainter);
-				String comment = JOptionPane
-						.showInputDialog("What is your annotation for: "
-								+ annoTitle);
-				Annotation annotation = new Annotation(annoTitle, comment);
-				annotationList.add(annotation);
 
-			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
-			
-		}
-
-		/*
-		 * if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-		 * 
-		 * try { h.addHighlight(p0, p1, DefaultHighlighter.DefaultPainter);
-		 * MouseInputAdapter mouseHandler = new MouseInputAdapter() {
-		 * 
-		 * public void mouseEntered(MouseEvent event) { checkForHover(event); }
-		 * 
-		 * 
-		 * }; } catch (BadLocationException e) { // TODO Auto-generated catch
-		 * block e.printStackTrace(); } }
-		 */
+	}
 	}
 
 	public class Annotation {

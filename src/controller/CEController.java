@@ -1,14 +1,23 @@
 package controller;
 import model.*;
 import networking.*;
+import server.CEServer;
 import view.ChatView;
 import view.DocumentView;
 import view.EditView;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.html.HTMLEditorKit;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -317,23 +326,65 @@ public class CEController extends JFrame implements Serializable {
 	 */
 	private class ExportListener implements ActionListener {
 
-		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+
+			String comment = JOptionPane.showInputDialog("Enter a File Name To Save To As HTML");
+			comment = comment + ".html";
+
+			File toWrite = new File(comment);
+			String toExport = editView.getText();
+			ObjectOutputStream saveStream;
+			try {
+				saveStream = new ObjectOutputStream(new FileOutputStream(comment));
+				saveStream.writeObject(toExport);
+				JOptionPane.showMessageDialog(null, "File Successfully Saved!");
+				saveStream.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 		}
+		
 
-	}
+	
+
+//			ArrayList<Doc> stuff = clientAllMaster.getList();
+//			Doc toExport;
+//			for (Doc theDoc : stuff) {
+//				if (theDoc.getDocName().equals(comment)) {
+//					toExport = theDoc;
+//
+//					ObjectOutputStream saveStream;
+//					try {
+//						saveStream = new ObjectOutputStream(new FileOutputStream(comment));
+//						saveStream.writeObject(f);
+//						JOptionPane.showMessageDialog(null, "File Successfully Saved!");
+//						saveStream.close();
+//					} catch (IOException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//
+//				}
+//				else{
+//					JOptionPane.showMessageDialog(null, "Invalid File!");
+//				}
+//			}
+
+		}
+	
+
 	/**
 	 * 
-<<<<<<< Updated upstream
+	 <<<<<<< Updated upstream
+	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @class listens for Exit button to be clicked and starts closing methods
-=======
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @class  ExitListener
-	 *listens for Exit button to be clicked and starts closing methods
->>>>>>> Stashed changes
+	 *        =======
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @class ExitListener listens for Exit button to be clicked and starts
+	 *        closing methods >>>>>>> Stashed changes
 	 */
 	// Listener Private Classes
 	private class ExitListener implements ActionListener {
@@ -344,14 +395,13 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * 
-<<<<<<< Updated upstream
+	 <<<<<<< Updated upstream
+	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @class Saves current document on server
-=======
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @class SaveListener
-	 * Saves current document on server
->>>>>>> Stashed changes
+	 * @class Saves current document on server =======
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @class SaveListener Saves current document on server >>>>>>> Stashed
+	 *        changes
 	 */
 	private class SaveListener implements ActionListener {
 		@Override
@@ -360,15 +410,15 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-<<<<<<< Updated upstream
+	 * <<<<<<< Updated upstream
+	 * 
 	 * @class listens for creation of new document
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
-=======
+	 *         =======
 	 * @class NewDocumentListener
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *listens for creation of new document
->>>>>>> Stashed changes
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts listens
+	 *         for creation of new document >>>>>>> Stashed changes
 	 */
 	private class NewDocumentListener implements ActionListener {
 
@@ -389,14 +439,13 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-<<<<<<< Updated upstream
+	 * <<<<<<< Updated upstream
+	 * 
 	 * @class Saves local copy of Document for further use
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-=======
-	 * @class SaveLocalListener 
-	 * Saves local copy of Document for further use
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
->>>>>>> Stashed changes
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts =======
+	 * @class SaveLocalListener Saves local copy of Document for further use
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts >>>>>>>
+	 *         Stashed changes
 	 *
 	 */
 	private class SaveLocalListener implements ActionListener {
@@ -406,14 +455,13 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-<<<<<<< Updated upstream
+	 * <<<<<<< Updated upstream
+	 * 
 	 * @class activates Undo
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-=======
-	 * @class UndoListener
-	 * activates Undo
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
->>>>>>> Stashed changes
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts =======
+	 * @class UndoListener activates Undo
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts >>>>>>>
+	 *         Stashed changes
 	 *
 	 */
 	private class UndoListener implements ActionListener {
@@ -434,6 +482,7 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 
+
 /**
  * @class VersionListener 
  * Shows current version of the document
@@ -448,16 +497,9 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-<<<<<<< Updated upstream
-	 * Add's User to document for editing
-	 * 
+
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *
-=======
-	 * Add's User to document for editing 
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @class AddUserListener
->>>>>>> Stashed changes
+	 * @class AddUserListener >>>>>>> Stashed changes
 	 */
 	private class AddUserListener implements ActionListener {
 		@Override
@@ -466,15 +508,13 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-	 * Removes user from document for edition permision
-<<<<<<< Updated upstream
+	 * Removes user from document for edition permision <<<<<<< Updated upstream
 	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
-=======
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @Class RemoveUserListener
->>>>>>> Stashed changes
+	 *         =======
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @Class RemoveUserListener >>>>>>> Stashed changes
 	 */
 	private class RemoveUserListener implements ActionListener {
 		@Override
@@ -484,11 +524,13 @@ public class CEController extends JFrame implements Serializable {
 	}
 
 
+
 /**
  * opens permission window to set user's permissions for editting
  * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  * @class PermissionListener
  */
+
 
 	private class PermissionListener implements ActionListener {
 		@Override
@@ -504,6 +546,7 @@ public class CEController extends JFrame implements Serializable {
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  * @class ChangePWListener
  */
+
 	private class ChangePWListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -591,14 +634,6 @@ public class CEController extends JFrame implements Serializable {
 		 */
 		public DocSelectView(CEController arg) {
 			clientDocumentView = new DocumentView(arg);
-
-		}
-		private class ExportListener implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
 
 		}
 

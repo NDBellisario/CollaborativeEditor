@@ -1,7 +1,6 @@
 package server;
 import model.Doc;
 import model.DocumentAssistant;
-import model.Revision;
 import model.RevisionAssistant;
 import model.User;
 import model.UserAssistant;
@@ -28,7 +27,7 @@ import java.util.*;
 /**
  * 
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
- * @class CEServer 
+ * @class CEServer
  * the main Class controls and distributes all documents, revisions, and users 
  * currently connected to the server. It can kick certain users from the server as well.
  * overall it Controls and saves documents for all users to easily Access
@@ -404,9 +403,9 @@ public class CEServer extends JFrame implements Serializable {
 					if (temp instanceof EditPacket) {
 						EditPacket readPacket = (EditPacket) temp;
 						// Executes the packet
-						readPacket.execute(masterList);
-						masterList.getList().get(readPacket.getDocID() - 1).setRevision(readPacket.getRev());
+						readPacket.execute(masterList);					
 						readPacket.setMaster(masterList);
+						masterList.getList().get(readPacket.getDocID() - 1).getRevisions().addRevision(readPacket);
 						for (ObjectOutputStream OPtemp : outputs.values()) {
 							OPtemp.reset();
 							OPtemp.writeObject(readPacket);
@@ -432,10 +431,10 @@ public class CEServer extends JFrame implements Serializable {
 						DocumentAssistant tempV = masterList;
 						masterList = newPacket.execute(tempV);
 						RevisionAssistant newDocRev = new RevisionAssistant();
-						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), newPacket.getName(), newDocRev);
-						masterList.getList().get(newEdit.getDocID() - 1).setRevision(newEdit.getRev());
+						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), newPacket.getName());
 						newEdit.setDocName(newPacket.getName());
 						newEdit.setMaster(masterList);
+						masterList.getList().get(newEdit.getDocID() - 1).getRevisions().addRevision(newEdit);
 						clientOutputStream.reset();
 						clientOutputStream.writeObject(newPacket);
 				

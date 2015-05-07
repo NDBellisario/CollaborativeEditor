@@ -1,7 +1,11 @@
 package model;
 import java.io.*;
 import java.util.*;
-
+/**
+ * 
+ * @author Nicholas,Omri,Cameron,Taylor,Eric
+ * Contains an List of all edits and users in editing of document
+ */
 public class EditAssistant extends Observable {
     private ArrayList<User> theData;
     private User currUser;
@@ -72,7 +76,11 @@ public class EditAssistant extends Observable {
     public void undoText() {
 
     }
-
+/**
+ * Get's the User class from the list of editors
+ * @param name
+ * @return User who is editing document 
+ */
     public User getUser(String name) {
         User toReturn = null;
         for (User user : theData) {

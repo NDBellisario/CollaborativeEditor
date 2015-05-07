@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.util.*;
 /**
  * @class DocumentView
- * @author NDBellisario
+ * @author Nicholas,Omri,Cameron,Taylor,Eric Team Amphetamine Salts 
  * Holds and displays current iteration of document from server and allows for interation between document
  */
 public class DocumentView extends JPanel {
@@ -21,7 +21,10 @@ public class DocumentView extends JPanel {
 	private JFrame frame;
 	private CEController theCaller;
 	ArrayList<Doc> ourDocs;
-
+/**
+ * Constructor for DocumentView 
+ * @param arg - CEController
+ */
 	public DocumentView(CEController arg) {
 		frame = new JFrame();
 		theCaller = arg;
@@ -44,7 +47,10 @@ public class DocumentView extends JPanel {
 		frame.setResizable(true);
 		frame.pack();
 	}
-
+/**
+ * Update List of documents that are available to edit 
+ * @param theLists
+ */
 	public void updateList(ArrayList<Doc> theLists) {
 
 
@@ -67,10 +73,18 @@ public class DocumentView extends JPanel {
 
 
 	}
+	/**
+	 * Returns an ArrayList of all Documents 
+	 * @return ArrayList - [Documents] 
+	 */
 	public ArrayList<Doc> getDocs(){
 		return ourDocs;
 	}
-
+/**
+ * @class SelectDocumentListener
+ * @author NDBellisario
+ * Selects current document in view for editing 
+ */
 	private class SelectDocumentListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 

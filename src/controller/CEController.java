@@ -31,7 +31,8 @@ import java.util.List;
 /**
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  * 
- * @Class This class deals with the client connecting to the server via a
+ * @Class CEController
+ * This class deals with the client connecting to the server via a
  *        username and password (which is checked against registered users. Also
  *        sends/recieves packets when the user performs an action on the
  *        document
@@ -321,8 +322,8 @@ public class CEController extends JFrame implements Serializable {
 		chatView.UpdateRevisionPanel(rev);
 	}
 	/**
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts Exports
-	 *         files to HTML Format for later use
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts 
+	 * Exports files to HTML Format for later use
 	 */
 	private class ExportListener implements ActionListener {
 
@@ -410,12 +411,6 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-	 * <<<<<<< Updated upstream
-	 * 
-	 * @class listens for creation of new document
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *
-	 *         =======
 	 * @class NewDocumentListener
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts listens
 	 *         for creation of new document >>>>>>> Stashed changes
@@ -439,13 +434,10 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-	 * <<<<<<< Updated upstream
-	 * 
-	 * @class Saves local copy of Document for further use
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts =======
-	 * @class SaveLocalListener Saves local copy of Document for further use
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts >>>>>>>
-	 *         Stashed changes
+
+	 * @class SaveLocalListener 
+	 * Saves local copy of Document for further use
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
 	private class SaveLocalListener implements ActionListener {
@@ -482,17 +474,13 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 
-	/**
-	 * @class Shows current version of the document
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *
-	 */
 
-	/**
-	 * @class VersionListener Shows current version of the document
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *
-	 */
+/**
+ * @class VersionListener 
+ * Shows current version of the document
+ * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ *
+ */
 
 	private class VersionListener implements ActionListener {
 		@Override
@@ -501,11 +489,7 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-	 * <<<<<<< Updated upstream Add's User to document for editing
-	 * 
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *
-	 *         ======= Add's User to document for editing
+
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @class AddUserListener >>>>>>> Stashed changes
 	 */
@@ -516,13 +500,9 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-	 * Removes user from document for edition permision <<<<<<< Updated upstream
-	 * 
+	 * Removes user from document for edition permision 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *
-	 *         =======
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @Class RemoveUserListener >>>>>>> Stashed changes
+	 * @Class RemoveUserListener 
 	 */
 	private class RemoveUserListener implements ActionListener {
 		@Override
@@ -531,19 +511,14 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 
-	/**
-	 * opens permission window to set user's permissions for editting
-	 * 
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *
-	 */
 
-	/**
-	 * opens permission window to set user's permissions for editting
-	 * 
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @class PermissionListener
-	 */
+
+/**
+ * opens permission window to set user's permissions for editting
+ * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ * @class PermissionListener
+ */
+
 
 	private class PermissionListener implements ActionListener {
 		@Override
@@ -552,19 +527,13 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 
-	/**
-	 * Change's Users PW
-	 * 
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *
-	 */
 
-	/**
-	 * Change's Users PW
-	 * 
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @class ChangePWListener
-	 */
+
+/**
+ * Change's Users PW
+ * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ * @class ChangePWListener
+ */
 
 	private class ChangePWListener implements ActionListener {
 		@Override
@@ -611,10 +580,9 @@ public class CEController extends JFrame implements Serializable {
 
 	}
 	/**
-	 * Sets currentdocument to the selected one from the Doc window
+	 * Sets current document to the selected one from the Doc window
 	 * 
-	 * @param toSet
-	 *            Document number for selection
+	 * @param toSet Document number for selection
 	 */
 	public void setCurrentSelectedDoc(int toSet) {
 		currentSelectedDoc = toSet;

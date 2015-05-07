@@ -100,6 +100,7 @@ public class EditPacket implements Serializable {
 		if ((newText.equals(temp.getList().get(docID - 1).getDocContents()) && !newText.equals("null"))) {
 			temp.getList().get(docID - 1).setDocContents((temp.getList().get(docID - 1).getDocContents()));
 			setDocName(temp.getList().get(docID - 1).getDocName());
+			temp.getList().get(docID - 1).setDocContents(newText);
 			setMaster(temp);
 
 		} else {

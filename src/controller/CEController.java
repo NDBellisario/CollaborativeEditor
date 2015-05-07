@@ -19,11 +19,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.List;
 
-/** @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+/**
+ * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  * 
- * @Class This class deals with the client connecting to the server via a 
- * username and password (which is checked against registered users.
- * Also sends/recieves packets when the user performs an action on the document
+ * @Class This class deals with the client connecting to the server via a
+ *        username and password (which is checked against registered users. Also
+ *        sends/recieves packets when the user performs an action on the
+ *        document
  * 
  */
 
@@ -47,7 +49,7 @@ public class CEController extends JFrame implements Serializable {
 	private Thread serverrevthread;
 	private DocumentAssistant clientAllMaster;
 	private boolean updateDocs;
-	
+
 	/**
 	 * Constructor for CEController builds and calls all initializing methods
 	 */
@@ -58,18 +60,19 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * Starts CEController at initial runtime
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		new CEController();
 	}
-	
+
 	public void test() {
 
 	}
 	/**
 	 * Creates user's model classes and instantiates them for uses
-	 */   
+	 */
 	private void initUserModels() {
 		// Setting up hashing
 
@@ -175,10 +178,10 @@ public class CEController extends JFrame implements Serializable {
 			clientAllMaster = usrPacket.getML();
 			if (clientAllMaster.getList().size() == 0) {
 				updateDocs = false;
-				//System.out.println("Initial value was false");
+				// System.out.println("Initial value was false");
 			} else {
 				updateDocs = true;
-				//System.out.println("Initial value was true");
+				// System.out.println("Initial value was true");
 			}
 
 			List<String> toSet = temp.getChats();
@@ -202,7 +205,7 @@ public class CEController extends JFrame implements Serializable {
 	}
 
 	/**
-	 *  Setups the GUI for user to interact with
+	 * Setups the GUI for user to interact with
 	 */
 	private void setupGui() {
 		// Permissions Pop up
@@ -223,7 +226,7 @@ public class CEController extends JFrame implements Serializable {
 		JMenuItem removeUser = new JMenuItem("Remove User");
 		JMenuItem changePermission = new JMenuItem("Permissions Options");
 		JMenuItem export = new JMenuItem("Export to HTML");
-		
+
 		this.setTitle("Collaborative Editor");
 		// Adding action listeners for File
 		quitOption.addActionListener(new ExitListener());
@@ -255,7 +258,7 @@ public class CEController extends JFrame implements Serializable {
 		fileContainer.add(saveLocal);
 		fileContainer.add(export);
 		fileContainer.add(quitOption);
-		
+
 		// editContainer sub menu buttons
 		editContainer.add(undo);
 		editContainer.add(redo);
@@ -269,7 +272,7 @@ public class CEController extends JFrame implements Serializable {
 		// Add menu bar
 		this.setJMenuBar(menuBarCore);
 		// Add ChatView
-		//RevisionAssistant 
+		// RevisionAssistant
 		chatView = new ChatView(mainUser, outputStrm, new RevisionAssistant());
 
 		editView = new EditView(mainUser, new ArrayList<Doc>());
@@ -290,37 +293,41 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * updates chat view with current messages from Server
-	 * @param allMessages All message from start of Server
+	 * 
+	 * @param allMessages
+	 *            All message from start of Server
 	 */
 	public void updateChat(List<String> allMessages) {
 
 		chatView.updateChatPanel(allMessages);
 	}
- /**
-  * Updates Revision view with current revisions from Server 
-  * @param rev all revision from the document
-  */
+	/**
+	 * Updates Revision view with current revisions from Server
+	 * 
+	 * @param rev
+	 *            all revision from the document
+	 */
 	public void updateRevisionsView(RevisionAssistant rev) {
 
 		chatView.UpdateRevisionPanel(rev);
 	}
 	/**
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * Exports files to HTML Format for later use 
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts Exports
+	 *         files to HTML Format for later use
 	 */
-	private class ExportListener implements ActionListener{
+	private class ExportListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
 	/**
 	 * 
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *@class listens for Exit button to be clicked and starts closing methods
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @class listens for Exit button to be clicked and starts closing methods
 	 */
 	// Listener Private Classes
 	private class ExitListener implements ActionListener {
@@ -331,7 +338,7 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * 
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @class Saves current document on server
 	 */
 	private class SaveListener implements ActionListener {
@@ -342,7 +349,7 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * @class listens for creation of new document
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
 	private class NewDocumentListener implements ActionListener {
@@ -365,7 +372,7 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * @class Saves local copy of Document for further use
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
 	private class SaveLocalListener implements ActionListener {
@@ -376,7 +383,7 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * @class activates Undo
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
 	private class UndoListener implements ActionListener {
@@ -386,8 +393,8 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-	 * @class Activates Redo 
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @class Activates Redo
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
 	private class RedoListener implements ActionListener {
@@ -396,11 +403,11 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
-/**
- * @class Shows current version of the document
- * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
- *
- */
+	/**
+	 * @class Shows current version of the document
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *
+	 */
 	private class VersionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -408,8 +415,9 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-	 * Add's User to document for editing 
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * Add's User to document for editing
+	 * 
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
 	private class AddUserListener implements ActionListener {
@@ -420,7 +428,8 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * Removes user from document for edition permision
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * 
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
 	private class RemoveUserListener implements ActionListener {
@@ -429,22 +438,24 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
-/**
- * opens permission window to set user's permissions for editting
- * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
- *
- */
+	/**
+	 * opens permission window to set user's permissions for editting
+	 * 
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *
+	 */
 	private class PermissionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
-/**
- * Change's Users PW
- * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
- *
- */
+	/**
+	 * Change's Users PW
+	 * 
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *
+	 */
 	private class ChangePWListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -490,7 +501,9 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * Sets currentdocument to the selected one from the Doc window
-	 * @param toSet Document number for selection
+	 * 
+	 * @param toSet
+	 *            Document number for selection
 	 */
 	public void setCurrentSelectedDoc(int toSet) {
 		currentSelectedDoc = toSet;
@@ -514,17 +527,29 @@ public class CEController extends JFrame implements Serializable {
 
 	/* This Deals With Updating Out Docs! */
 	/**
-	 * open the Selection for documents doc and updates based on which document you wish to edit
+	 * open the Selection for documents doc and updates based on which document
+	 * you wish to edit
+	 * 
 	 * @author NDBellisario
 	 *
 	 */
 	private class DocSelectView implements Runnable {
 		/**
 		 * Constructs document view
-		 * @param arg Controller you with to view from
+		 * 
+		 * @param arg
+		 *            Controller you with to view from
 		 */
 		public DocSelectView(CEController arg) {
 			clientDocumentView = new DocumentView(arg);
+
+		}
+		private class ExportListener implements ActionListener {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
 
 		}
 
@@ -535,17 +560,19 @@ public class CEController extends JFrame implements Serializable {
 		public void run() {
 			while (true) {
 				if (updateDocs) {
-					//System.out.println("Inside update docs " + updateDocs);
+					// System.out.println("Inside update docs " + updateDocs);
 
 					ArrayList<Doc> toPass = new ArrayList<Doc>();
 					ArrayList<Doc> cheapLock = clientAllMaster.getList();
 					// System.out.println(clientAllMaster.getList().size() +
 					// "  "+ currentSelectedDoc);
 					for (int i = 0; i < cheapLock.size(); i++) {
-						//System.out.println("Running update on " + cheapLock.size());
+						// System.out.println("Running update on " +
+						// cheapLock.size());
 						if (cheapLock.get(i).canView((mainUser))) {
 							toPass.add(cheapLock.get(i));
-							//System.out.println("topass size " + toPass.size());
+							// System.out.println("topass size " +
+							// toPass.size());
 						}
 					}
 
@@ -573,7 +600,8 @@ public class CEController extends JFrame implements Serializable {
 	}
 
 	/**
-	 * Once connection is set up, this deals writing out updates 
+	 * Once connection is set up, this deals writing out updates
+	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * */
 	private class ServerRevisionWrite implements Runnable {
@@ -619,10 +647,11 @@ public class CEController extends JFrame implements Serializable {
 	}
 
 	/**
-	 *  This class will get new revisions and update GUI
-	 *  @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 *  @Class ServerCommunicator 
-	 *   */
+	 * This class will get new revisions and update GUI
+	 * 
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @Class ServerCommunicator
+	 * */
 	private class ServerCommunicator implements Runnable {
 		@Override
 		public void run() {
@@ -654,7 +683,8 @@ public class CEController extends JFrame implements Serializable {
 							editView.setText(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents(), newPacket.getStyle());
 						}
 
-						//System.out.println("The packet we just got " + updateDocs);
+						// System.out.println("The packet we just got " +
+						// updateDocs);
 
 					} else if (unknown instanceof ChatPacket) {
 						@SuppressWarnings("unchecked")

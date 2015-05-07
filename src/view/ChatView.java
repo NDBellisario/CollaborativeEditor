@@ -195,7 +195,12 @@ public class ChatView extends JPanel implements Serializable{
     	
     }
     
-
+/**
+ * 
+ * @author  Nicholas,Omri,Cameron,Taylor,Eric
+ * @class loadRevisionListener
+ * triggers when revisions loader button is pressed 
+ */
     
     private class loadRevisionListener implements ActionListener {
         public void actionPerformed(ActionEvent arg0) {

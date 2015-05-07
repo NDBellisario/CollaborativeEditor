@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 /**
  * Recover Packet 
- * @author NDBellisario
+ * @author Nicholas,Omri,Cameron,Taylor,Eric
  *Recovers the User's information if lost
  */
 public class RecoverPacket implements Serializable {

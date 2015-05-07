@@ -27,7 +27,8 @@ import java.util.*;
 /**
  * 
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
- * @class CEServer the main Class controls and distributes all documents, revisions, and users 
+ * @class CEServer 
+ * the main Class controls and distributes all documents, revisions, and users 
  * currently connected to the server. It can kick certain users from the server as well.
  * overall it Controls and saves documents for all users to easily Access
  */
@@ -241,7 +242,8 @@ public class CEServer extends JFrame implements Serializable {
 /**
  * 
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
- * @Class ClientAccept start up upon a new client being connected 
+ * @Class ClientAccepter 
+ * start up upon a new client being connected 
  * while accepting and creating the connect to the new client before 
  * sending of the input and output stream information to the ClientFirstContact
  */
@@ -268,7 +270,8 @@ public class CEServer extends JFrame implements Serializable {
 
 	/**
 	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @Class This gets out input/output stream Reads in a login packed containing
+	 * @Class ClientFirstContact
+	 * This gets out input/output stream Reads in a login packed containing
 	 * username and password Executes and gets a boolean. True means we are
 	 * good, false means no If true, update list on server side and spawn an
 	 * edit and chat thread If false, let the client know so they can fix it.
@@ -291,6 +294,7 @@ public class CEServer extends JFrame implements Serializable {
 		@Override
 		/**
 		 * Beings Client First Contact to accept packets about who the connecting client is
+		 * 
 		 */
 		public void run() {
 			try {
@@ -351,9 +355,7 @@ public class CEServer extends JFrame implements Serializable {
 			}
 		}
 
-		/*
-		 * Let's the server know we have a new Client
-		 */
+		
 		/**
 		 * Initializes client with new user information and add's them to a list of current users
 		 */
@@ -366,13 +368,11 @@ public class CEServer extends JFrame implements Serializable {
 
 	/**
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @Class This is actually what deals with communicating with the Client for
+	 * @Class ClientHandler
+	 * This is actually what deals with communicating with the Client for
 	 * updates! handles all incoming packets
 	 */
 	private class ClientHandler implements Runnable, Serializable {
-		/**
-         *
-         */
 		private static final long serialVersionUID = 1L;
 		private ObjectInputStream clientInputStream;
 		private ObjectOutputStream clientOutputStream;

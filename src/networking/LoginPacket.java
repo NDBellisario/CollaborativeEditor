@@ -24,11 +24,17 @@ public class LoginPacket implements Serializable {
         this.userName = uname;
         this.password = pw;
     }
-
+/**
+ * String getName returns Name of User
+ * @return getName - String 
+ */
     public String getName() {
         return userName;
     }
-
+/**
+ * getPassword get 
+ * @return
+ */
     public byte[] getPassword() {
         return password;
     }

@@ -12,8 +12,9 @@ import java.awt.event.*;
 import java.io.Serializable;
 import java.util.*;
 
-/*
- * Written by Taylor Cox
+/**
+ * @author Nicholas,Omri,Cameron,Taylor,Eric Team Amphetamine Salts 
+ * @Class ServerView
  * This is the server view
  * 
  * Essentially instead of annoying popups, all the server's
@@ -31,7 +32,7 @@ public class ServerView extends JFrame implements Serializable {
     private JList<String> currentUsersTemp;
     
 
-    /*
+    /**
      * This sets up the menu, and out blank document before asking for a port to
      * use
      */
@@ -45,7 +46,7 @@ public class ServerView extends JFrame implements Serializable {
 
     }
 
-    /*
+    /**
      * This means our server was successfully able to start up, so now we can
      * set up all of the view and controls
      */
@@ -57,7 +58,7 @@ public class ServerView extends JFrame implements Serializable {
         setPref();
     }
 
-    /*
+    /**
      * This tells a user that the port they gave was bad and defaults to one to
      * use
      */
@@ -66,14 +67,14 @@ public class ServerView extends JFrame implements Serializable {
         portNumber = "9002";
     }
 
-    /*
-     * This occurs when a user connects TODO: Make it say their actual name.
+    /**
+     * This occurs when a user connects
      */
     public void userConnect() {
         //JOptionPane.showMessageDialog(this, "User Connected!");
     }
 
-    /*
+    /**
      * This lays out the display of the server GUI
      */
     public void setPref() {
@@ -97,8 +98,8 @@ public class ServerView extends JFrame implements Serializable {
     
     
 
-    /*
-     * Menu settings TODO: Make more and make them work
+    /**
+     * Menu settings
      */
     public void setUpMenu() {
 
@@ -124,7 +125,7 @@ public class ServerView extends JFrame implements Serializable {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    /*
+    /**
      * This sets up the info of who is on our server!
      */
     public void setUpStats() {
@@ -175,7 +176,7 @@ public class ServerView extends JFrame implements Serializable {
 
     }
 
-    /*
+    /**
      * How the CEServer gets the port
      */
     public int getPortNumber() {
@@ -188,7 +189,7 @@ public class ServerView extends JFrame implements Serializable {
 
     }
 
-    /*
+    /**
      * Called when a new client is connected
      */
     public void updateClients(ArrayList<String> activeUsers) {
@@ -198,7 +199,11 @@ public class ServerView extends JFrame implements Serializable {
     }
  
 
-    // quits Server connection
+    /** 
+     * @class QuitActionListenr
+     * @authorNicholas,Omri,Cameron,Taylor,Eric Team Amphetamine Salts 
+     * Stops Server when press
+     */
     private class QuitActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent arg0) {
@@ -209,7 +214,11 @@ public class ServerView extends JFrame implements Serializable {
         }
 
     }
-
+/**
+ * @Class ButtonListener
+ * @author NDBellisario
+ * listens for Button presses and then actives methods based on events given 
+ */
     private class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent arg0) {
             String s = ((JButton) arg0.getSource()).getText();
@@ -243,7 +252,11 @@ public class ServerView extends JFrame implements Serializable {
             }
         }
     }
-
+/**
+ * @Class SaveActionsListenr
+ * @author NDBellisario
+ * Save's the current server preferences for later use
+ */
     private class SaveActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {

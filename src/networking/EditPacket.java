@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-<<<<<<< Updated upstream
+
 import javax.swing.text.StyledDocument;
 
 
@@ -37,16 +37,15 @@ public class EditPacket implements Serializable {
 	private RevisionAssistant revAssist;
 	private Date createdOn;
 	private Long mili;
-<<<<<<< Updated upstream
+
 	private StyledDocument packetStyle;
-=======
+
 	/**
 	 * Constructor
 	 * @param editView current Edit view
 	 * @param arg current User 
 	 * @param argID document ID
-	 */
->>>>>>> Stashed changes
+*/
 	public EditPacket(EditView editView, User arg, int argID) {
 		packetStyle = null;
 		if (editView == null) {

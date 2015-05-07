@@ -27,12 +27,19 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
+<<<<<<< HEAD
 /**
  * @class EditView
  * @author Nicholas,Omri,Cameron,Taylor,Eric
  * Controls and contains all information on EditView
  */
+=======
+
+>>>>>>> parent of 35c5de4... change
 public class EditView extends JPanel implements Serializable {
+	/**
+     *
+     */
 	private static final long serialVersionUID = 1L;
 	private JPanel formatPanel;
 	private JTextPane textBox;
@@ -72,11 +79,7 @@ public class EditView extends JPanel implements Serializable {
 	private JList<Annotation> scrollAnnoList;
 	private DefaultListModel<Annotation> userList;
 	private ArrayList<Annotation> annotationList = new ArrayList<Annotation>();
-/**
- * Constructor
- * @param userArg
- * @param theD
- */
+
 	public EditView(User userArg, ArrayList<Doc> theD) {
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(700, 600));
@@ -138,10 +141,7 @@ public class EditView extends JPanel implements Serializable {
 		this.add(currentDocLabel, BorderLayout.NORTH);
 
 	}
-/**
- * Changes document to different one of choice
- * @param argName
- */
+
 	public void changeDoc(String argName) {
 		currentDocLabel.setText(argName);
 		repaint();
@@ -149,32 +149,18 @@ public class EditView extends JPanel implements Serializable {
 		// BorderLayout.NORTH);
 		// repaint();
 	}
-/**
- * Returns the title of document name
- * @return String - Doc Title
- */
+
 	public String getDocName() {
 		return currentDocLabel.getText();
 	}
-	/**
-	 * returns the current values of Textpane
-	 * @return JTextPane
-	 */
 	public JTextPane getPane(){
 		return textBox;
 	}
-/**
- * Changes the permission values 
- * @param arg
- */
+
 	public void changePermission(int arg) {
 		permission = arg;
 	}
 
-	/**
-	 * formats the entire JPanel
-	 * @return JPanel
-	 */
 	private JPanel formatPanel() {
 		JPanel formats = new JPanel();
 		formats.setLayout(new GridLayout(12, 1));
@@ -275,18 +261,11 @@ public class EditView extends JPanel implements Serializable {
 	 * 
 	 * }
 	 */
-/**
- * gets the text inside of the text box and returns them as a string 
- * @return String
- */
+
 	public String getText() {
 		return textBox.getText();
 	}
-/**
- * Set's current text values of the text box 
- * @param s -String 
- * @param style - Document Style
- */
+
 	public void setText(final String s, StyledDocument style) {
 		int oldLen = textBox.getCaretPosition();
 		textBox.setText(s);
@@ -300,12 +279,7 @@ public class EditView extends JPanel implements Serializable {
 			textBox.setCaretPosition(textBox.getDocument().getLength());
 		}
 	}
-/**
- * 
- * @author  Nicholas,Omri,Cameron,Taylor,Eric Team Amphetamine Salts 
- * @class FormatListener
- * Controls formating for Text
- */
+
 	public class formatListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -376,9 +350,6 @@ public class EditView extends JPanel implements Serializable {
 	 * } else { MutableAttributeSet attrs = textBox.getInputAttributes();
 	 * StyleConstants.setBold(attrs, true); } }
 	 */
-	/**
-	 * makes text selected Italic
-	 */
 	public void makeItal() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
@@ -390,19 +361,13 @@ public class EditView extends JPanel implements Serializable {
 		}
 
 	}
-/**
- * Get's style information from current sheet
- * @return Document
- */
+
 	public Document getStyle(){
 		return textBox.getStyledDocument();
 	}
 
-/**
- * updates font style
- * 
- * 
- */
+
+
 	public void updateFont() {
 		fontStyle = textBox.addStyle("font", null);
 		StyleConstants.setFontFamily(fontStyle, fonts.getSelectedItem()
@@ -417,10 +382,7 @@ public class EditView extends JPanel implements Serializable {
 					.toString());
 		}
 	}
-	
-/**
- * updates Font Size
- */
+
 	public void updateFontSize() {
 		sizeStyle = textBox.addStyle("size", null);
 		StyleConstants.setFontSize(sizeStyle,
@@ -435,9 +397,7 @@ public class EditView extends JPanel implements Serializable {
 					(fSize.getSelectedIndex() + 2) * 7);
 		}
 	}
-/**
- * Changes/types select text in underline format
- */
+
 	public void makeUnderline() {
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();
@@ -468,9 +428,6 @@ public class EditView extends JPanel implements Serializable {
 	 * } else { StyleContext context = new StyleContext(); Style style =
 	 * textBox.getStyle(context.DEFAULT_STYLE);
 	 * StyleConstants.setAlignment(style, StyleConstants.ALIGN_RIGHT); } }
-	 */
-	/**
-	 * Creates an Annotation for the selected Text
 	 */
 	public void createAnnotation() {
 
@@ -504,28 +461,16 @@ public class EditView extends JPanel implements Serializable {
 
 	}
 	}
-/**
- * @class Annotation
- * @author Nicholas,Omri,Cameron,Taylor,Eric
- * 
- * contains select Annotation values
- */
+
 	public class Annotation {
 		private String annotation;
 		private String title;
 
-		/**
-		 * Annotation Constructor
-		 * @param highlighted
-		 * @param comment
-		 */
 		public Annotation(String highlighted, String comment) {
 			annotation = comment;
 			title = highlighted;
 		}
-		/**
-		 * return the String format of the annotation for display.
-		 */
+
 		public String toString() {
 			String toReturn = "Annotation For " + title;
 			toReturn += "\n" + annotation;

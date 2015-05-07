@@ -19,6 +19,7 @@ import java.util.*;
 <<<<<<< HEAD
  * 
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+<<<<<<< HEAD
  * @class CEServer
 <<<<<<< HEAD
 =======
@@ -26,6 +27,9 @@ import java.util.*;
 >>>>>>> b923dd5bc12b63b5ce232e893e37607b8e696ea7
 >>>>>>> aff1495d50a4f00a3a589b17bb8a355582b74dbe
  * the main Class controls and distributes all documents, revisions, and users 
+=======
+ * @class CEServer the main Class controls and distributes all documents, revisions, and users 
+>>>>>>> parent of 35c5de4... change
  * currently connected to the server. It can kick certain users from the server as well.
  * overall it Controls and saves documents for all users to easily Access
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
@@ -240,8 +244,13 @@ public class CEServer extends JFrame implements Serializable {
 	 */
 /**
  * 
+<<<<<<< HEAD
  * 
  * start up upon a new client being connected 
+=======
+ * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ * @Class ClientAccept start up upon a new client being connected 
+>>>>>>> parent of 35c5de4... change
  * while accepting and creating the connect to the new client before 
  * sending of the input and output stream information to the ClientFirstContact
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
@@ -268,9 +277,14 @@ public class CEServer extends JFrame implements Serializable {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * 
 	 * 
 	 * This gets out input/output stream Reads in a login packed containing
+=======
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @Class This gets out input/output stream Reads in a login packed containing
+>>>>>>> parent of 35c5de4... change
 	 * username and password Executes and gets a boolean. True means we are
 	 * good, false means no If true, update list on server side and spawn an
 	 * edit and chat thread If false, let the client know so they can fix it.
@@ -294,7 +308,6 @@ public class CEServer extends JFrame implements Serializable {
 		@Override
 		/**
 		 * Beings Client First Contact to accept packets about who the connecting client is
-		 * 
 		 */
 		public void run() {
 			try {
@@ -355,7 +368,9 @@ public class CEServer extends JFrame implements Serializable {
 			}
 		}
 
-		
+		/*
+		 * Let's the server know we have a new Client
+		 */
 		/**
 		 * Initializes client with new user information and add's them to a list of current users
 		 */
@@ -367,13 +382,21 @@ public class CEServer extends JFrame implements Serializable {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * This is actually what deals with communicating with the Client for
+=======
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @Class This is actually what deals with communicating with the Client for
+>>>>>>> parent of 35c5de4... change
 	 * updates! handles all incoming packets
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * 
 	 * 
 	 */
 	private class ClientHandler implements Runnable, Serializable {
+		/**
+         *
+         */
 		private static final long serialVersionUID = 1L;
 		private ObjectInputStream clientInputStream;
 		private ObjectOutputStream clientOutputStream;

@@ -331,8 +331,9 @@ public class CEController extends JFrame implements Serializable {
 		public void actionPerformed(ActionEvent e) {
 
 			String comment = JOptionPane.showInputDialog("Enter a File Name To Save To As HTML");
+			comment = comment + ".html";
 
-			File toWrite = new File(comment + ".html");
+			File toWrite = new File(comment);
 			String toExport = editView.getText();
 			ObjectOutputStream saveStream;
 			try {

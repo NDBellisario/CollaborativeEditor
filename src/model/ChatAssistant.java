@@ -1,11 +1,6 @@
 package model;
 import java.util.*;
-/**
- *  @author   Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts 
- * 
- *  @class ChatAssistant
- *  Chat assistant Manages the Chat logs and conversation in editor
- */
+
 public class ChatAssistant extends Observable {
     private ArrayList messages;
     private String toSend;

@@ -1,8 +1,7 @@
 package model;
 import java.io.Serializable;
 import java.util.*;
-/** 
- * @class DocumentAssistant
+/**
  * @author Nicholas,Omri,Cameron,Taylor,Eric
  * This class will store all of the server's Doc objects in an ArrayList
  * each Doc has a unique ID number stored as an integer

@@ -95,7 +95,7 @@ public class EditView extends JPanel implements Serializable {
 		// HTMLEditorKit().getContentType(), "");
 		textBox = new JTextPane();
 		//textBox.setContentType("text/html");
-		// textBox.setEditorKit(new HTMLEditorKit());
+		//textBox.setEditorKit(new HTMLEditorKit());
 		// textBox.setText("\"<html><body><p>hey</p><p></p></body></html>\"");
 		textBox.setMargin(new Insets(25, 25, 25, 25));
 

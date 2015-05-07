@@ -6,9 +6,11 @@ import view.DocumentView;
 import view.EditView;
 
 import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -317,13 +319,32 @@ public class CEController extends JFrame implements Serializable {
 	 */
 	private class ExportListener implements ActionListener {
 
-		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+
+			// HTMLDocument doc = new HTMLDocument();
+
+			HTMLEditorKit kit = new HTMLEditorKit();
+
+			String comment = JOptionPane.showInputDialog("Enter a filename");
+
+			File f = new File(comment + ".html");
+
+			ArrayList<Doc> temp = clientAllMaster.getList();
+
+			for (Doc doc : temp) {
+
+				if (doc.getDocName().equals(comment)) {
+
+					doc.getDocContents();
+
+				}
+
+			}
 
 		}
 
 	}
+
 	/**
 	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts

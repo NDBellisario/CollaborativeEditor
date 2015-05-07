@@ -29,11 +29,20 @@ public class UserAssistant implements Serializable {
         //notifyObservers();
     }
 
-
+    /**
+     * Call getUser and returns a specific User
+     * @param identificationNumber
+     * @return User instance from list
+     */
     public User getUser(int identificationNumber) {
     	return userList.get(identificationNumber - 1);
     }
-
+    
+    /**
+     * get's User based on name rather and ID number
+     * @param username
+     * @return User instance from list
+     */
     public User getUser(String username) {
         for (User user : userList) {
             if (user.getUserName().equalsIgnoreCase(username)) {
@@ -44,7 +53,10 @@ public class UserAssistant implements Serializable {
         return null;
     }
 
-
+    /**
+     * Returns entire list of User's inside
+     * @return returns and Arraylist of users
+     */
     public ArrayList<User> getUsers() {
         return userList;
     }

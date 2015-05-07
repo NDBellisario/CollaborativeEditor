@@ -12,8 +12,18 @@ import java.util.List;
 
 //import model.AddMessageCommand;
 //import view.ChatPanel.EnterListener;
+<<<<<<< Updated upstream
 
 public class ChatView extends JPanel implements Serializable{
+=======
+/**
+ * Chat View 
+ * @author NDBellisario
+ * Main view or Chat and Revision panel for displaying current
+ * revisions to user and as well the current message in the chat 
+ */
+public class ChatView extends JPanel{
+>>>>>>> Stashed changes
     /**
 	 * 
 	 */
@@ -40,7 +50,12 @@ public class ChatView extends JPanel implements Serializable{
     private DefaultListModel<String> displayofRevisions;
 
     private ObjectOutputStream output;
-
+/**
+ * Constructor for panel 
+ * @param user - User
+ * @param outputSet - ObjectOutputStream
+ * @param newRev - RevisionAssistant 
+ */
     public ChatView(User user, ObjectOutputStream outputSet, RevisionAssistant newRev) {
  
         this.username = user.getUserName();
@@ -120,6 +135,10 @@ public class ChatView extends JPanel implements Serializable{
        // this.add(new JLabel("Chat", SwingConstants.CENTER), BorderLayout.NORTH);
     }
 
+    /**
+     * Grab's new message, Creates chat packet and sends message to server 
+     * @param text2Send
+     */
     public void ServerChatWrite(String text2Send) {
 
         ChatPacket message = new ChatPacket(text2Send);
@@ -130,7 +149,10 @@ public class ChatView extends JPanel implements Serializable{
             e.printStackTrace();
         }
     }
-
+/**
+ * Updates chat panel for user to see latest message
+ * @param arg
+ */
     public void updateChatPanel(List<String> arg) {
         String s = "";
         for (String message : arg)
@@ -143,6 +165,11 @@ public class ChatView extends JPanel implements Serializable{
 
     //Action listener class to update the chat conversation
     //when a user clicks send.
+    /**
+     * @class ChatSendListener 
+     * @author Nicholas,Omri,Cameron,Taylor,Eric
+     * Listens for new messages from the server then updates accordingly
+     */
     private class chatSendListener implements ActionListener {
         public void actionPerformed(ActionEvent arg0) {
             String s = textField.getText();
@@ -154,6 +181,10 @@ public class ChatView extends JPanel implements Serializable{
 
         }
     }
+    /**
+     * UpdateRevisionPanel with new information as it arrives 
+     * @param rev - RevisionAssitant
+     */
     public void UpdateRevisionPanel(RevisionAssistant rev){
     	revView = rev;
     	displayofRevisions.clear();

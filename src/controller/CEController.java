@@ -326,8 +326,14 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * 
+<<<<<<< Updated upstream
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @class listens for Exit button to be clicked and starts closing methods
+=======
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @class  ExitListener
+	 *listens for Exit button to be clicked and starts closing methods
+>>>>>>> Stashed changes
 	 */
 	// Listener Private Classes
 	private class ExitListener implements ActionListener {
@@ -338,8 +344,14 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * 
+<<<<<<< Updated upstream
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @class Saves current document on server
+=======
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @class SaveListener
+	 * Saves current document on server
+>>>>>>> Stashed changes
 	 */
 	private class SaveListener implements ActionListener {
 		@Override
@@ -348,9 +360,15 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
+<<<<<<< Updated upstream
 	 * @class listens for creation of new document
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
+=======
+	 * @class NewDocumentListener
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *listens for creation of new document
+>>>>>>> Stashed changes
 	 */
 	private class NewDocumentListener implements ActionListener {
 
@@ -371,8 +389,14 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
+<<<<<<< Updated upstream
 	 * @class Saves local copy of Document for further use
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+=======
+	 * @class SaveLocalListener 
+	 * Saves local copy of Document for further use
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+>>>>>>> Stashed changes
 	 *
 	 */
 	private class SaveLocalListener implements ActionListener {
@@ -382,8 +406,14 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
+<<<<<<< Updated upstream
 	 * @class activates Undo
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+=======
+	 * @class UndoListener
+	 * activates Undo
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+>>>>>>> Stashed changes
 	 *
 	 */
 	private class UndoListener implements ActionListener {
@@ -403,11 +433,20 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
+<<<<<<< Updated upstream
 	/**
 	 * @class Shows current version of the document
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
+=======
+/**
+ * @class VersionListener 
+ * Shows current version of the document
+ * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ *
+ */
+>>>>>>> Stashed changes
 	private class VersionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -415,10 +454,16 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
+<<<<<<< Updated upstream
 	 * Add's User to document for editing
 	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
+=======
+	 * Add's User to document for editing 
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @class AddUserListener
+>>>>>>> Stashed changes
 	 */
 	private class AddUserListener implements ActionListener {
 		@Override
@@ -428,9 +473,14 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * Removes user from document for edition permision
+<<<<<<< Updated upstream
 	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
+=======
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @Class RemoveUserListener
+>>>>>>> Stashed changes
 	 */
 	private class RemoveUserListener implements ActionListener {
 		@Override
@@ -438,24 +488,40 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
+<<<<<<< Updated upstream
 	/**
 	 * opens permission window to set user's permissions for editting
 	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
+=======
+/**
+ * opens permission window to set user's permissions for editting
+ * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ * @class PermissionListener
+ */
+>>>>>>> Stashed changes
 	private class PermissionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
+<<<<<<< Updated upstream
 	/**
 	 * Change's Users PW
 	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
+=======
+/**
+ * Change's Users PW
+ * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ * @class ChangePWListener
+ */
+>>>>>>> Stashed changes
 	private class ChangePWListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -476,6 +542,7 @@ public class CEController extends JFrame implements Serializable {
 
 	/**
 	 * Logout is called when User is kicked from server
+	 * 
 	 */
 	public void logout() {
 		JOptionPane.showMessageDialog(this, "Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
@@ -603,6 +670,7 @@ public class CEController extends JFrame implements Serializable {
 	 * Once connection is set up, this deals writing out updates
 	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @class ServerRevisionWrite
 	 * */
 	private class ServerRevisionWrite implements Runnable {
 		/**

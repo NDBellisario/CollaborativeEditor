@@ -14,23 +14,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-/* Test Username: cat Password = meow */
-/*
- * Written By Taylor Cox
- * 
- * This class handles several things.
- * 1: Connecting to the server
- * 2. Account Login/Creation/Recovery
- * 3. Communication to the server for text/chat updates
- * 
- */
+
 /**
+<<<<<<< HEAD
  * 
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  * @class CEServer
+=======
+>>>>>>> b923dd5bc12b63b5ce232e893e37607b8e696ea7
  * the main Class controls and distributes all documents, revisions, and users 
  * currently connected to the server. It can kick certain users from the server as well.
  * overall it Controls and saves documents for all users to easily Access
+ * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ * @class CEServer
  */
 public class CEServer extends JFrame implements Serializable {
 	/*
@@ -241,11 +237,11 @@ public class CEServer extends JFrame implements Serializable {
 	 */
 /**
  * 
- * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
- * @Class ClientAccepter 
+ * 
  * start up upon a new client being connected 
  * while accepting and creating the connect to the new client before 
  * sending of the input and output stream information to the ClientFirstContact
+ * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  */
 	private class ClientAccepter implements Runnable {
 		@Override
@@ -269,12 +265,13 @@ public class CEServer extends JFrame implements Serializable {
 	}
 
 	/**
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @Class ClientFirstContact
+	 * 
+	 * 
 	 * This gets out input/output stream Reads in a login packed containing
 	 * username and password Executes and gets a boolean. True means we are
 	 * good, false means no If true, update list on server side and spawn an
 	 * edit and chat thread If false, let the client know so they can fix it.
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 */
 
 	private class ClientFirstContact implements Runnable {
@@ -367,10 +364,11 @@ public class CEServer extends JFrame implements Serializable {
 	}
 
 	/**
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @Class ClientHandler
 	 * This is actually what deals with communicating with the Client for
 	 * updates! handles all incoming packets
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * 
+	 * 
 	 */
 	private class ClientHandler implements Runnable, Serializable {
 		private static final long serialVersionUID = 1L;

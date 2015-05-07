@@ -49,10 +49,6 @@ public class Doc implements Serializable {
 	 * Sets current Revision set for this Document
 	 * @param arg List of Revisions to track all changes made in document 
 	 */
-	public void setRevision(RevisionAssistant arg) {
-		theRevisions = arg;
-	}
-
 	public void setStyle(StyledDocument arg){
 		ourStyle = arg;
 	}

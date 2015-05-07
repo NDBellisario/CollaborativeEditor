@@ -1,7 +1,6 @@
 package networking;
 import model.Doc;
 import model.DocumentAssistant;
-import model.Revision;
 import model.RevisionAssistant;
 import model.User;
 import view.EditView;
@@ -9,7 +8,6 @@ import view.EditView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-
 
 import javax.swing.text.StyledDocument;
 
@@ -31,10 +29,8 @@ public class EditPacket implements Serializable {
 	private int docID;
 	private String docName;
 	private DocumentAssistant masterDA;
-	private boolean revisionTime;
-	private RevisionAssistant revAssist;
 	private Date createdOn;
-	private Long mili;
+	private long mili;
 
 	private StyledDocument packetStyle;
 
@@ -59,7 +55,7 @@ public class EditPacket implements Serializable {
 		theUser = arg;
 		docID = argID;
 		createdOn = new Date();
-		revisionTime = false;
+		mili = System.currentTimeMillis();
 		
 		
 		
@@ -72,16 +68,13 @@ public class EditPacket implements Serializable {
 	 * @param docName
 	 * @param arg
 	 */
-	public EditPacket(User mainUser, Integer docID2, String docName, RevisionAssistant arg) {
+	public EditPacket(User mainUser, Integer docID2, String docName) {
 		theUser = mainUser;
 		docID = docID2;
 		setDocName(docName);
-		revisionTime = true;
 		createdOn = new Date();
-		revAssist = arg;
-		Revision newR = new Revision(theUser, createdOn, mili);
-		revAssist.addRevision(newR);
 		packetStyle = null;
+		mili = System.currentTimeMillis();
 	}
 	public StyledDocument getStyle(){
 		return packetStyle;
@@ -133,6 +126,9 @@ public class EditPacket implements Serializable {
 	public User getUser() {
 		return theUser;
 	}
+	public long getMili(){
+		return mili;
+	}
 	/**
 	 * Returns the current document assisant after being passed threw the Stream
 	 * @param temp
@@ -141,29 +137,15 @@ public class EditPacket implements Serializable {
 	public DocumentAssistant execute(DocumentAssistant temp) {
 		// If the document contents has something new, and the value of the new
 		// change is not null, we need to set the doc contents
-		mili = System.currentTimeMillis();
-		revAssist = temp.getList().get(docID - 1).getRevisions();
+
+
 		if ((newText.equals(temp.getList().get(docID - 1).getDocContents()) && !newText.equals("null"))) {
 			temp.getList().get(docID - 1).setDocContents((temp.getList().get(docID - 1).getDocContents()));
 			setDocName(temp.getList().get(docID - 1).getDocName());
 			temp.getList().get(docID - 1).setDocContents(newText);
 			setMaster(temp);
 
-		} else {
-			temp.getList().get(docID - 1).setDocContents(newText);
-			setDocName(temp.getList().get(docID - 1).getDocName());
-
-			if (revAssist.getStack().peek() != null) {
-
-				if (revAssist.getStack().peek().getET() > (mili + 2000)) {
-					//Revision newR = new Revision(theUser, createdOn, mili);
-					revAssist.addRevision(newR);
-					setMaster(temp);
-				}
-
-			}
-			setMaster(temp);
-		}
+		} 
 		return temp;
 
 	}
@@ -178,16 +160,24 @@ public class EditPacket implements Serializable {
 	 * get's current Revision assistant 
 	 * @return RevisionAssistant
 	 */
-	public RevisionAssistant getRev() {
-		// TODO Auto-generated method stub
-		return revAssist;
-	}
+
 	/**
 	 * Returns the current Document 
 	 * @return Document 
 	 */
 	public Doc getDoc() {
 		return masterDA.getList().get(docID - 1);
+	}
+	/**
+	 * Returns the current Tiem
+	 * @return Long
+	 */
+	@SuppressWarnings("deprecation")
+	public String getTime() {
+		Date temp = new Date();
+		String toReturn = ("" + temp.getHours()+":" + temp.getMinutes());
+		
+		return toReturn;
 	}
 
 }

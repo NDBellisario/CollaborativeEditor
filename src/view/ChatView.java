@@ -1,14 +1,17 @@
 package view;
 import model.*;
 import networking.ChatPacket;
+import networking.EditPacket;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Stack;
 
 //import model.AddMessageCommand;
 //import view.ChatPanel.EnterListener;
@@ -61,15 +64,14 @@ public class ChatView extends JPanel implements Serializable{
         this.setPreferredSize(new Dimension(400, 600));
         this.displayofRevisions = new DefaultListModel<String>();
 
-        
+        revView = newRev;
         revisionPanel = new JPanel(new BorderLayout());
         
-        revView = newRev;
         displayofRevisions.clear();
-        if(!(revView == null)){
-        for(int i = 0;i < revView.revisionList.size(); i++){
-        	Revision tempRev = revView.getStack().get(i);
-        	String temp = ("Revision by" + tempRev.getRevisorUser() + "Edited at" + tempRev.getTime().toString());
+        if(revView != null){
+        for(int i = 0; i < revView.revisionList.size(); i++){
+        	EditPacket tempRev = revView.getStack().elementAt(i);
+        	String temp = ("Revision by: " + tempRev.getUser().getUserName() + "At: " + tempRev.getTime().toString());
         	displayofRevisions.addElement(temp);
         }
         }
@@ -158,7 +160,7 @@ public class ChatView extends JPanel implements Serializable{
 
         textArea.setText(s);
         textArea.setCaretPosition(s.length());
-        repaint();
+        revisionPanel.repaint();
     }
 
     //Action listener class to update the chat conversation
@@ -187,8 +189,8 @@ public class ChatView extends JPanel implements Serializable{
     	revView = rev;
     	displayofRevisions.clear();
         for(int i = 0;i < revView.revisionList.size(); i++){
-        	Revision tempRev = revView.revisionList.get(i);
-        	String temp = ("Revision by" + tempRev.getRevisorUser() + "Edited at" + tempRev.getTime().toString());
+        	EditPacket tempRev = revView.getStack().elementAt(i);
+        	String temp = ("Revision by: " + tempRev.getUser().getUserName() + " At: " + tempRev.getTime());
         	displayofRevisions.addElement(temp);
         }
         repaint();

@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 /**
- * @class DocumentView
+ *
  * @author Nicholas,Omri,Cameron,Taylor,Eric Team Amphetamine Salts 
  * Holds and displays current iteration of document from server and allows for interation between document
  */

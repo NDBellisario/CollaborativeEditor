@@ -454,20 +454,20 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
-<<<<<<< Updated upstream
+
 	/**
 	 * @class Shows current version of the document
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
-=======
+
 /**
  * @class VersionListener 
  * Shows current version of the document
  * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  *
  */
->>>>>>> Stashed changes
+
 	private class VersionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -509,40 +509,40 @@ public class CEController extends JFrame implements Serializable {
 			// TODO Auto-generated method stub
 		}
 	}
-<<<<<<< Updated upstream
+
 	/**
 	 * opens permission window to set user's permissions for editting
 	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
-=======
+
 /**
  * opens permission window to set user's permissions for editting
  * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  * @class PermissionListener
  */
->>>>>>> Stashed changes
+
 	private class PermissionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
-<<<<<<< Updated upstream
+
 	/**
 	 * Change's Users PW
 	 * 
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 *
 	 */
-=======
+
 /**
  * Change's Users PW
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  * @class ChangePWListener
  */
->>>>>>> Stashed changes
+
 	private class ChangePWListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {

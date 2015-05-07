@@ -12,18 +12,16 @@ import java.util.List;
 
 //import model.AddMessageCommand;
 //import view.ChatPanel.EnterListener;
-<<<<<<< Updated upstream
+
 
 public class ChatView extends JPanel implements Serializable{
-=======
+
 /**
  * Chat View 
  * @author NDBellisario
  * Main view or Chat and Revision panel for displaying current
  * revisions to user and as well the current message in the chat 
  */
-public class ChatView extends JPanel{
->>>>>>> Stashed changes
     /**
 	 * 
 	 */

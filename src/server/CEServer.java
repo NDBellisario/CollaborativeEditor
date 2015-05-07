@@ -403,7 +403,7 @@ public class CEServer extends JFrame implements Serializable {
 						// Executes the packet
 						readPacket.execute(masterList);					
 						readPacket.setMaster(masterList);
-						masterList.getList().get(readPacket.getDocID() - 1).getRevisions().addRevision(readPacket);
+						masterList.getList().get(readPacket.getDocID() - 1).getRevisions();
 						for (ObjectOutputStream OPtemp : outputs.values()) {
 							OPtemp.reset();
 							OPtemp.writeObject(readPacket);
@@ -428,7 +428,6 @@ public class CEServer extends JFrame implements Serializable {
 						CreateNewDocument newPacket = (CreateNewDocument) temp;
 						DocumentAssistant tempV = masterList;
 						masterList = newPacket.execute(tempV);
-						RevisionAssistant newDocRev = new RevisionAssistant();
 						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), newPacket.getName());
 						newEdit.setDocName(newPacket.getName());
 						newEdit.setMaster(masterList);

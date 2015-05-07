@@ -24,7 +24,13 @@ import java.util.*;
  * 3. Communication to the server for text/chat updates
  * 
  */
-
+/**
+ * 
+ * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ * @class CEServer the main Class controls and distributes all documents, revisions, and users 
+ * currently connected to the server. It can kick certain users from the server as well.
+ * overall it Controls and saves documents for all users to easily Access
+ */
 public class CEServer extends JFrame implements Serializable {
 	/*
 	 * Private Instance Variables
@@ -45,12 +51,17 @@ public class CEServer extends JFrame implements Serializable {
 	 * Initializes the variables Gets a port, and jamborees with the view as
 	 * needed If a failed attempt to setup, uses a default port.
 	 */
+	/** 
+	 * Constructor starts Server Methods for creation
+	 */
 	public CEServer() {
 		readFromFile();
 		// initVariables();
 		startServer();
 	}
-
+	/**
+	 * Finds and Read's in pre-saved server preference from file
+	 */
 	public void readFromFile() {
 		boolean noPreviousConfig = false;
 
@@ -124,7 +135,10 @@ public class CEServer extends JFrame implements Serializable {
 		}
 
 	}
-
+/**
+ * Initializes server for use
+ * 
+ */
 	public void startServer() {
 		// Setting up the Server.
 		int portNumber = ourView.getPortNumber();
@@ -146,7 +160,9 @@ public class CEServer extends JFrame implements Serializable {
 			ourView.roundTwo(); // Adds everything to view frame
 		}
 	}
-
+/**
+ * Stops and shut down server as well as disconnects all connected users and force shut's down there clients
+ */
 	public void stopServer() {
 		LogoutPacket lGP = new LogoutPacket();
 
@@ -165,6 +181,12 @@ public class CEServer extends JFrame implements Serializable {
 		}
 
 	}
+	/**
+	 * if a user leaves on his own accord server.userLeft closes connect thread to selected user
+	 * 
+	 * @param usr String name of user who has dropped connect from the server
+	 * 
+	 */
 	public void userLeft(String usr) {
 		Thread threadtoKill = clients.get(usr);
 		activeUsers.remove(usr);
@@ -173,7 +195,13 @@ public class CEServer extends JFrame implements Serializable {
 		threadtoKill.stop();
 
 	}
-
+/**
+ * kickUser takes in a string of the name of the user then forcefully disconnect's
+ * them while also sending a shut down message to there client 
+ * 
+ * @param user
+ * @throws InterruptedException
+ */
 	public void kickUser(String user) throws InterruptedException {
 		LogoutPacket lGP = new LogoutPacket();
 		ObjectOutputStream out = outputs.get(user);
@@ -210,9 +238,18 @@ public class CEServer extends JFrame implements Serializable {
 	 * the socket, and passes it onto a new thread who's goal is to initialize
 	 * the connection and have the user login
 	 */
-
+/**
+ * 
+ * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ * @Class ClientAccept start up upon a new client being connected 
+ * while accepting and creating the connect to the new client before 
+ * sending of the input and output stream information to the ClientFirstContact
+ */
 	private class ClientAccepter implements Runnable {
 		@Override
+		/**
+		 * begins client runnable meathod to accept connections
+		 */
 		public void run() {
 			while (true) {
 				Socket temp;
@@ -229,24 +266,32 @@ public class CEServer extends JFrame implements Serializable {
 		}
 	}
 
-	/*
-	 * This gets out input/output stream Reads in a login packed containing
+	/**
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @Class This gets out input/output stream Reads in a login packed containing
 	 * username and password Executes and gets a boolean. True means we are
 	 * good, false means no If true, update list on server side and spawn an
 	 * edit and chat thread If false, let the client know so they can fix it.
 	 */
-	// TODO: Account creation button
+
 	private class ClientFirstContact implements Runnable {
 		private ObjectOutputStream output;
 		private ObjectInputStream input;
 		private String userName;
-
+		/**
+		 * Constructor for Client First Contact method
+		 * @param argOutput Clients output stream
+		 * @param argInput Client input stream
+		 */
 		public ClientFirstContact(ObjectOutputStream argOutput, ObjectInputStream argInput) {
 			input = argInput;
 			output = argOutput;
 		}
 
 		@Override
+		/**
+		 * Beings Client First Contact to accept packets about who the connecting client is
+		 */
 		public void run() {
 			try {
 				// Read from controller the info of the user trying to log in
@@ -309,6 +354,9 @@ public class CEServer extends JFrame implements Serializable {
 		/*
 		 * Let's the server know we have a new Client
 		 */
+		/**
+		 * Initializes client with new user information and add's them to a list of current users
+		 */
 		private void clientInit() {
 			activeUsers.add(userName);
 			ourView.updateClients(activeUsers);
@@ -316,9 +364,10 @@ public class CEServer extends JFrame implements Serializable {
 		}
 	}
 
-	/*
-	 * This is actually what deals with communicating with the Client for
-	 * updates!
+	/**
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @Class This is actually what deals with communicating with the Client for
+	 * updates! handles all incoming packets
 	 */
 	private class ClientHandler implements Runnable, Serializable {
 		/**
@@ -328,7 +377,12 @@ public class CEServer extends JFrame implements Serializable {
 		private ObjectInputStream clientInputStream;
 		private ObjectOutputStream clientOutputStream;
 		private User mainUser;
-
+		/**
+		 * Constructs communications stream for clients to connect through
+		 * @param inputArg clients input stream
+		 * @param outputArg clients output stream
+		 * @param user current connected user who wish's to communicate
+		 */
 		public ClientHandler(ObjectInputStream inputArg, ObjectOutputStream outputArg, User user) {
 			clientInputStream = inputArg;
 			clientOutputStream = outputArg;
@@ -336,6 +390,9 @@ public class CEServer extends JFrame implements Serializable {
 		}
 
 		@Override
+		/**
+		 * runnable method being infinite loop to listen for incoming packets from the clients 
+		 */
 		public void run() {
 
 			while (true) {
@@ -399,7 +456,10 @@ public class CEServer extends JFrame implements Serializable {
 			}
 		}
 	}
-
+	/**
+	 * Saves the current Server information for later use
+	 *
+	 */
 	public void save() {
 		ObjectOutputStream saveStream = null;
 		String fileName = "";
@@ -433,7 +493,9 @@ public class CEServer extends JFrame implements Serializable {
 		}
 
 	}
-
+	/**
+	 * Starts the whole Shabang for server!
+	 */
 	public static void main(String[] args) {
 		new CEServer();
 	}

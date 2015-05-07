@@ -19,11 +19,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.List;
 
-/* Author: Nick Bellisario
+/** @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  * 
- * This class deals with the client connecting to the server via a 
+ * @Class This class deals with the client connecting to the server via a 
  * username and password (which is checked against registered users.
- * 
  * Also sends/recieves packets when the user performs an action on the document
  * 
  */
@@ -48,20 +47,29 @@ public class CEController extends JFrame implements Serializable {
 	private Thread serverrevthread;
 	private DocumentAssistant clientAllMaster;
 	private boolean updateDocs;
-
+	
+	/**
+	 * Constructor for CEController builds and calls all initializing methods
+	 */
 	public CEController() {
 		currentSelectedDoc = 0;
 		initUserModels();
 
 	}
-
+	/**
+	 * Starts CEController at initial runtime
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		new CEController();
 	}
+	
 	public void test() {
 
 	}
-	/* Connects to the server and makes sure the login info matches an account */
+	/**
+	 * Creates user's model classes and instantiates them for uses
+	 */   
 	private void initUserModels() {
 		// Setting up hashing
 
@@ -193,7 +201,9 @@ public class CEController extends JFrame implements Serializable {
 
 	}
 
-	/* Setups the GUI */
+	/**
+	 *  Setups the GUI for user to interact with
+	 */
 	private void setupGui() {
 		// Permissions Pop up
 		// Initializing graphic user interface variables
@@ -212,11 +222,14 @@ public class CEController extends JFrame implements Serializable {
 		JMenuItem changePW = new JMenuItem("Change Password");
 		JMenuItem removeUser = new JMenuItem("Remove User");
 		JMenuItem changePermission = new JMenuItem("Permissions Options");
+		JMenuItem export = new JMenuItem("Export to HTML");
+		
 		this.setTitle("Collaborative Editor");
 		// Adding action listeners for File
 		quitOption.addActionListener(new ExitListener());
 		save.addActionListener(new SaveListener());
 		saveLocal.addActionListener(new SaveLocalListener());
+		export.addActionListener(new ExportListener());
 		// Adding Action Listeners for Edit
 		undo.addActionListener(new UndoListener());
 		redo.addActionListener(new RedoListener());
@@ -240,7 +253,9 @@ public class CEController extends JFrame implements Serializable {
 		// fileContainer sub menu buttons
 		fileContainer.add(save);
 		fileContainer.add(saveLocal);
+		fileContainer.add(export);
 		fileContainer.add(quitOption);
+		
 		// editContainer sub menu buttons
 		editContainer.add(undo);
 		editContainer.add(redo);
@@ -273,17 +288,40 @@ public class CEController extends JFrame implements Serializable {
 		this.setVisible(true);
 
 	}
-
+	/**
+	 * updates chat view with current messages from Server
+	 * @param allMessages All message from start of Server
+	 */
 	public void updateChat(List<String> allMessages) {
 
 		chatView.updateChatPanel(allMessages);
 	}
-
+ /**
+  * Updates Revision view with current revisions from Server 
+  * @param rev all revision from the document
+  */
 	public void updateRevisionsView(RevisionAssistant rev) {
 
 		chatView.UpdateRevisionPanel(rev);
 	}
+	/**
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * Exports files to HTML Format for later use 
+	 */
+	private class ExportListener implements ActionListener{
 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	/**
+	 * 
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *@class listens for Exit button to be clicked and starts closing methods
+	 */
 	// Listener Private Classes
 	private class ExitListener implements ActionListener {
 		@Override
@@ -291,14 +329,22 @@ public class CEController extends JFrame implements Serializable {
 			CEController.this.selfExit();
 		}
 	}
-
+	/**
+	 * 
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * @class Saves current document on server
+	 */
 	private class SaveListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
 		}
 	}
-
+	/**
+	 * @class listens for creation of new document
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *
+	 */
 	private class NewDocumentListener implements ActionListener {
 
 		private String name;
@@ -317,55 +363,88 @@ public class CEController extends JFrame implements Serializable {
 
 		}
 	}
+	/**
+	 * @class Saves local copy of Document for further use
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *
+	 */
 	private class SaveLocalListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
-
+	/**
+	 * @class activates Undo
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *
+	 */
 	private class UndoListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
-
+	/**
+	 * @class Activates Redo 
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *
+	 */
 	private class RedoListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
-
+/**
+ * @class Shows current version of the document
+ * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ *
+ */
 	private class VersionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
-
+	/**
+	 * Add's User to document for editing 
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *
+	 */
 	private class AddUserListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
-
+	/**
+	 * Removes user from document for edition permision
+	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *
+	 */
 	private class RemoveUserListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
-
+/**
+ * opens permission window to set user's permissions for editting
+ * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ *
+ */
 	private class PermissionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 		}
 	}
-
+/**
+ * Change's Users PW
+ * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+ *
+ */
 	private class ChangePWListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -384,10 +463,16 @@ public class CEController extends JFrame implements Serializable {
 	// }
 	// }
 
+	/**
+	 * Logout is called when User is kicked from server
+	 */
 	public void logout() {
 		JOptionPane.showMessageDialog(this, "Server has Shutdown", "Server Quit", JOptionPane.ERROR_MESSAGE);
 		System.exit(0);
 	}
+	/**
+	 * self exit is used for safely disconnecting from the server
+	 */
 	public void selfExit() {
 		try {
 			LogoutPacket selfLog = new LogoutPacket();
@@ -403,6 +488,10 @@ public class CEController extends JFrame implements Serializable {
 		}
 
 	}
+	/**
+	 * Sets currentdocument to the selected one from the Doc window
+	 * @param toSet Document number for selection
+	 */
 	public void setCurrentSelectedDoc(int toSet) {
 		currentSelectedDoc = toSet;
 		mainUser.setSelectedDoc(currentSelectedDoc);
@@ -416,18 +505,33 @@ public class CEController extends JFrame implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * changes Document's name
+	 */
 	public void updateDocName() {
 		editView.changeDoc(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocName());
 	}
 
 	/* This Deals With Updating Out Docs! */
+	/**
+	 * open the Selection for documents doc and updates based on which document you wish to edit
+	 * @author NDBellisario
+	 *
+	 */
 	private class DocSelectView implements Runnable {
+		/**
+		 * Constructs document view
+		 * @param arg Controller you with to view from
+		 */
 		public DocSelectView(CEController arg) {
 			clientDocumentView = new DocumentView(arg);
 
 		}
 
 		@Override
+		/**
+		 * runs runnable method to listen for new document that are created by other users 
+		 */
 		public void run() {
 			while (true) {
 				if (updateDocs) {
@@ -468,8 +572,15 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 
-	/* Once connection is set up, this deals writing out updates */
+	/**
+	 * Once connection is set up, this deals writing out updates 
+	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 * */
 	private class ServerRevisionWrite implements Runnable {
+		/**
+		 * runs infinite loop to listen for Server change to the document
+		 * 
+		 */
 		public void run() {
 			while (true) {
 
@@ -507,7 +618,11 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 
-	/* This class will get new revisions and update GUI */
+	/**
+	 *  This class will get new revisions and update GUI
+	 *  @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
+	 *  @Class ServerCommunicator 
+	 *   */
 	private class ServerCommunicator implements Runnable {
 		@Override
 		public void run() {

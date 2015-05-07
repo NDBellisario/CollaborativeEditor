@@ -13,8 +13,12 @@ import java.util.List;
 //import model.AddMessageCommand;
 //import view.ChatPanel.EnterListener;
 
-public class ChatView extends JPanel{
+public class ChatView extends JPanel implements Serializable{
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      *
      */
 

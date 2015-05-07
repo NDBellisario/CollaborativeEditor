@@ -167,10 +167,10 @@ public class CEController extends JFrame implements Serializable {
 			clientAllMaster = usrPacket.getML();
 			if (clientAllMaster.getList().size() == 0) {
 				updateDocs = false;
-				System.out.println("Initial value was false");
+				//System.out.println("Initial value was false");
 			} else {
 				updateDocs = true;
-				System.out.println("Initial value was true");
+				//System.out.println("Initial value was true");
 			}
 
 			List<String> toSet = temp.getChats();
@@ -431,17 +431,17 @@ public class CEController extends JFrame implements Serializable {
 		public void run() {
 			while (true) {
 				if (updateDocs) {
-					System.out.println("Inside update docs " + updateDocs);
+					//System.out.println("Inside update docs " + updateDocs);
 
 					ArrayList<Doc> toPass = new ArrayList<Doc>();
 					ArrayList<Doc> cheapLock = clientAllMaster.getList();
 					// System.out.println(clientAllMaster.getList().size() +
 					// "  "+ currentSelectedDoc);
 					for (int i = 0; i < cheapLock.size(); i++) {
-						System.out.println("Running update on " + cheapLock.size());
+						//System.out.println("Running update on " + cheapLock.size());
 						if (cheapLock.get(i).canView((mainUser))) {
 							toPass.add(cheapLock.get(i));
-							System.out.println("topass size " + toPass.size());
+							//System.out.println("topass size " + toPass.size());
 						}
 					}
 
@@ -536,10 +536,10 @@ public class CEController extends JFrame implements Serializable {
 						}
 
 						if (((newPacket.getDocID() == currentSelectedDoc) && newPacket.getDocID() != 0)) {
-							editView.setText(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents());
+							editView.setText(clientAllMaster.getList().get(currentSelectedDoc - 1).getDocContents(), newPacket.getStyle());
 						}
 
-						System.out.println("The packet we just got " + updateDocs);
+						//System.out.println("The packet we just got " + updateDocs);
 
 					} else if (unknown instanceof ChatPacket) {
 						@SuppressWarnings("unchecked")

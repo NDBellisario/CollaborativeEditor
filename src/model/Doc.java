@@ -3,6 +3,9 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
+
 import networking.EditPacket;
 
 public class Doc implements Serializable {
@@ -18,6 +21,7 @@ public class Doc implements Serializable {
 	private ArrayList<String> annotations;
 	private String docContents;
 	private RevisionAssistant theRevisions;
+	private StyledDocument ourStyle;
 
 	public Doc(String docName, int docId, int ownerId, ArrayList<Integer> editors) {
 		this.docName = docName;
@@ -33,6 +37,12 @@ public class Doc implements Serializable {
 	}
 	public void setRevision(RevisionAssistant arg) {
 		theRevisions = arg;
+	}
+	public void setStyle(StyledDocument arg){
+		ourStyle = arg;
+	}
+	public StyledDocument getStyle(){
+		return ourStyle;
 	}
 	public boolean canView(User theArg) {
 

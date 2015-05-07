@@ -7,8 +7,10 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.AttributeSet;
+import javax.swing.text.AttributeSet.CharacterAttribute;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
@@ -23,9 +25,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class EditView extends JPanel {
+public class EditView extends JPanel implements Serializable {
 	/**
      *
      */
@@ -140,6 +143,9 @@ public class EditView extends JPanel {
 	public String getDocName() {
 		return currentDocLabel.getText();
 	}
+	public JTextPane getPane(){
+		return textBox;
+	}
 
 	public void changePermission(int arg) {
 		permission = arg;
@@ -245,29 +251,18 @@ public class EditView extends JPanel {
 		return textBox.getText();
 	}
 
-	public void setText(final String s) {
-		int oldLen = textBox.getDocument().getLength();
+	public void setText(final String s, StyledDocument style) {
+		int oldLen = textBox.getCaretPosition();
 		textBox.setText(s);
-		// int caretPos = textBox.getCaretPosition();
-		// try {
-		// textBox.getDocument().insertString(caretPos, s, null);
-		// } catch (BadLocationException ex) {
-		// ex.printStackTrace();
-		// }
-		//int len = textBox.getDocument().getLength();
-
-		/*
-		 * CaretListener cListener = new CaretListener() {
-		 * 
-		 * @Override public void caretUpdate(CaretEvent caretEvent) {
-		 * textBox.setCaretPosition(caretEvent.getDot()); textBox.setText(s); }
-		 * };
-		 * 
-		 * textBox.addCaretListener(cListener);
-		 */
-
-		//textBox.setCaretPosition(s.length());
+		if(style != null){
+		textBox.setStyledDocument(style);
+		}
+		if(oldLen <= textBox.getDocument().getLength()){
 		textBox.setCaretPosition(oldLen);
+		}
+		else{
+			textBox.setCaretPosition(textBox.getDocument().getLength());
+		}
 	}
 
 	public class formatListener implements ActionListener {
@@ -341,11 +336,13 @@ public class EditView extends JPanel {
 		}
 
 	}
+	public Document getStyle(){
+		return textBox.getStyledDocument();
+	}
 
 	public void changeColor() {
 		colorStyle = textBox.addStyle("color", null);
-		StyleConstants
-				.setForeground(colorStyle, col[colors.getSelectedIndex()]);
+		StyleConstants.setForeground(colorStyle, col[colors.getSelectedIndex()]);
 
 		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
 			int len = textBox.getSelectedText().length();

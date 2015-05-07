@@ -10,6 +10,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.text.StyledDocument;
+
+
 /*
  * Manages the changes made to the text editor
  * 
@@ -28,17 +31,24 @@ public class EditPacket implements Serializable {
 	private RevisionAssistant revAssist;
 	private Date createdOn;
 	private Long mili;
+	private StyledDocument packetStyle;
 	public EditPacket(EditView editView, User arg, int argID) {
-
+		packetStyle = null;
 		if (editView == null) {
 			newText = "";
+			//System.out.println("AAAAAA");
 		} else {
 			newText = editView.getText();
+			//System.out.println("BBBBBBB");
+			packetStyle = editView.getPane().getStyledDocument();
 		}
 		theUser = arg;
 		docID = argID;
 		createdOn = new Date();
 		revisionTime = false;
+		
+		
+		
 
 	}
 
@@ -51,6 +61,13 @@ public class EditPacket implements Serializable {
 		revAssist = arg;
 		Revision newR = new Revision(theUser, createdOn, mili);
 		revAssist.addRevision(newR);
+		packetStyle = null;
+	}
+	public StyledDocument getStyle(){
+		return packetStyle;
+	}
+	public void setStyle(StyledDocument arg){
+		packetStyle = arg;
 	}
 
 	public void setDocName(String name) {

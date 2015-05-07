@@ -379,11 +379,7 @@ public class CEController extends JFrame implements Serializable {
 
 	/**
 	 * 
-	 <<<<<<< Updated upstream
-	 * 
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @class listens for Exit button to be clicked and starts closing methods
-	 *        =======
+
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @class ExitListener listens for Exit button to be clicked and starts
 	 *        closing methods >>>>>>> Stashed changes
@@ -397,10 +393,6 @@ public class CEController extends JFrame implements Serializable {
 	}
 	/**
 	 * 
-	 <<<<<<< Updated upstream
-	 * 
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * @class Saves current document on server =======
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @class SaveListener Saves current document on server >>>>>>> Stashed
 	 *        changes
@@ -414,7 +406,7 @@ public class CEController extends JFrame implements Serializable {
 	/**
 	 * @class NewDocumentListener
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts listens
-	 *         for creation of new document >>>>>>> Stashed changes
+	 *         for creation of new document 
 	 */
 	private class NewDocumentListener implements ActionListener {
 
@@ -448,10 +440,6 @@ public class CEController extends JFrame implements Serializable {
 		}
 	}
 	/**
-	 * <<<<<<< Updated upstream
-	 * 
-	 * @class activates Undo
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts =======
 	 * @class UndoListener activates Undo
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts >>>>>>>
 	 *         Stashed changes

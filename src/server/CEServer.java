@@ -1,6 +1,7 @@
 package server;
 import model.Doc;
 import model.DocumentAssistant;
+import model.Revision;
 import model.RevisionAssistant;
 import model.User;
 import model.UserAssistant;

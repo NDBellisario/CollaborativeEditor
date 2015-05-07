@@ -727,7 +727,7 @@ public class CEController extends JFrame implements Serializable {
 						// System.out.println("Wrote a Packet! of Doc Type " +
 						// currentSelectedDoc);
 						outputStrm.reset();
-						Thread.sleep(700); // Only want to send every 2000 ms.
+						Thread.sleep(2000); // Only want to send every 2000 ms.
 
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

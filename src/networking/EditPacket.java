@@ -154,15 +154,15 @@ public class EditPacket implements Serializable {
 			temp.getList().get(docID - 1).setDocContents(newText);
 			setDocName(temp.getList().get(docID - 1).getDocName());
 
-//			if (revAssist.getStack().peek() != null) {
-//
-//				if (revAssist.getStack().peek().getET() > (mili + 60000)) {
-//					Revision newR = new Revision(theUser, createdOn, mili);
-//					revAssist.addRevision(newR);
-//					setMaster(temp);
-//				}
-//
-//			}
+			if (revAssist.getStack().peek() != null) {
+
+				if (revAssist.getStack().peek().getET() > (mili + 2000)) {
+					//Revision newR = new Revision(theUser, createdOn, mili);
+					revAssist.addRevision(newR);
+					setMaster(temp);
+				}
+
+			}
 			setMaster(temp);
 		}
 		return temp;

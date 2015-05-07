@@ -353,42 +353,12 @@ public class EditView extends JPanel implements Serializable {
 		}
 
 	}
-<<<<<<< HEAD
+
 	public Document getStyle(){
 		return textBox.getStyledDocument();
 	}
 
-=======
-	/*
->>>>>>> 772b974c20ba06e5bda84c7915ac71e8a4824e6d
-	public void changeColor() {
-		colorStyle = textBox.addStyle("color", null);
-		StyleConstants.setForeground(colorStyle, col[colors.getSelectedIndex()]);
 
-		if (textBox.getSelectionEnd() != textBox.getCaretPosition()) {
-			int len = textBox.getSelectedText().length();
-			textBox.getStyledDocument().setCharacterAttributes(textBox.getSelectionStart(), len, colorStyle, false);
-			
-			boolean flag = true;
-			for (int i = textBox.getCaretPosition(); i < textBox.getSelectionEnd(); i++) {
-				if(!textBox.getStyledDocument().getCharacterElement(i).getAttribute(StyleConstants.getForeground(a)) {
-					flag = false;
-				}
-			}
-			if (flag == true) {
-				len = textBox.getSelectedText().length();
-				textBox.getStyledDocument().setCharacterAttributes(
-						textBox.getSelectionStart(), len, colorStyle, false);
-			} else {
-				JOptionPane.showMessageDialog(null, "You can't color over an annotation!");
-			}
-			
-		} else {
-			MutableAttributeSet attrs = textBox.getInputAttributes();
-			StyleConstants.setForeground(attrs, col[colors.getSelectedIndex()]);
-
-		}
-	}*/
 
 	public void updateFont() {
 		fontStyle = textBox.addStyle("font", null);

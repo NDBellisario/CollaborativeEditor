@@ -22,10 +22,9 @@ public class Doc implements Serializable {
 	private ArrayList<String> annotations;
 	private String docContents;
 	private RevisionAssistant theRevisions;
-<<<<<<< HEAD
 	private StyledDocument ourStyle;
 
-=======
+
 	/**
 	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @param docName name of document constructed 
@@ -33,7 +32,7 @@ public class Doc implements Serializable {
 	 * @param ownerId unique Owner ID to track document creater
 	 * @param editors current permitted users who can edit the document 
 	 */
->>>>>>> 772b974c20ba06e5bda84c7915ac71e8a4824e6d
+
 	public Doc(String docName, int docId, int ownerId, ArrayList<Integer> editors) {
 		this.docName = docName;
 		this.docIdentification = docId;
@@ -53,20 +52,20 @@ public class Doc implements Serializable {
 	public void setRevision(RevisionAssistant arg) {
 		theRevisions = arg;
 	}
-<<<<<<< HEAD
+
 	public void setStyle(StyledDocument arg){
 		ourStyle = arg;
 	}
 	public StyledDocument getStyle(){
 		return ourStyle;
 	}
-=======
+
 	/**
 	 * permissions for who can view documents
 	 * @param theArg User who wish's to view document
 	 * @return boolean with accepted for denied
 	 */
->>>>>>> 772b974c20ba06e5bda84c7915ac71e8a4824e6d
+
 	public boolean canView(User theArg) {
 
 		int lookFor = theArg.getID();

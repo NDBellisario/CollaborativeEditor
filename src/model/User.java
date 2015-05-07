@@ -2,7 +2,11 @@ package model;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+/**
+ * 
+ * @author Nicholas,Omri,Cameron,Taylor,Eric
+ * Contains all information on the user for the Server to understand and decode 
+ */
 public class User implements Serializable {
     /**
      *
@@ -13,7 +17,13 @@ public class User implements Serializable {
     int permission;
     int identification;
     public int selectedDoc;
-
+    /**
+     * Constructer for the User Class
+     * @param userName name of user
+     * @param password password for user
+     * @param id unique ID login information
+     * @param argDoc document associated with user
+     */
     public User(String userName, String password, int id, int argDoc) {
         setUserName(userName);
         try {
@@ -68,6 +78,10 @@ public class User implements Serializable {
         //}
 
     }
+    /**
+     * Sets Identification ID for server to see
+     * @param id
+     */
 
     public void setIdentification(int id) {
     	this.identification = id;
@@ -112,6 +126,10 @@ public class User implements Serializable {
             return 1;
         }
     }
+    /**
+     * 
+     * @return Integer
+     */
     public Integer getID(){
         return identification;
     }

@@ -8,7 +8,11 @@ import controller.CEController;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-
+/**
+ * @class DocumentView
+ * @author NDBellisario
+ * Holds and displays current iteration of document from server and allows for interation between document
+ */
 public class DocumentView extends JPanel {
 	private JList<String> documentList;
 	private JButton selectDoc;

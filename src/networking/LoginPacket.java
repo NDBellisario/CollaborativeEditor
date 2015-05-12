@@ -6,20 +6,11 @@ import java.io.Serializable;
 import java.util.*;
 
 @SuppressWarnings("serial")
-/**
- * 
- * @author Nicholas,Omri,Cameron,Taylor,Eric
- * contains login information New User for Server to allow in
- */
 public class LoginPacket implements Serializable {
     String userName;
     byte[] password;
     String recover;
-/**
- * Constructs login packet
- * @param uname - String UserName
- * @param pw - Byte Array Password 
- */
+
     public LoginPacket(String uname, byte[] pw) {
         this.userName = uname;
         this.password = pw;

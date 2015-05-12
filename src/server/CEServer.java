@@ -14,26 +14,22 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-
+/* Test Username: cat Password = meow */
+/*
+ * Written By Taylor Cox
+ * 
+ * This class handles several things.
+ * 1: Connecting to the server
+ * 2. Account Login/Creation/Recovery
+ * 3. Communication to the server for text/chat updates
+ * 
+ */
 /**
-<<<<<<< HEAD
  * 
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-<<<<<<< HEAD
- * @class CEServer
-<<<<<<< HEAD
-=======
-=======
->>>>>>> b923dd5bc12b63b5ce232e893e37607b8e696ea7
->>>>>>> aff1495d50a4f00a3a589b17bb8a355582b74dbe
- * the main Class controls and distributes all documents, revisions, and users 
-=======
  * @class CEServer the main Class controls and distributes all documents, revisions, and users 
->>>>>>> parent of 35c5de4... change
  * currently connected to the server. It can kick certain users from the server as well.
  * overall it Controls and saves documents for all users to easily Access
- * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
- * @class CEServer
  */
 public class CEServer extends JFrame implements Serializable {
 	/*
@@ -47,7 +43,7 @@ public class CEServer extends JFrame implements Serializable {
 	public transient HashMap<String, ObjectInputStream> inputs;
 	public transient HashMap<String, Thread> clients;
 	private UserAssistant theUsers;
-	private ArrayList<String> activeUsers;
+	private transient ArrayList<String> activeUsers;
 	private transient ServerView ourView;
 	private RevisionAssistant serverRevassist;
 
@@ -70,7 +66,7 @@ public class CEServer extends JFrame implements Serializable {
 		boolean noPreviousConfig = false;
 
 		// TODO: String loadFileName =
-		// JOptionPane.showInputDialog("Enter The Name Of The Previous Saved Server State\nLeave Blank For a New Server");
+		JOptionPane.showInputDialog("Enter The Name Of The Previous Saved Server State\nLeave Blank For a New Server");
 		String loadFileName = "";
 		if (loadFileName != null && !loadFileName.equals("")) {
 			ObjectInputStream loadStream = null;
@@ -110,7 +106,8 @@ public class CEServer extends JFrame implements Serializable {
 			}
 
 			if (loadedController != null) {
-				this.activeUsers = loadedController.activeUsers;
+
+				this.activeUsers = new ArrayList<String>();
 				this.ourView = new ServerView(this); // New Server View
 				this.outputs = new HashMap<String, ObjectOutputStream>();
 				this.theUsers = loadedController.theUsers;
@@ -244,16 +241,10 @@ public class CEServer extends JFrame implements Serializable {
 	 */
 /**
  * 
-<<<<<<< HEAD
- * 
- * start up upon a new client being connected 
-=======
  * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  * @Class ClientAccept start up upon a new client being connected 
->>>>>>> parent of 35c5de4... change
  * while accepting and creating the connect to the new client before 
  * sending of the input and output stream information to the ClientFirstContact
- * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
  */
 	private class ClientAccepter implements Runnable {
 		@Override
@@ -277,18 +268,11 @@ public class CEServer extends JFrame implements Serializable {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * 
-	 * 
-	 * This gets out input/output stream Reads in a login packed containing
-=======
 	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @Class This gets out input/output stream Reads in a login packed containing
->>>>>>> parent of 35c5de4... change
 	 * username and password Executes and gets a boolean. True means we are
 	 * good, false means no If true, update list on server side and spawn an
 	 * edit and chat thread If false, let the client know so they can fix it.
-	 * @author  Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 */
 
 	private class ClientFirstContact implements Runnable {
@@ -352,7 +336,7 @@ public class CEServer extends JFrame implements Serializable {
 				UpdateUserPacket usrPacket = new UpdateUserPacket(masterList);
 				ChatPacket toWrite = new ChatPacket(allChatMessages);
 				output.writeObject(toWrite);
-				output.writeObject(usrPacket);;
+				output.writeObject(usrPacket);
 				outputs.put(userLogin.getName(), output); // Puts on output map
 				inputs.put(userLogin.getName(), input); // Puts on Input Map
 
@@ -382,16 +366,9 @@ public class CEServer extends JFrame implements Serializable {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * This is actually what deals with communicating with the Client for
-=======
 	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
 	 * @Class This is actually what deals with communicating with the Client for
->>>>>>> parent of 35c5de4... change
 	 * updates! handles all incoming packets
-	 * @author Nicholas,Taylor,Omri,Eric,Cameron Team Amphetamine Salts
-	 * 
-	 * 
 	 */
 	private class ClientHandler implements Runnable, Serializable {
 		/**
@@ -427,9 +404,9 @@ public class CEServer extends JFrame implements Serializable {
 					if (temp instanceof EditPacket) {
 						EditPacket readPacket = (EditPacket) temp;
 						// Executes the packet
-						readPacket.execute(masterList);					
+						readPacket.execute(masterList);
+						masterList.getList().get(readPacket.getDocID() - 1).setRevision(readPacket.getRev());
 						readPacket.setMaster(masterList);
-						masterList.getList().get(readPacket.getDocID() - 1).getRevisions();
 						for (ObjectOutputStream OPtemp : outputs.values()) {
 							OPtemp.reset();
 							OPtemp.writeObject(readPacket);
@@ -454,10 +431,11 @@ public class CEServer extends JFrame implements Serializable {
 						CreateNewDocument newPacket = (CreateNewDocument) temp;
 						DocumentAssistant tempV = masterList;
 						masterList = newPacket.execute(tempV);
-						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), newPacket.getName());
+						RevisionAssistant newDocRev = new RevisionAssistant();
+						EditPacket newEdit = new EditPacket(mainUser, newPacket.getDocID(), newPacket.getName(), newDocRev);
+						masterList.getList().get(newEdit.getDocID() - 1).setRevision(newEdit.getRev());
 						newEdit.setDocName(newPacket.getName());
 						newEdit.setMaster(masterList);
-						masterList.getList().get(newEdit.getDocID() - 1).getRevisions().addRevision(newEdit);
 						clientOutputStream.reset();
 						clientOutputStream.writeObject(newPacket);
 				

@@ -27,15 +27,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
-<<<<<<< HEAD
-/**
- * @class EditView
- * @author Nicholas,Omri,Cameron,Taylor,Eric
- * Controls and contains all information on EditView
- */
-=======
 
->>>>>>> parent of 35c5de4... change
 public class EditView extends JPanel implements Serializable {
 	/**
      *
@@ -255,6 +247,9 @@ public class EditView extends JPanel implements Serializable {
 	/*
 	 * @Override public void update(Observable o, Object arg){
 	 * 
+	 * // TODO Auto-generated method stub }
+	 */
+
 	// Do not need this method.
 	/*
 	 * public void setUpGUI(){
@@ -301,15 +296,12 @@ public class EditView extends JPanel implements Serializable {
 				//updateFontSize();
 			} else if (e.getSource() == leftIndent) {
 				Action a = new StyledEditorKit.AlignmentAction("left-justify", StyleConstants.ALIGN_LEFT);
-				setText(getText()+" ", null);
 				a.actionPerformed(e);
 			} else if (e.getSource() == centerIndent) {
 				Action a = new StyledEditorKit.AlignmentAction("center-justify", StyleConstants.ALIGN_CENTER); 
-				setText(getText()+" ", null);
 				a.actionPerformed(e);
 			} else if (e.getSource() == rightIndent) {
 				Action a = new StyledEditorKit.AlignmentAction("right-justify", StyleConstants.ALIGN_RIGHT); 
-				setText(getText()+" ", null);
 				a.actionPerformed(e);
 			} else if (e.getSource() == fontType) {
 
@@ -325,7 +317,7 @@ public class EditView extends JPanel implements Serializable {
 					userList.addElement(anno);
 				}
 				scrollAnnoList = new JList<Annotation>(userList);
-				//scrollAnnoList.setFont(new Font("Arial", Font.BOLD, 20));
+				scrollAnnoList.setFont(new Font("Arial", Font.BOLD, 20));
 				JScrollPane currentAnnos = new JScrollPane(scrollAnnoList);
 				JOptionPane.showMessageDialog(null, currentAnnos);
 			}
@@ -472,8 +464,8 @@ public class EditView extends JPanel implements Serializable {
 		}
 
 		public String toString() {
-			String toReturn = "Annotation For " + title;
-			toReturn += "\n" + annotation;
+			String toReturn = "Your annotation for " + title + " is ";
+			toReturn += annotation;
 			return toReturn;
 		}
 	}

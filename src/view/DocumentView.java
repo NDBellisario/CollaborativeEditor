@@ -9,13 +9,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 /**
-<<<<<<< HEAD
- *
- * @author Nicholas,Omri,Cameron,Taylor,Eric Team Amphetamine Salts 
-=======
  * @class DocumentView
  * @author NDBellisario
->>>>>>> parent of 35c5de4... change
  * Holds and displays current iteration of document from server and allows for interation between document
  */
 public class DocumentView extends JPanel {

@@ -1,7 +1,11 @@
-Post Project Reflection:  After being graded by a class TA, this project recieved full points for the implementation of the WYSIWYG real time editor/chat system.  15 points extra credit were also awarded for making it exportable formatted HTML file and creating an annotation feature.  This project provided an excellent opportunity to first explore large scale programming projects as well as pitching the product which will help in later projects I worked on.   
+#####Post Project Reflection:  
+
+After being graded by a class TA, this project recieved full points for the implementation of the WYSIWYG real time editor/chat system. 15 points extra credit were also awarded for making it exportable formatted HTML file and creating an annotation feature.  This project provided an excellent opportunity to first explore large scale programming projects as well as pitching the product which will help in later projects I worked on.   
 
 
-Improvements:  Unfortunately we opted to do real time updates every few seconds to all connected devices, which caused some stability issues with multiple connected users editing at the same time on the same document.  With more time we would have liked to implement a way to time stamp the times of specific updates in order to not step over eachother.  Revision history of edits had to be scrapped last minute due to poor performance.  The bar on the right was designed to populate with revisions every 5 minutes as restore points for the document. There was an issue with the timer and couldn't fully integrate it before the deadline.
+#####Improvements:  
+
+Unfortunately we opted to do real time updates every few seconds to all connected devices, which caused some stability issues with multiple connected users editing at the same time on the same document.  With more time we would have liked to implement a way to time stamp the times of specific updates in order to not step over eachother.  Revision history of edits had to be scrapped last minute due to poor performance.  The bar on the right was designed to populate with revisions every 5 minutes as restore points for the document. There was an issue with the timer and couldn't fully integrate it before the deadline.
 
 
 ####**CollaborativeEditor**</br>
